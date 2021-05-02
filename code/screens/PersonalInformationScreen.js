@@ -8,8 +8,8 @@ export default class PersonalInformationScreen extends Component{
         return (
             <View style={styles.mainview}>
                 <Text style={styles.headline}>Personal settings</Text>
-                <EditPersonalInformation></EditPersonalInformation>
-                <EditPassword></EditPassword>
+                <EditPersonalInformation style={{flex:1}}></EditPersonalInformation>
+                <EditPassword style={{flex:0.5}}></EditPassword>
             </View>
         )
     }
@@ -17,9 +17,12 @@ export default class PersonalInformationScreen extends Component{
 
 const styles = StyleSheet.create({
     mainview: {
+        flexDirection: "column",
+        width: "100%",
         flex: 1,
-        alignSelf: 'stretch',
-        backgroundColor: '#ff0'
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#F28D35'
     },
     headline:{
         margin:30

@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, TextInput } from 'react-native';
+import { Text, View, TextInput } from 'react-native';
 import {UserDataService} from "../../services/UserData";
 import {Button} from "react-native";
+import {styles} from "./styles";
 
 export default function EditPassword(){
     let userdata = new UserDataService();
@@ -35,7 +36,6 @@ export default function EditPassword(){
         return (
             <View style={styles.mainview}>
                 <View style={styles.table}>
-
                     <View style={styles.row}>
                         <View style={styles.cell}><Text>Old Password:</Text></View>
                         <View style={styles.cell}><TextInput onChangeText={setOldPassword} value={oldPassword}></TextInput></View>
@@ -48,13 +48,13 @@ export default function EditPassword(){
                         <View style={styles.cell}><Text>New Password Confirmation:</Text></View>
                         <View style={styles.cell}><TextInput onChangeText={setNewPassword2} value={newPassword2}></TextInput></View>
                     </View>
-                    {isInputValid() ? <Text>Valid Input!</Text> : null}
-                    <View style={[styles.row, {alignSelf: "flex-end"}]}>
-                        <Button onPress={() => cancel()} title="Cancel"/>
-                        <Button onPress={() => save()} title="Save"/>
-                    </View>
-                </View>
 
+                </View>
+                {isInputValid() ? <Text>Valid Input!</Text> : null}
+                <View style={[styles.row, {alignSelf: "flex-end"}]}>
+                    <Button style={styles.button} onPress={() => cancel()} title="Cancel"/>
+                    <Button style={styles.button} onPress={() => save()} title="Save"/>
+                </View>
             </View>
         );
     }else{
@@ -64,44 +64,12 @@ export default function EditPassword(){
                     <View style={styles.row}>
                         <View style={styles.cell}><Text>Password:</Text></View>
                         <View style={styles.cell}><Text>*****</Text></View>
-                        <Button onPress={() => setIsEditing(true)} title="Edit"/>
                     </View>
+                </View>
+                <View style={{alignSelf: "flex-end"}}>
+                    <Button style={styles.button} onPress={() => setIsEditing(true)} title="Edit"/>
                 </View>
             </View>
         );
     }
 }
-
-
-export const styles = StyleSheet.create({
-    mainview: {
-        margin: 20,
-        padding: 10
-    },
-    table: {
-        padding: 10,
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    row: {
-        flex: 1,
-        alignSelf: 'stretch',
-        flexDirection: 'row'
-    },
-    cell: {
-        flex: 1,
-        alignSelf: 'stretch'
-    },
-    input: {
-        flex: 1,
-        alignSelf: 'stretch',
-        borderWidth: 5,
-    },
-    button: {
-        flex: 0.5,
-        alignSelf: "flex-end",
-        padding: 10
-    },
-});
