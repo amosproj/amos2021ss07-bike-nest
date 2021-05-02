@@ -4,31 +4,31 @@ from an API Endpoint with authentication required. See "Networking" in Expo Docu
  */
 export class UserDataService{
 
-    public GetFirstName(): string{
+    GetFirstName(){
         return "Max";
     }
 
-    public GetLastName(): string{
+    GetLastName(){
         return "Mustermann";
     }
 
-    public GetEmail(): string{
+    GetEmail(){
         return "maxmustermann@musteradresse.com";
     }
 
-    public UpdateFirstName(firstName: string): boolean{
+    UpdateFirstName(firstName){
         return false;
     }
 
-    public UpdateLastName(lastName: string): boolean{
+    UpdateLastName(lastName){
         return false;
     }
 
-    public UpdateEmail(email: string): boolean{
+    UpdateEmail(email){
         return false
     }
 
-    public UpdatePassword(oldPassword: string, newPassword: string): boolean{
+    UpdatePassword(oldPassword, newPassword){
         return false;
     }
 }
