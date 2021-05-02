@@ -27,4 +27,8 @@ export class UserDataService{
     public UpdateEmail(email: string): boolean{
         return false
     }
+
+    public UpdatePassword(oldPassword: string, newPassword: string): boolean{
+        return false;
+    }
 }
