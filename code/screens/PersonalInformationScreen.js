@@ -1,16 +1,28 @@
 import EditPersonalInformation from "../components/EditPersonalInformation/EditPersonalInformation";
 import EditPassword from "../components/EditPersonalInformation/EditPassword";
 import React, {Component} from "react";
-import {Text, View} from "react-native";
+import {StyleSheet, Text, View} from "react-native";
 
 export default class PersonalInformationScreen extends Component{
     render(){
         return (
-            <View>
-                <h1>Personal settings</h1>
+            <View style={styles.mainview}>
+                <Text style={styles.headline}>Personal settings</Text>
                 <EditPersonalInformation></EditPersonalInformation>
                 <EditPassword></EditPassword>
             </View>
         )
     }
 }
+
+const styles = StyleSheet.create({
+    mainview: {
+        flex: 1,
+        alignSelf: 'stretch',
+        backgroundColor: '#ff0'
+    },
+    headline:{
+        margin:30
+    },
+
+});
