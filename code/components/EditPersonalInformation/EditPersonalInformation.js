@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
-import {Text, View, TextInput, StyleSheet} from 'react-native';
+import {Pressable, Text, View, TextInput, StyleSheet} from 'react-native';
 import {UserDataService} from "../../services/UserData";
-import {Button} from "react-native";
 import {styles} from "./styles";
 
 export default function EditPersonalInformation() {
@@ -27,32 +26,38 @@ export default function EditPersonalInformation() {
     }
 
     let EditOrShow = (text, setter) =>
-        isEditing ? <TextInput style={[styles.Input, styles.cell]} onChangeText={setter} value={text}/> : <Text style={styles.cell}>{text}</Text>
+        isEditing ?
+            <TextInput style={styles.inputField} onChangeText={setter} value={text}/>
+            :
+            <View style={{justifyContent: 'center'}}><Text style={styles.specialText}>{text}</Text></View>
+
 
     return (
-        <View style={styles.mainview}>
-            <View style={styles.table}>
-                <View style={styles.row}>
-                    <Text style={{flex:0.4}}>Last Name:</Text>
+        <View style={styles.container}>
+
+                    <Text style={styles.stdText}>Last Name:</Text>
                     {EditOrShow(lastName, setLastName)}
-                </View>
-                <View style={styles.row}>
-                    <Text style={{flex:0.4}}>First Name:</Text>
+
+                    <Text style={styles.stdText}>First Name:</Text>
                     {EditOrShow(firstName, setFirstName)}
-                </View>
-                <View style={styles.row}>
-                    <Text style={{flex:0.4}}>Email Address:</Text>
+
+                    <Text style={styles.stdText}>Email Address:</Text>
                     {EditOrShow(email,setEmail)}
-                </View>
-            </View>
+
             {isEditing ?
-                <View style={{flexDirection: "row", alignSelf: "flex-end"}}>
-                    <Button style={styles.button} onPress={() => cancel()} title="Cancel"/>
-                    <Button style={styles.button} onPress={() => saveData()} title="Save"/>
+                <View>
+                    <Pressable style={styles.button} onPress={() => cancel()}>
+                        <Text style={styles.buttonText}>Cancel</Text>
+                    </Pressable>
+                    <Pressable style={styles.button} onPress={() => saveData()}>
+                        <Text style={styles.buttonText}>Save</Text>
+                    </Pressable>
                 </View>
                 :
-                <View style={{alignSelf: "flex-end"}}>
-                    <Button style={styles.button} onPress={() => setIsEditing(true)} title="Edit"/>
+                <View>
+                    <Pressable style={styles.button} onPress={() => setIsEditing(true)}>
+                        <Text style={styles.buttonText}>Edit</Text>
+                    </Pressable>
                 </View>
             }
         </View>

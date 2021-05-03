@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
-import { Text, View, TextInput } from 'react-native';
+import { Pressable, Text, View, TextInput } from 'react-native';
 import {UserDataService} from "../../services/UserData";
-import {Button} from "react-native";
 import {styles} from "./styles";
 
 export default function EditPassword(){
@@ -35,40 +34,30 @@ export default function EditPassword(){
     if(isEditing){
         return (
             <View style={styles.mainview}>
-                <View style={styles.table}>
-                    <View style={styles.row}>
-                        <View style={styles.cell}><Text>Old Password:</Text></View>
-                        <View style={styles.cell}><TextInput onChangeText={setOldPassword} value={oldPassword}></TextInput></View>
-                    </View>
-                    <View style={styles.row}>
-                        <View style={styles.cell}><Text>New Password:</Text></View>
-                        <View style={styles.cell}><TextInput onChangeText={setNewPassword1} value={newPassword1}></TextInput></View>
-                    </View>
-                    <View style={styles.row}>
-                        <View style={styles.cell}><Text>New Password Confirmation:</Text></View>
-                        <View style={styles.cell}><TextInput onChangeText={setNewPassword2} value={newPassword2}></TextInput></View>
-                    </View>
+                <Text style={styles.stdText}>Old Password:</Text>
+                <TextInput style={styles.inputField} onChangeText={setOldPassword} value={oldPassword}></TextInput>
+                <Text style={styles.stdText}>New Password:</Text>
+                <TextInput style={styles.inputField} onChangeText={setNewPassword1} value={newPassword1}></TextInput>
 
-                </View>
+                <Text style={styles.stdText}>New Password Confirmation:</Text>
+                <TextInput style={styles.inputField} onChangeText={setNewPassword2} value={newPassword2}></TextInput>
                 {isInputValid() ? <Text>Valid Input!</Text> : null}
-                <View style={[styles.row, {alignSelf: "flex-end"}]}>
-                    <Button style={styles.button} onPress={() => cancel()} title="Cancel"/>
-                    <Button style={styles.button} onPress={() => save()} title="Save"/>
-                </View>
+                <Pressable style={styles.button} onPress={() => cancel()}>
+                    <Text style={styles.buttonText}>Cancel</Text>
+                </Pressable>
+                <Pressable style={styles.button} onPress={() => save()}>
+                    <Text style={styles.buttonText}>Save</Text>
+                </Pressable>
             </View>
         );
     }else{
         return (
             <View style={styles.mainview}>
-                <View style={styles.table}>
-                    <View style={styles.row}>
-                        <View style={styles.cell}><Text>Password:</Text></View>
-                        <View style={styles.cell}><Text>*****</Text></View>
-                    </View>
-                </View>
-                <View style={{alignSelf: "flex-end"}}>
-                    <Button style={styles.button} onPress={() => setIsEditing(true)} title="Edit"/>
-                </View>
+                <View style={styles.cell}><Text style={styles.stdText}>Password:</Text></View>
+                <View style={styles.cell}><Text style={styles.stdText}>*****</Text></View>
+                <Pressable style={styles.button} onPress={() => setIsEditing(true)}>
+                    <Text style={styles.buttonText}>Edit</Text>
+                </Pressable>
             </View>
         );
     }
