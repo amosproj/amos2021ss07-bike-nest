@@ -1,40 +1,21 @@
-// App.js
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { createStackNavigator } from "react-navigation-stack";
-import { createAppContainer } from 'react-navigation';
-
-import HomeScreen from './screens/HomeScreen';
-import AboutScreen from './screens/AboutScreen';
-import CreateAccountScreen from './screens/CreateAccountScreen';
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { CreateAccountScreen } from './screens/CreateAccountScreen';
+import PersonalInformationScreen from './screens/PersonalInformationScreen';
 
 
-export default class App extends React.Component {
-  render() {
-    return <AppContainer />;
-  }
+export default function App() {
+  return (
+    <NavigationContainer>
+      <AppNavigator.Navigator initialRouteName="CreateAccountScreen">
+        <AppNavigator.Screen name='CreateAccount' component={CreateAccountScreen} />
+        <AppNavigator.Screen name='EditPersonalInformation' component={PersonalInformationScreen} />
+      </AppNavigator.Navigator>
+    </NavigationContainer>
+  );
 }
 
-const AppNavigator = createStackNavigator({
-  CreateAccount: {
-    screen: CreateAccountScreen
-  },
-  Home: {
-    screen: HomeScreen
-  },
-  About: {
-    screen: AboutScreen
-  }
+const AppNavigator = createStackNavigator();
 
-});
 
-const AppContainer = createAppContainer(AppNavigator);
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

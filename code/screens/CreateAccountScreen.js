@@ -1,44 +1,19 @@
-import React, { Component } from 'react';
-import { Alert } from 'react-native';
-import { Pressable, CheckBox, StyleSheet, Text, View, TextInput } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import Colors from '../Colors';
+import { CreateAccountManually } from '../components/CreateAccountManually';
+import { CreateAccountVia3rdParty } from '../components/CreateAccountVia3rdParty';
 
+export function CreateAccountScreen({ navigation }) {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.h1}>Profil erstellen</Text>
+      <CreateAccountVia3rdParty />
+      <Text>ODER MIT EMAIL ANMELDEN</Text>
+      <CreateAccountManually />
+    </View>
+  );
 
-export default class CreateAccountScreen extends Component {
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.h1}>Profil erstellen</Text>
-        <Pressable style={[styles.button, { backgroundColor: Colors.Facebook_Blue }]}>
-          <Text style={styles.buttonText}>MIT FACEBOOK ANMELDEN</Text>
-        </Pressable>
-        <Pressable style={[styles.button, { backgroundColor: '#fff', borderColor: Colors.Google_Grey }]}>
-          <Text style={[styles.buttonText, { color: "#000" }]}>MIT GOOGLE ANMELDEN</Text>
-        </Pressable>
-        <Text>ODER MIT EMAIL ANMELDEN</Text>
-        <TextInput
-          defaultValue='Name'
-          style={styles.inputField}
-        />
-        <TextInput
-          defaultValue='Email'
-          style={styles.inputField}
-        />
-        <TextInput
-          secureTextEntry={true}
-          style={styles.inputField}
-        />
-        <View style={styles.checkBoxContainer}>
-          <Text style={styles.checkboxText} onPress={() => Alert.alert("Lorem ipsum")}>Datenschutzrichtlinien gelesen</Text>
-          <CheckBox style={styles.checkbox} />
-        </View>
-        <Pressable style={styles.button} onPress={() => Alert.alert("Test")}>
-          <Text style={styles.buttonText}>Los geht's</Text>
-        </Pressable>
-      </View>
-    );
-  };
 }
 
 

@@ -1,4 +1,4 @@
-import {StyleSheet} from "react-native";
+import { StyleSheet } from "react-native";
 
 export default class Colors {
 
@@ -63,6 +63,17 @@ export const styles = StyleSheet.create({
         fontSize: 28,
         fontWeight: 'bold',
         margin: 30
-    }
+    }, 
+    checkbox: {
+        borderRadius: 2,
+        alignSelf: "center",
+    },
+    checkboxText: {
+        margin: 8,
+    }, 
+    checkBoxContainer: {
+        flexDirection: 'row',
+        marginBottom: 20,
+      },
 
 });
