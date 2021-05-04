@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Alert, Pressable, Text, View } from 'react-native';
 import { styles } from "./EditPersonalInformation/styles";
 import Colors from "../styles/Colors";
 import { useNavigation } from '@react-navigation/native';
@@ -9,7 +9,14 @@ export function CreateAccountVia3rdParty() {
 
     return (
         <View>
-            <Pressable style={[styles.button, { backgroundColor: Colors.Facebook_Blue }]}>
+            <Pressable style={[styles.button, { backgroundColor: Colors.Facebook_Blue }]}
+             onPress={() => Alert.alert("Nice!",
+            "Du hast erfolgreich einen Account erstellt.",
+            [             
+              { text: "OK", onPress: () => navigation.navigate("FindBikeNest") }
+            ]
+          )}
+            >
                 <Text style={styles.buttonText}>MIT FACEBOOK ANMELDEN</Text>
             </Pressable>
             <Pressable onPress={() => navigation.navigate("EditPersonalInformation")} style={[styles.button, { backgroundColor: '#fff', borderColor: Colors.Google_Grey }]}>
