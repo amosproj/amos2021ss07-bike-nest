@@ -1,30 +1,30 @@
-const mainStyles = StyleSheet.create({
+import { StyleSheet } from 'react-native';
+import Colors from './Colors';
 
+export const mainStyles = StyleSheet.create({
 
   //Text
-  // h1: {
-  //   fontSize: 28,
-  //   fontWeight: 'bold',
-  //   margin: 30
-  // },
   h1: {
     fontSize: 39,
     letterSpacing: 4,
-    fontWeight: 500,
+    fontWeight: "500",
     marginBottom: 16,
   },
-  
+
   h2: {
     fontSize: 27,
     letterSpacing: 2,
-    fontWeight: 400,
-  },
-  
-  h3: {
-    fontSize: 18,
-    fontWeight: 300,
+    fontWeight: "400",
   },
 
+  h3: {
+    fontSize: 18,
+    fontWeight: "300",
+  },
+
+  stdText:{
+    fontSize: 14
+  },
 
   container: {
     flex: 1,
@@ -36,16 +36,7 @@ const mainStyles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 20,
   },
-  button: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 3,
-    width: 328,
-    height: 55,
-    borderRadius: 38,
-    margin: 9,
-    backgroundColor: Colors.UI_Light_2
-  },
+
   inputField: {
     width: 328,
     height: 55,
@@ -70,7 +61,38 @@ const mainStyles = StyleSheet.create({
   },
   checkboxText: {
     margin: 8,
-  }
+  },
 
+  //Buttons
+  buttonBig: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 3,
+    width: 328,
+    height: 55,
+    borderRadius: 38,
+    margin: 9,
+    backgroundColor: Colors.UI_Light_2
+  },
+  buttonMedium: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 3,
+    width: 198,
+    height: 55,
+    borderRadius: 38,
+    margin: 9,
+    backgroundColor: Colors.UI_Light_2
+  },
+  buttonSmall: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 3,
+    width: 128,
+    height: 55,
+    borderRadius: 38,
+    margin: 9,
+    backgroundColor: Colors.UI_Light_2
+  },
 
 });

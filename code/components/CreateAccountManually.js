@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { CheckBox, Pressable, Text, View, TextInput, StyleSheet } from 'react-native';
+import { Pressable, Text, View, TextInput, StyleSheet } from 'react-native';
 import { UserDataService } from "../services/UserData";
 import { styles } from "./EditPersonalInformation/styles";
 import { useNavigation } from '@react-navigation/native';
 import { Alert, Modal } from 'react-native';
-import Colors from "../styles/Colors";
+import { mainStyles } from "../styles/MainStyles";
+import CheckBox from '@react-native-community/checkbox';
 
 export function CreateAccountManually() {
     let userdata = new UserDataService();
@@ -15,6 +16,7 @@ export function CreateAccountManually() {
     const [modalVisible, setModalVisible] = useState(false);
     const [modalText, setModalText] = useState("");
     const [isValidInput, setIsValidInput] = useState(false);
+    const [toggleCheckBox, setToggleCheckBox] = useState(false);
     const navigation = useNavigation();
 
     //TODO: real Validation + Checkbox
@@ -65,8 +67,8 @@ export function CreateAccountManually() {
             >
                 <View style={stylesTest.modalContainer}>
                     <View style={stylesTest.modalContentContainer}>
-                        <Text >{modalText}</Text>
-                        <Pressable style={styles.button} onPress={() => onModalPress()}>
+                        <Text style={mainStyles.stdText}>{modalText}</Text>
+                        <Pressable style={mainStyles.buttonSmall} onPress={() => onModalPress()}>
                             <Text style={styles.buttonText}>OK</Text>
                         </Pressable>
                     </View>
@@ -98,10 +100,14 @@ export function CreateAccountManually() {
                 value={password}
             />
             <View style={styles.checkBoxContainer}>
-                <Text style={styles.checkboxText} onPress={() => Alert.alert("Lorem ipsum")}>Datenschutzrichtlinien gelesen</Text>
-                <CheckBox style={styles.checkbox} />
+                <Text style={styles.checkboxText}
+                    onPress={() => Alert.alert("Lorem ipsum")}>Datenschutzrichtlinien gelesen</Text>
+                <CheckBox style={styles.checkbox}
+                    onValueChange={(newValue) => setToggleCheckBox(newValue)}
+                    value={toggleCheckBox}
+                />
             </View>
-            <Pressable style={styles.button} onPress={() => validateInput()}>
+            <Pressable style={mainStyles.buttonBig} onPress={() => validateInput()}>
                 <Text style={styles.buttonText}>Los geht's</Text>
             </Pressable>
         </View>
@@ -111,12 +117,13 @@ export function CreateAccountManually() {
 const stylesTest = StyleSheet.create({
     modalContentContainer: {
         width: 288,
-        height: 144,
+        height: 184,
         borderRadius: 15,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#fff',
         elevation: 3,
+        padding: 18,
     },
     modalContainer: {
         flex: 1,

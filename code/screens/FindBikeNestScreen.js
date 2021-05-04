@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { getDistance } from 'geolib';
 import { markers } from '../tools/mapData'
+import * as Location from 'expo-location';
 import {
   StyleSheet,
   Alert,
@@ -15,7 +16,7 @@ import {
   Dimensions,
   Platform,
 } from "react-native";
-import * as Location from 'expo-location';
+
 
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = height / 3.5;
