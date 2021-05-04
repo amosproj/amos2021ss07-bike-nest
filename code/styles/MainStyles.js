@@ -1,6 +1,7 @@
-const mainStyles = StyleSheet.create({
+import { StyleSheet } from "react-native";
+import Colors from "./Colors";
 
-
+export const mainstyles = StyleSheet.create({
   //Text
   // h1: {
   //   fontSize: 28,
@@ -8,24 +9,19 @@ const mainStyles = StyleSheet.create({
   //   margin: 30
   // },
   h1: {
-    fontSize: 39,
-    letterSpacing: 4,
-    fontWeight: 500,
-    marginBottom: 16,
+    fontSize: 28,
+    fontWeight: 'bold',
+    margin: 30
   },
-  
   h2: {
-    fontSize: 27,
-    letterSpacing: 2,
-    fontWeight: 400,
+    fontSize: 20,
   },
-  
   h3: {
     fontSize: 18,
-    fontWeight: 300,
   },
-
-
+  p: {
+    fontSize: 16,
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -55,14 +51,19 @@ const mainStyles = StyleSheet.create({
     margin: 9,
     paddingLeft: 12,
   },
+  inputFieldHalf:{
+    width: 200,
+    height: 55,
+    color: Colors.UI_Light_3,
+    backgroundColor: Colors.UI_Light_4,
+    borderRadius: 15,
+    position: "absolute",
+    left: 0,
+    padding: 10,
+  },
   buttonText: {
     fontSize: 14,
     color: Colors.UI_Light_4
-  },
-  h1: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    margin: 30
   },
   checkbox: {
     borderRadius: 2,
