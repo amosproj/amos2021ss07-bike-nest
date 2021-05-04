@@ -39,10 +39,10 @@ export default function LoginScreen({ navigation }) {
 
         <View style={{ flex: 0.6, justifyContent: 'center' }}>
           <TextInput style={styles.inputField}
-            defaultValue='E-Mail Adresse'
+            placeholder='E-Mail Adresse'
           />
           <TextInput style={styles.inputField}
-            defaultValue='Passwort'
+            placeholder='Passwort'
             secureTextEntry={true}
           />
         </View>
