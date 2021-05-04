@@ -17,8 +17,8 @@ export default function PaymentScreen({ navigation }) {
         <View style={{ flex: 0.2, alignContent: 'center', justifyContent: 'center', marginTop: 10 }}>
           <Text style={styles.h1}>Meine Bestellung</Text>
         </View>
-        <Text style={mainstyles.h2}>
-          <Text style={{position: 'absolute', textAlign:'left'}}>Details                                       </Text>
+        <Text style={mainstyles.h3}>
+          <Text style={{position: 'absolute', textAlign:'left'}}>Details                                                 </Text>
           <Text style={{position: 'absolute', textAlign:'right'}}>         Ändern</Text>
         </Text>
         <View style={{ flex: 0.2, justifyContent: 'center' }}> 
@@ -35,9 +35,9 @@ export default function PaymentScreen({ navigation }) {
         </View>
         <View style={{ flex: 0.9, justifyContent: 'center', color: Colors.UI_Light_1 }}>
         <Text>
-          <Text style={mainstyles.h2}>Zahlungsmethode                </Text>
+          <Text style={mainstyles.h3}>Zahlungsmethode                          </Text>
           <Image source={require('../assets/payment/plus.png')}/>
-          <Text style={mainstyles.h2}>Hinzufügen</Text>
+          <Text style={mainstyles.h3}>Hinzufügen</Text>
         </Text>
         <View style={{ flex: 0.6, justifyContent: 'center' }}> 
           <Pressable style={[styles.button, { backgroundColor: Colors.UI_Light_4 }]}>
@@ -52,15 +52,17 @@ export default function PaymentScreen({ navigation }) {
           </Pressable>
           </View>
           <Image source={require('../assets/payment/Divider.png')} />
-        </View>
-        {/* <View style={{ flex: 0.2, justifyContent: 'center',  alignItems: 'center' }}> 
-          <Text style={{ color: '#000000', alignItems: 'center', justifyContent: 'center' }}>Promocode</Text>
+        <Text>
+          <Text style={mainstyles.h3}>Promocode</Text> 
           <TextInput style={mainstyles.inputFieldHalf}
             placeholder='BIKE NEST'
             secureTextEntry={true}/>
-          <Image source={require('../assets/payment/Divider.png')} />
-        </View> */}
-        <View style={{ flex: 0.7, justifyContent: 'center' }}> 
+        </Text>
+          <Image source={require('../assets/payment/Divider.png')} /> 
+        </View>
+        <View style={{ flex: 0.2, justifyContent: 'center' }}> 
+        <Text style={mainstyles.h3}>Übersicht</Text> 
+        <Text></Text>
         <Text>
           <Text style={{ color: '#000000', alignItems: 'center', justifyContent: 'center' }}>Gesamt exkl. Mwst.                                            </Text> 
           <Text style={{ color: '#000000', alignItems: 'center', justifyContent: 'center',  fontWeight: 'bold' }}>50€</Text> 
@@ -80,7 +82,8 @@ export default function PaymentScreen({ navigation }) {
           <Text style={{ color: Colors.UI_Light_2, alignItems: 'center', justifyContent: 'center',  fontWeight: 'bold' }}>54,50€</Text> 
           </Text>
           <Text></Text>
-          <Text style={mainstyles.h2}>Jetzt kostenpflichtig Bestellen</Text>
+          <Text style={mainstyles.h3}>Jetzt kostenpflichtig Bestellen</Text> 
+          <Image source={require('../assets/payment/mail-send.png')} />
         </View>
         
         

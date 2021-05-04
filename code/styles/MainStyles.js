@@ -2,12 +2,6 @@ import { StyleSheet } from "react-native";
 import Colors from "./Colors";
 
 export const mainstyles = StyleSheet.create({
-  //Text
-  // h1: {
-  //   fontSize: 28,
-  //   fontWeight: 'bold',
-  //   margin: 30
-  // },
   h1: {
     fontSize: 28,
     fontWeight: 'bold',
