@@ -25,8 +25,6 @@ export function CreateAccountManually() {
         if (!newEmail()) {
             setModalText("Ein Account mit der Email " + email + " existiert bereits.");
         } else {
-
-
             if (isValid)
                 setModalText("Hurra! Dein Account wurde erfolgreich eingerichtet");
             else
@@ -54,6 +52,7 @@ export function CreateAccountManually() {
         return isNewEmail;
     }
 
+    //TODO: Replace Modal (not working in web)
     return (
         <View style={styles.container}>
             <Modal
