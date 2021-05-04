@@ -22,7 +22,7 @@ const CARD_HEIGHT = height / 3.5;
 const CARD_WIDTH = width * 0.8;
 const spacing_for_card_inset = width * 0.1 - 10;
 
-export default function FindBikeNestScreen() {
+export default function FindBikeNestScreen({navigation}) {
 
   const initialMapState = {
     markers,
