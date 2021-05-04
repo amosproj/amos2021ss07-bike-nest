@@ -12,7 +12,7 @@ export function CreateAccountVia3rdParty() {
             <Pressable style={[styles.button, { backgroundColor: Colors.Facebook_Blue }]}>
                 <Text style={styles.buttonText}>MIT FACEBOOK ANMELDEN</Text>
             </Pressable>
-            <Pressable onPress={() => navigation.navigate("FindBikeNest")} style={[styles.button, { backgroundColor: '#fff', borderColor: Colors.Google_Grey }]}>
+            <Pressable onPress={() => navigation.navigate("EditPersonalInformation")} style={[styles.button, { backgroundColor: '#fff', borderColor: Colors.Google_Grey }]}>
                 <Text style={[styles.buttonText, { color: "#000" }]}>MIT GOOGLE ANMELDEN</Text>
             </Pressable>
         </View>

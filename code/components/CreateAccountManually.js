@@ -38,7 +38,7 @@ export function CreateAccountManually() {
     let onModalPress = () => {
         if (isValidInput) {
             setModalVisible(false);
-            navigation.navigate("EditPersonalInformation");
+            navigation.navigate("FindBikeNest");
         }
         else
             setModalVisible(false);
