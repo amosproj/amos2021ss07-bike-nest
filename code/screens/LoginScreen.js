@@ -3,7 +3,7 @@ import React from 'react';
 import { ImageBackground, Pressable, StyleSheet, Text, TextInput, View, Image, TouchableWithoutFeedback } from 'react-native';
 import { Keyboard } from 'react-native'
 import { Dimensions } from "react-native";
-import Colors from '../Colors';
+import Colors from '../styles/Colors';
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height

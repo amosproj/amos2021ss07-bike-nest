@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { styles } from "./EditPersonalInformation/styles";
-import Colors from "../Colors";
+import Colors from "../styles/Colors";
 
 export function CreateAccountVia3rdParty() {
 

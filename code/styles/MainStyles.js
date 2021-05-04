@@ -1,24 +1,31 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import Colors from '../styles/Colors';
-import { CreateAccountManually } from '../components/CreateAccountManually';
-import { CreateAccountVia3rdParty } from '../components/CreateAccountVia3rdParty';
-
-export function CreateAccountScreen({ navigation }) {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.h1}>Profil erstellen</Text>
-      <CreateAccountVia3rdParty />
-      <Text>ODER MIT EMAIL ANMELDEN</Text>
-      <CreateAccountManually />
-    </View>
-  );
-
-}
+const mainStyles = StyleSheet.create({
 
 
+  //Text
+  // h1: {
+  //   fontSize: 28,
+  //   fontWeight: 'bold',
+  //   margin: 30
+  // },
+  h1: {
+    fontSize: 39,
+    letterSpacing: 4,
+    fontWeight: 500,
+    marginBottom: 16,
+  },
+  
+  h2: {
+    fontSize: 27,
+    letterSpacing: 2,
+    fontWeight: 400,
+  },
+  
+  h3: {
+    fontSize: 18,
+    fontWeight: 300,
+  },
 
-const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -67,5 +74,3 @@ const styles = StyleSheet.create({
 
 
 });
-
-

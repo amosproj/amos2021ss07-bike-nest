@@ -4,7 +4,7 @@ import { UserDataService } from "../services/UserData";
 import { styles } from "./EditPersonalInformation/styles";
 import { useNavigation } from '@react-navigation/native';
 import { Alert, Modal } from 'react-native';
-import Colors from "../Colors";
+import Colors from "../styles/Colors";
 
 export function CreateAccountManually() {
     let userdata = new UserDataService();
