@@ -24,27 +24,23 @@ const spacing_for_card_inset = width * 0.1 - 10;
 
 export default function FindBikeNestScreen() {
 
-  const initialMapState = {
-    markers,
-    region: {
-      latitude: 49.46,
-      longitude: 11.07,
-      latitudeDelta: 0.06,
-      longitudeDelta: 0.04,
-    },
-  };
-
   //states, each state change re-renders scene
   const [displayState, setDisplayState] = useState('flex');
   //const [location, setLocation] = useState(null);
-  const [state, setState] = useState(initialMapState);
+  const [stateMarkers, setState] = useState(markers);
   const [distances, setDistances] = useState([0, 0, 0, 0])
+  const [isLoggedIn, setLogin] = useState(false);
   const _map = useRef(null);
   const _scrollView = useRef(null);
   let mapIndex = 0;
   let mapAnimation = new Animated.Value(0);
-
-  // // asks for user location permission
+  const region = {
+    latitude: 49.46,
+    longitude: 11.07,
+    latitudeDelta: 0.06,
+    longitudeDelta: 0.04,
+  }
+  // asks for user location permission
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -55,7 +51,7 @@ export default function FindBikeNestScreen() {
 
       let location = await Location.getCurrentPositionAsync({});
       let localdistances = []
-      state.markers.map((marker, index) => {
+      stateMarkers.map((marker, index) => {
         localdistances.push(getDistanceToUser(marker, location));
       });
       setDistances(localdistances);
@@ -67,7 +63,7 @@ export default function FindBikeNestScreen() {
 
 
   // compute scaling of markers
-  const interpolations = state.markers.map((marker, index) => {
+  const interpolations = stateMarkers.map((marker, index) => {
     const inputRange = [
       (index - 1) * CARD_WIDTH,
       (index) * CARD_WIDTH,
@@ -95,8 +91,8 @@ export default function FindBikeNestScreen() {
   useEffect(() => {
     mapAnimation.addListener(({ value }) => {
       let index = Math.floor(value / CARD_WIDTH + 0.3); // animate 30% away from landing on the next item
-      if (index >= state.markers.length) {
-        index = state.markers.length - 1;
+      if (index >= stateMarkers.length) {
+        index = stateMarkers.length - 1;
       }
       if (index <= 0) {
         index = 0;
@@ -107,12 +103,12 @@ export default function FindBikeNestScreen() {
       const regionTimeout = setTimeout(() => {
         if (mapIndex !== index) {
           mapIndex = index;
-          const { coordinate } = state.markers[index];
+          const { coordinate } = stateMarkers[index];
           _map.current.animateToRegion(
             {
               ...coordinate,
-              latitudeDelta: state.region.latitudeDelta,
-              longitudeDelta: state.region.longitudeDelta,
+              latitudeDelta: region.latitudeDelta,
+              longitudeDelta: region.longitudeDelta,
             },
             300
           );
@@ -123,15 +119,22 @@ export default function FindBikeNestScreen() {
 
   // moves cards at the bottom of screen
   const onMarkerPress = (mapEventData) => {
-    //currently not used, card visibility
-    // if (displayState === ("none")) { setDisplayState("flex"); }
+    console.log(isLoggedIn);
     const markerID = mapEventData._targetInst.return.key;
+
+    if(!isLoggedIn){setLogin(true);}
+
+    // stateArr = [...stateMarkers];
+    // console.log('setting markers')
+    // setState(stateArr.concat(stateArr.splice(0, markerID)))
+
     let x = (markerID * CARD_WIDTH) + (markerID * 20);
     if (Platform.OS === 'ios') {
       x = x - spacing_for_card_inset;
     }
 
     _scrollView.current.scrollTo({ x: x, y: 0, animated: true });
+
   }
 
   // currently not used, hides cards at the bottom of screen
@@ -143,12 +146,12 @@ export default function FindBikeNestScreen() {
     <View style={styles.container}>
       <MapView
         ref={_map}
-        initialRegion={state.region}
+        initialRegion={region}
         showsUserLocation={true}
         style={styles.container}
       // onPress={(e) => onMapPress(e)}
       >
-        {state.markers.map((marker, index) => {
+        {stateMarkers.map((marker, index) => {
           const scaleStyle = {
             transform: [
               {
@@ -200,7 +203,7 @@ export default function FindBikeNestScreen() {
           { useNativeDriver: true }
         )}
       >
-        {state.markers.map((marker, index) => (
+        { isLoggedIn && stateMarkers.map((marker, index) => (
           <View style={[styles.card, { backgroundColor: marker.color, display: displayState }]} key={index}>
             <Image
               source={marker.image}
@@ -316,7 +319,7 @@ const styles = StyleSheet.create({
     // width: '100%',
     padding: 5,
     borderRadius: 3,
-   // backgroundColor: '#FFF',
+    // backgroundColor: '#FFF',
   },
   textSign: {
     color: '#FFF',
