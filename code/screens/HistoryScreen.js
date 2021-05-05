@@ -27,7 +27,7 @@ export default function HistoryScreen({ navigation }) {
       <Text style={styles.nest} >
         Fetch data of where bike is parked </Text>
 
-      <TouchableOpacity onPress={() => alert('go to next screen')} style={styles.buttonLock}>
+      <TouchableOpacity onPress={() => navigation.navigate("EditPersonalInformation")} style={styles.buttonLock}>
         <Text style={styles.buttonLockOwner}> Max Muster's bike </Text>
         <Text style={styles.buttonLockText}> locked </Text>
       </TouchableOpacity>
