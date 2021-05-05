@@ -12,7 +12,7 @@ var height = Dimensions.get('window').height; //full height
 
 export default function PaymentScreen({ navigation }) {
   return (
-    <View style={styles.container}>
+    <View style={mainstyles.container}>
       <ImageBackground source={require('../assets/background/background.png')} style={[styles.backgroundImage, { alignItems: 'center' }]}>
         <View style={{ flex: 0.2, alignContent: 'center', justifyContent: 'center', marginTop: 10 }}>
           <Text style={styles.h1}>Meine Bestellung</Text>
@@ -40,27 +40,27 @@ export default function PaymentScreen({ navigation }) {
           <Text style={mainstyles.h3}>Hinzufügen</Text>
         </Text>
         <View style={{ flex: 0.6, justifyContent: 'center' }}> 
-          <Pressable style={[styles.button, { backgroundColor: Colors.UI_Light_4 }]}>
+          <Pressable style={[styles.button, { backgroundColor: '#ffffff' }]}>
             <View style={styles.buttonContent}>
-              <Image style={styles.buttonImage} source={require('../assets/payment/Paypal1.png')} />
+              <Image style={styles.buttonImage, { maxWidth: 150 }} source={require('../assets/payment/Paypal1.png')} />
             </View>
           </Pressable>
-          <Pressable style={[styles.button, { backgroundColor: Colors.UI_Light_4 , borderColor: Colors.UI_Light_2, borderWidth: 1 }]}>
+          <Pressable style={[styles.button, { backgroundColor: '#ffffff' , borderColor: Colors.UI_Light_2, borderWidth: 1 }]}>
             <View style={styles.buttonContent}>
               <Image style={styles.buttonImage} source={require('../assets/payment/Visa.png')} />
             </View>
           </Pressable>
-          </View>
+        </View>
           <Image source={require('../assets/payment/Divider.png')} />
-        <Text>
-          <Text style={mainstyles.h3}>Promocode</Text> 
+        <View style={{ flex: 0.6, justifyContent: 'center'}}> 
+          <Text style={mainstyles.label}>Promocode</Text> 
           <TextInput style={mainstyles.inputFieldHalf}
             placeholder='BIKE NEST'
             secureTextEntry={true}/>
-        </Text>
           <Image source={require('../assets/payment/Divider.png')} /> 
         </View>
-        <View style={{ flex: 0.2, justifyContent: 'center' }}> 
+        </View>
+        <View style={{ flex: 0.6, justifyContent: 'center' }}> 
         <Text style={mainstyles.h3}>Übersicht</Text> 
         <Text></Text>
         <Text>
@@ -82,8 +82,10 @@ export default function PaymentScreen({ navigation }) {
           <Text style={{ color: Colors.UI_Light_2, alignItems: 'center', justifyContent: 'center',  fontWeight: 'bold' }}>54,50€</Text> 
           </Text>
           <Text></Text>
-          <Text style={mainstyles.h3}>Jetzt kostenpflichtig Bestellen</Text> 
+          <Text style={{marginLeft: 120, margin: 10,}}>
+          <Text style={mainstyles.h3}>Jetzt kostenpflichtig Bestellen  </Text> 
           <Image source={require('../assets/payment/mail-send.png')} />
+          </Text>
         </View>
         
         

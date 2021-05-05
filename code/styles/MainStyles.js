@@ -2,6 +2,13 @@ import { StyleSheet } from "react-native";
 import Colors from "./Colors";
 
 export const mainstyles = StyleSheet.create({
+  container:{
+    backgroundColor: '#ffffff',
+    padding: "10px",
+    // fontFamily: "montserrat",
+    flex: 1,
+    alignItems: 'center',
+  },
   h1: {
     fontSize: 28,
     fontWeight: 'bold',
@@ -36,6 +43,12 @@ export const mainstyles = StyleSheet.create({
     margin: 9,
     backgroundColor: Colors.UI_Light_2
   },
+  label:{
+    fontSize: 18,
+    display: 'flex',
+    width: 150,
+    alignSelf: 'flex-start',
+  },
   inputField: {
     width: 328,
     height: 55,
@@ -46,13 +59,15 @@ export const mainstyles = StyleSheet.create({
     paddingLeft: 12,
   },
   inputFieldHalf:{
+    display: 'flex',
+    alignSelf: 'flex-end',
     width: 200,
     height: 55,
     color: Colors.UI_Light_3,
     backgroundColor: Colors.UI_Light_4,
     borderRadius: 15,
-    position: "absolute",
-    left: 0,
+    marginLeft: 120,
+    margin: 10,
     padding: 10,
   },
   buttonText: {
