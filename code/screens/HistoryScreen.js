@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity  } from 'react-native';
 import { Dimensions } from "react-native";
-import Avatar from './assets/Avatar.png'; 
-import bike from './assets/bike.png'; 
+import Avatar from '../assets/Avatar.png'; 
+import bike from '../assets/bike.png'; 
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 
