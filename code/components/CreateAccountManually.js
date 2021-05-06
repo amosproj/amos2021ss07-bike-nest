@@ -5,7 +5,7 @@ import { styles } from "./EditPersonalInformation/styles";
 import { useNavigation } from '@react-navigation/native';
 import { Alert, Modal } from 'react-native';
 import { mainStyles } from "../styles/MainStyles";
-import CheckBox from '@react-native-community/checkbox';
+import BikeNest_CheckBox from './BikeNest_CheckBox';
 
 export function CreateAccountManually() {
     let userdata = new UserDataService();
@@ -16,7 +16,6 @@ export function CreateAccountManually() {
     const [modalVisible, setModalVisible] = useState(false);
     const [modalText, setModalText] = useState("");
     const [isValidInput, setIsValidInput] = useState(false);
-    const [toggleCheckBox, setToggleCheckBox] = useState(false);
     const navigation = useNavigation();
 
     //TODO: real Validation + Checkbox
@@ -99,14 +98,11 @@ export function CreateAccountManually() {
                 onChangeText={setPassword}
                 value={password}
             />
-            <View style={styles.checkBoxContainer}>
-                <Text style={styles.checkboxText}
-                    onPress={() => Alert.alert("Lorem ipsum")}>Datenschutzrichtlinien gelesen</Text>
-                <CheckBox style={styles.checkbox}
-                    onValueChange={(newValue) => setToggleCheckBox(newValue)}
-                    value={toggleCheckBox}
-                />
-            </View>
+            <BikeNest_CheckBox
+                onPressText={() => Alert.alert("Lorem ipsum")}
+                toggleText={"Datenschutzrichtlinien gelesen"}
+                initialValue={false}
+            />
             <Pressable style={mainStyles.buttonBig} onPress={() => validateInput()}>
                 <Text style={styles.buttonText}>Los geht's</Text>
             </Pressable>
