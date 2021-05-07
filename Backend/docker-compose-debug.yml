@@ -34,34 +34,42 @@ services:
 
   bikenest:
     container_name: bikenest
-    build: service-bikenest
+    build: 
+      context: service-bikenest
+      dockerfile: Dockerfile_debug
     restart: always
     ports:
      - "9001:9001"
+     - "5005:5005"
     environment:
      - MYSQL_HOST=bikenest-db
      - MYSQL_PORT=3306
      - MYSQL_DBNAME=bikenest
      - MYSQL_USER=bikenestservice
      - MYSQL_PASSWORD=test
-     
+     - _JAVA_OPTIONS=-Xms256m -Xmx384m -Xdebug -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
     networks:
      - bikenest-db
      
   booking:
     container_name: booking
-    build: service-booking
+    build: 
+      context: service-booking
+      dockerfile: Dockerfile_debug
     restart: always
     ports:
      - "9002:9002"
+     - "5006:5006"
     environment:
      - MYSQL_HOST=booking-db
      - MYSQL_PORT=3306
      - MYSQL_DBNAME=booking
      - MYSQL_USER=bookingservice
      - MYSQL_PASSWORD=test
+     - _JAVA_OPTIONS=-Xms256m -Xmx384m -Xdebug -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006
     networks:
      - booking-db
+
 networks:
   booking-db:
   bikenest-db:
