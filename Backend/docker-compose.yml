@@ -1,0 +1,58 @@
+version: "3"
+services:
+  booking-db:
+    container_name: booking-db
+    image: mysql
+    environment:
+     - MYSQL_ROOT_PASSWORD=test
+    networks:
+     - booking-db
+
+  bikenest-db:
+    container_name: bikenest-db
+    image: mysql
+    environment:
+     - MYSQL_ROOT_PASSWORD=test #define password in application.properties of bikenest service
+    networks:
+     - bikenest-db
+    
+  #php:
+  #  container_name: phpadmin
+  #  image: phpmyadmin/phpmyadmin
+  #  ports:
+  #   - "8080:80"
+  #  environment:
+  #   - PMA_HOST=booking-db
+  #  networks:
+  #   - booking-db
+
+  bikenest:
+    container_name: bikenest
+    build: bikenest
+    ports:
+     - "8001:8001"
+    environment:
+     - MYSQL_HOST=bikenest-db
+     - MYSQL_PORT=3306
+     - MYSQL_DBNAME=test
+     - MYSQL_USER=root
+     - MYSQL_PASSWORD=test
+    networks:
+     - bikenest-db
+
+  booking:
+    container_name: booking
+    build: booking
+    ports:
+     - "8002:8002"
+    environment:
+     - MYSQL_HOST=booking-db
+     - MYSQL_PORT=3306
+     - MYSQL_DBNAME=test
+     - MYSQL_USER=root
+     - MYSQL_PASSWORD=test
+    networks:
+     - booking-db
+networks:
+  booking-db:
+  bikenest-db:
