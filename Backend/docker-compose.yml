@@ -1,10 +1,13 @@
-version: "3"
+version: "3.8"
 services:
   booking-db:
     container_name: booking-db
     image: mysql
     environment:
      - MYSQL_ROOT_PASSWORD=test
+     - MYSQL_USER=bookingservice
+     - MYSQL_PASSWORD=test
+     - MYSQL_DATABASE=booking
     networks:
      - booking-db
 
@@ -12,7 +15,10 @@ services:
     container_name: bikenest-db
     image: mysql
     environment:
-     - MYSQL_ROOT_PASSWORD=test #define password in application.properties of bikenest service
+     - MYSQL_ROOT_PASSWORD=test
+     - MYSQL_USER=bikenestservice
+     - MYSQL_PASSWORD=test
+     - MYSQL_DATABASE=bikenest
     networks:
      - bikenest-db
     
@@ -29,13 +35,14 @@ services:
   bikenest:
     container_name: bikenest
     build: service-bikenest
+    restart: always
     ports:
-     - "8001:8001"
+     - "9001:9001"
     environment:
      - MYSQL_HOST=bikenest-db
      - MYSQL_PORT=3306
-     - MYSQL_DBNAME=test
-     - MYSQL_USER=root
+     - MYSQL_DBNAME=bikenest
+     - MYSQL_USER=bikenestservice
      - MYSQL_PASSWORD=test
     networks:
      - bikenest-db
@@ -43,13 +50,14 @@ services:
   booking:
     container_name: booking
     build: service-booking
+    restart: always
     ports:
-     - "8002:8002"
+     - "9002:9002"
     environment:
      - MYSQL_HOST=booking-db
      - MYSQL_PORT=3306
-     - MYSQL_DBNAME=test
-     - MYSQL_USER=root
+     - MYSQL_DBNAME=booking
+     - MYSQL_USER=bookingservice
      - MYSQL_PASSWORD=test
     networks:
      - booking-db
