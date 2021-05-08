@@ -2,14 +2,6 @@ import { StyleSheet } from 'react-native';
 import Colors from './Colors';
 
 export const mainStyles = StyleSheet.create({
-
-  container:{
-    backgroundColor: '#ffffff',
-    padding: "10px",
-    // fontFamily: "montserrat",
-    flex: 1,
-    alignItems: 'center',
-  },
   //Text
   h1: {
     fontSize: 39,
@@ -17,26 +9,21 @@ export const mainStyles = StyleSheet.create({
     fontWeight: "500",
     marginBottom: 16,
   },
-
   h2: {
     fontSize: 27,
     letterSpacing: 2,
     fontWeight: "400",
   },
-
   h3: {
     fontSize: 18,
     fontWeight: "300",
   },
-
   stdText:{
     fontSize: 14
   },
-
   p: {
     fontSize: 16,
   },
-
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -72,18 +59,6 @@ export const mainStyles = StyleSheet.create({
     borderRadius: 15,
     margin: 9,
     paddingLeft: 12,
-  },
-  inputFieldHalf:{
-    display: 'flex',
-    alignSelf: 'flex-end',
-    width: 200,
-    height: 55,
-    color: Colors.UI_Light_3,
-    backgroundColor: Colors.UI_Light_4,
-    borderRadius: 15,
-    marginLeft: 120,
-    margin: 10,
-    padding: 10,
   },
   buttonText: {
     fontSize: 14,

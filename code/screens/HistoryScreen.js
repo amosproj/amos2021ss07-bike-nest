@@ -47,9 +47,6 @@ export default function HistoryScreen({ navigation }) {
       <TouchableOpacity onPress={() => alert('go to next screen')} style={styles.buttonHistory}>
         <Text style={styles.buttonHistoryText}> Frühere Reservierungen und Zahlungen </Text>
       </TouchableOpacity>
-    
-
-
 
     </View>
   );
