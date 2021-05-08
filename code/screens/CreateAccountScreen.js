@@ -13,7 +13,6 @@ export function CreateAccountScreen({ navigation }) {
       <CreateAccountManually />
     </View>
   );
-
 }
 
 

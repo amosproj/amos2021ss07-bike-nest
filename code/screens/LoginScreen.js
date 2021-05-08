@@ -48,7 +48,7 @@ export default function LoginScreen({ navigation }) {
         </View>
 
         <View style={{ flex: 0.2, justifyContent: 'center' }}>
-          <Pressable style={styles.button}>
+          <Pressable style={styles.button}  onPress={() => navigation.navigate("History")}>
             <Text style={[styles.buttonText, { fontWeight: 'bold' }]}>Log In</Text>
           </Pressable>
 
