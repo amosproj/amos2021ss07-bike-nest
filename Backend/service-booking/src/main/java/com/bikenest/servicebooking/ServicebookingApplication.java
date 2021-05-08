@@ -11,7 +11,7 @@ public class ServicebookingApplication {
 
     @RequestMapping("/")
     public String home() {
-        return "EXAMPLE ENDPOINT";
+        return "VERSION 1";
     }
 
 

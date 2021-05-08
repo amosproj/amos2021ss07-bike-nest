@@ -32,7 +32,11 @@ public class BikenestController {
 
     @GetMapping(path="/all")
     public @ResponseBody Iterable<Bikenest> GetAllBikenests() {
-        Iterable<Bikenest> all = bikenestRepository.findAll();
-        return all;
+        return bikenestRepository.findAll();
+    }
+
+    @GetMapping("/d")
+    public @ResponseBody String home() {
+        return "Demo ddd";
     }
 }

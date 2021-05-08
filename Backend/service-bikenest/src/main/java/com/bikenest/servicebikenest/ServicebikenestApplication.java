@@ -17,7 +17,7 @@ public class ServicebikenestApplication {
 
     @RequestMapping("/")
     public String home() {
-        return "EXAMPLE ENDPOINT";
+        return "VERSION 1";
     }
 
     public static void main(String[] args) {
