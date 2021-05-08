@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert, Pressable, Text, View } from 'react-native';
-import { styles } from "./EditPersonalInformation/styles";
-import Colors from "../styles/Colors";
+import { mainStyles } from "../styles/MainStyles";
+import  colors  from "../styles/Colors";
 import { useNavigation } from '@react-navigation/native';
 
 export function CreateAccountVia3rdParty() {
@@ -9,7 +9,7 @@ export function CreateAccountVia3rdParty() {
 
     return (
         <View>
-            <Pressable style={[styles.button, { backgroundColor: Colors.Facebook_Blue }]}
+            <Pressable style={[mainStyles.buttonBig, { backgroundColor: colors.Facebook_Blue }]}
              onPress={() => Alert.alert("Nice!",
             "Du hast erfolgreich einen Account erstellt.",
             [             
@@ -17,10 +17,10 @@ export function CreateAccountVia3rdParty() {
             ]
           )}
             >
-                <Text style={styles.buttonText}>MIT FACEBOOK ANMELDEN</Text>
+                <Text style={mainStyles.buttonText}>MIT FACEBOOK ANMELDEN</Text>
             </Pressable>
-            <Pressable onPress={() => navigation.navigate("EditPersonalInformation")} style={[styles.button, { backgroundColor: '#fff', borderColor: Colors.Google_Grey }]}>
-                <Text style={[styles.buttonText, { color: "#000" }]}>MIT GOOGLE ANMELDEN</Text>
+            <Pressable onPress={() => navigation.navigate("EditPersonalInformation")} style={[mainStyles.buttonBig, { backgroundColor: '#fff', borderColor: colors.Google_Grey }]}>
+                <Text style={[mainStyles.buttonText, { color: "#000" }]}>MIT GOOGLE ANMELDEN</Text>
             </Pressable>
         </View>
     );

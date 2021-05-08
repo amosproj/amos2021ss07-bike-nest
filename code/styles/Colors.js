@@ -1,5 +1,5 @@
 
-export default class Colors {
+export default class colors {
   //TODO: dark-light theme? Categories like Support, UI, Base 
   static get UI_Light_0() { return "#D6F2C9"; }
   static get UI_Light_1() { return "#B5D99C"; }

@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import Colors from './Colors';
+import colors from './Colors';
 
 export const mainStyles = StyleSheet.create({
 
@@ -22,9 +22,11 @@ export const mainStyles = StyleSheet.create({
     fontWeight: "300",
   },
 
-  stdText:{
+  stdText: {
     fontSize: 14
   },
+
+
 
   container: {
     flex: 1,
@@ -41,14 +43,14 @@ export const mainStyles = StyleSheet.create({
     width: 328,
     height: 55,
     color: '#333333',
-    backgroundColor: Colors.UI_Light_4,
+    backgroundColor: colors.UI_Light_4,
     borderRadius: 15,
     margin: 9,
     paddingLeft: 12,
   },
   buttonText: {
     fontSize: 14,
-    color: Colors.UI_Light_4
+    color: colors.UI_Light_4
   },
   h1: {
     fontSize: 28,
@@ -73,15 +75,15 @@ export const mainStyles = StyleSheet.create({
     backgroundColor: '#fff',
     elevation: 3,
     padding: 18,
-},
-modalContainer: {
+  },
+  modalContainer: {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#00000090',
 
-},
+  },
 
   //Buttons
   buttonBig: {
@@ -92,7 +94,7 @@ modalContainer: {
     height: 55,
     borderRadius: 38,
     margin: 9,
-    backgroundColor: Colors.UI_Light_2
+    backgroundColor: colors.UI_Light_2
   },
   buttonMedium: {
     alignItems: 'center',
@@ -102,7 +104,7 @@ modalContainer: {
     height: 55,
     borderRadius: 38,
     margin: 9,
-    backgroundColor: Colors.UI_Light_2
+    backgroundColor: colors.UI_Light_2
   },
   buttonSmall: {
     alignItems: 'center',
@@ -112,7 +114,7 @@ modalContainer: {
     height: 55,
     borderRadius: 38,
     margin: 9,
-    backgroundColor: Colors.UI_Light_2
+    backgroundColor: colors.UI_Light_2
   },
 
 });

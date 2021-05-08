@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Pressable, Text, View, TextInput } from 'react-native';
 import { UserDataService } from "../services/UserData";
-import { styles } from "./EditPersonalInformation/styles";
 import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 import { mainStyles } from "../styles/MainStyles";
@@ -62,7 +61,7 @@ export function CreateAccountManually() {
 
     //TODO: Replace Modal (not working in web)
     return (
-        <View style={styles.container}>
+        <View style={mainStyles.container}>
             <BikeNest_Modal
                 modalHeadLine={modalHeadline}
                 modalText={modalText}
@@ -72,26 +71,26 @@ export function CreateAccountManually() {
             />
             <TextInput
                 placeholder='Vorname'
-                style={styles.inputField}
+                style={mainStyles.inputField}
                 onChangeText={setFirstName}
                 value={firstName}
             />
             <TextInput
                 placeholder='Name'
-                style={styles.inputField}
+                style={mainStyles.inputField}
                 onChangeText={setLastName}
                 value={lastName}
             />
             <TextInput
                 placeholder='Email'
-                style={styles.inputField}
+                style={mainStyles.inputField}
                 onChangeText={setEmail}
                 value={email}
             />
             <TextInput
                 placeholder="Passwort"
                 secureTextEntry={true}
-                style={styles.inputField}
+                style={mainStyles.inputField}
                 onChangeText={setPassword}
                 value={password}
             />
@@ -101,7 +100,7 @@ export function CreateAccountManually() {
                 initialValue={false}
             />
             <Pressable style={mainStyles.buttonBig} onPress={() => validateInput()}>
-                <Text style={styles.buttonText}>Los geht's</Text>
+                <Text style={mainStyles.buttonText}>Los geht's</Text>
             </Pressable>
         </View>
     );
