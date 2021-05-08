@@ -68,7 +68,7 @@ export const mainStyles = StyleSheet.create({
     width: 288,
     height: 184,
     borderRadius: 15,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#fff',
     elevation: 3,

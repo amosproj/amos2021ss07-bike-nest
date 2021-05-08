@@ -16,6 +16,7 @@ export function CreateAccountManually() {
     const [password, setPassword] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
     const [modalText, setModalText] = useState("");
+    const [modalHeadline, setModalHeadline] = useState("");
     const [isValidInput, setIsValidInput] = useState(false);
     const navigation = useNavigation();
 
@@ -25,12 +26,17 @@ export function CreateAccountManually() {
         setIsValidInput(isValid);
 
         if (!newEmail()) {
+            setModalHeadline("Sorry!");
             setModalText("Ein Account mit der Email " + email + " existiert bereits.");
         } else {
-            if (isValid)
-                setModalText("Hurra! Dein Account wurde erfolgreich eingerichtet");
-            else
+            if (isValid) {
+                setModalHeadline("Hurra!");
+                setModalText("Dein Account wurde erfolgreich eingerichtet");
+            }
+            else {
+                setModalHeadline("Sorry!");
                 setModalText("Oops da ist etwas schief gelaufen. Fülle bitte alle Felder aus.")
+            }
         }
         setModalVisible(true);
     }
@@ -58,6 +64,7 @@ export function CreateAccountManually() {
     return (
         <View style={styles.container}>
             <BikeNest_Modal
+                modalHeadLine={modalHeadline}
                 modalText={modalText}
                 isVisible={modalVisible}
                 onPress={() => onModalPress()}

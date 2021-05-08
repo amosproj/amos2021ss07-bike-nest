@@ -31,6 +31,7 @@ export default function BikeNest_Modal(props) {
         >
             <View style={mainStyles.modalContainer}>
                 <View style={mainStyles.modalContentContainer}>
+                    <Text style={mainStyles.h3}>{props.modalHeadLine}</Text>
                     <Text style={mainStyles.stdText}>{props.modalText}</Text>
                     <Pressable style={mainStyles.buttonSmall} onPress={() => onPress()}>
                         <Text style={mainStyles.buttonText}>OK</Text>
