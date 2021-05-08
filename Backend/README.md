@@ -13,4 +13,4 @@ We have to find a fix there. It is indeed possible to run "commands" before star
 the Spring services, that waits until the database is ready.
 
 Making remote debugging work was alot of hassle.
-I personally had to switch to AmazonCorretto 11 in IntelliJ and also use AmazonCorretto 11 in the Docker container.
+It is important that the JDK used inside the Docker Container exactly matches the JDK used for the service project.

@@ -23,8 +23,8 @@ public class BikenestController {
         // @RequestParam means it is a parameter from the GET or POST request
 
         Bikenest bikenest = new Bikenest();
-        bikenest.SetName(Name);
-        bikenest.SetSpotsLeft(SpotsLeft);
+        bikenest.setName(Name);
+        bikenest.setSpotsLeft(SpotsLeft);
 
         bikenestRepository.save(bikenest);
         return "Saved";
@@ -32,6 +32,7 @@ public class BikenestController {
 
     @GetMapping(path="/all")
     public @ResponseBody Iterable<Bikenest> GetAllBikenests() {
-        return bikenestRepository.findAll();
+        Iterable<Bikenest> all = bikenestRepository.findAll();
+        return all;
     }
 }

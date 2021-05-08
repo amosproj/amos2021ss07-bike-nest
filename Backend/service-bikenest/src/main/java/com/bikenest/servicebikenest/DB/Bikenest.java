@@ -16,27 +16,27 @@ public class Bikenest {
 
     private Integer SpotsLeft;
 
-    public Integer GetId(){
+    public Integer getId(){
         return Id;
     }
 
-    public void SetId(Integer Id){
+    public void setId(Integer Id){
         this.Id = Id;
     }
 
-    public Integer GetSpotsLeft() {
+    public Integer getSpotsLeft() {
         return SpotsLeft;
     }
 
-    public void SetSpotsLeft(Integer SpotsLeft) {
+    public void setSpotsLeft(Integer SpotsLeft) {
         this.SpotsLeft = SpotsLeft;
     }
 
-    public String GetName() {
+    public String getName() {
         return Name;
     }
 
-    public void SetName(String Name) {
+    public void setName(String Name) {
         this.Name = Name;
     }
 }
