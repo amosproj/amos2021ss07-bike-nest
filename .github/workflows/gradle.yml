@@ -21,8 +21,10 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+    - name: Grant execute permission for gradlew in Bikenest Service
+      run: chmod +x ./Backend/service-bikenest/gradlew
+    - name: Grant execute permission for gradlew in Booking Service
+      run: chmod +x ./Backend/service-booking/gradlew
     - name: Bikenest Service Unit Tests
       run: ./Backend/service-bikenest/gradlew test --tests com.bikenest.servicebikenest.unit.*
     - name: Booking Service Unit Tests
