@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Pressable, Text, View, TextInput, StyleSheet } from 'react-native';
+import { Pressable, Text, View, TextInput } from 'react-native';
 import { UserDataService } from "../services/UserData";
 import { styles } from "./EditPersonalInformation/styles";
 import { useNavigation } from '@react-navigation/native';
-import { Alert, Modal } from 'react-native';
+import { Alert } from 'react-native';
 import { mainStyles } from "../styles/MainStyles";
 import BikeNest_CheckBox from './BikeNest_CheckBox';
+import BikeNest_Modal from './BikeNest_Modal';
 
 export function CreateAccountManually() {
     let userdata = new UserDataService();
@@ -56,23 +57,12 @@ export function CreateAccountManually() {
     //TODO: Replace Modal (not working in web)
     return (
         <View style={styles.container}>
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    setModalVisible(!modalVisible);
-                }}
-            >
-                <View style={stylesTest.modalContainer}>
-                    <View style={stylesTest.modalContentContainer}>
-                        <Text style={mainStyles.stdText}>{modalText}</Text>
-                        <Pressable style={mainStyles.buttonSmall} onPress={() => onModalPress()}>
-                            <Text style={styles.buttonText}>OK</Text>
-                        </Pressable>
-                    </View>
-                </View>
-            </Modal>
+            <BikeNest_Modal
+                modalText={modalText}
+                isVisible={modalVisible}
+                onPress={() => onModalPress()}
+                onRequestClose={() => { setModalVisible(!modalVisible); }}
+            />
             <TextInput
                 placeholder='Vorname'
                 style={styles.inputField}
@@ -110,23 +100,3 @@ export function CreateAccountManually() {
     );
 }
 
-const stylesTest = StyleSheet.create({
-    modalContentContainer: {
-        width: 288,
-        height: 184,
-        borderRadius: 15,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#fff',
-        elevation: 3,
-        padding: 18,
-    },
-    modalContainer: {
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#00000090',
-
-    }
-});

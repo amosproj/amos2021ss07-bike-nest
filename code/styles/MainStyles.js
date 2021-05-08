@@ -63,6 +63,26 @@ export const mainStyles = StyleSheet.create({
     margin: 8,
   },
 
+  //Modal
+  modalContentContainer: {
+    width: 288,
+    height: 184,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    elevation: 3,
+    padding: 18,
+},
+modalContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#00000090',
+
+},
+
   //Buttons
   buttonBig: {
     alignItems: 'center',
