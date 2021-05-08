@@ -47,7 +47,6 @@ services:
      - MYSQL_DBNAME=bikenest
      - MYSQL_USER=bikenestservice
      - MYSQL_PASSWORD=test
-     - _JAVA_OPTIONS=-Xms256m -Xmx384m -Xdebug -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
     networks:
      - bikenest-db
      
@@ -66,7 +65,6 @@ services:
      - MYSQL_DBNAME=booking
      - MYSQL_USER=bookingservice
      - MYSQL_PASSWORD=test
-     - _JAVA_OPTIONS=-Xms256m -Xmx384m -Xdebug -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006
     networks:
      - booking-db
 

@@ -11,3 +11,6 @@ docker-compose up will start building all containers, and run them afterwards.
 The Spring Services require that the database has to be ready before they are trying to access it, which is not guaranteed by docker-compose.
 We have to find a fix there. It is indeed possible to run "commands" before starting a container. This feature could be used to run a script before starting
 the Spring services, that waits until the database is ready.
+
+Making remote debugging work was alot of hassle.
+I personally had to switch to AmazonCorretto 11 in IntelliJ and also use AmazonCorretto 11 in the Docker container.

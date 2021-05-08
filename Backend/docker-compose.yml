@@ -44,7 +44,6 @@ services:
      - MYSQL_DBNAME=bikenest
      - MYSQL_USER=bikenestservice
      - MYSQL_PASSWORD=test
-     
     networks:
      - bikenest-db
      
