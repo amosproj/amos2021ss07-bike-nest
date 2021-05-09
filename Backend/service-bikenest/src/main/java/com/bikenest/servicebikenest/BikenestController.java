@@ -18,12 +18,13 @@ public class BikenestController {
     @PostMapping(path="/add")
     public @ResponseBody
     String AddNewBikenest (@RequestParam String Name
-            , @RequestParam Integer SpotsLeft) {
+            , @RequestParam Integer SpotsLeft, @RequestParam String GPSCoordinates) {
         // @ResponseBody means the returned String is the response, not a view name
 
         Bikenest bikenest = new Bikenest();
         bikenest.setName(Name);
         bikenest.setSpotsLeft(SpotsLeft);
+        bikenest.setGPSCoordinates(GPSCoordinates);
 
         bikenestRepository.save(bikenest);
         return "Saved";

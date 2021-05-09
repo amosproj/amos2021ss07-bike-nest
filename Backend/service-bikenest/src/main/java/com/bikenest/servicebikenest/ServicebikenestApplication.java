@@ -17,5 +17,4 @@ public class ServicebikenestApplication {
     public static void main(String[] args) {
         SpringApplication.run(ServicebikenestApplication.class, args);
     }
-
 }
