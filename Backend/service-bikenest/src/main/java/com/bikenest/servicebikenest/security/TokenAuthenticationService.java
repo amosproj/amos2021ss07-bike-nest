@@ -15,16 +15,20 @@ import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 
 public class TokenAuthenticationService {
-    private String SECRET = "awdkjfawnvnmfajadwjj";
+    private String SECRET = "NdRgUkXp2s5v8y/B?D(G+KbPeShVmYq3";
     private String HEADER = "Authorization";
 
-    public void addAuthentication(String login, HttpServletResponse servletResponse) throws JOSEException {
+    public String generateToken(String user) throws JOSEException {
         byte[] sharedSecret = SECRET.getBytes();
         MACSigner signer = new MACSigner(sharedSecret);
-        JWTClaimsSet claimsSet = new JWTClaimsSet.Builder().subject(login).build();
+        JWTClaimsSet claimsSet = new JWTClaimsSet.Builder().subject(user).build();
         SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
         signedJWT.sign(signer);
-        String token = signedJWT.serialize();
+        return signedJWT.serialize();
+    }
+
+    public void addAuthentication(String user, HttpServletResponse servletResponse) throws JOSEException {
+        String token = generateToken(user);
         servletResponse.addHeader("Token", token);
     }
 

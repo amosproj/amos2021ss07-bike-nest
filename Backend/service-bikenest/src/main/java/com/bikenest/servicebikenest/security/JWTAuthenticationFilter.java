@@ -29,7 +29,5 @@ class JWTAuthenticationFilter extends GenericFilterBean {
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
         chain.doFilter(request,response);
-        //else
-          //  ((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
 }
