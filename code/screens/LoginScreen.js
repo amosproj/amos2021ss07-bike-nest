@@ -1,11 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { ImageBackground, Text, TextInput, View } from 'react-native';
-import { Dimensions, KeyboardAvoidingView } from "react-native";
+import { ImageBackground, Text, View } from 'react-native';
+import { Dimensions } from "react-native";
 import Colors from '../styles/Colors';
 import { CreateAccountVia3rdParty } from '../components/CreateAccountVia3rdParty';
 import { mainStyles } from '../styles/MainStyles';
 import BikeNest_Button, { ButtonStyle } from '../components/BikeNest_Button';
+import BikeNest_TextInput from '../components/BikeNest_TextInput';
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
@@ -28,10 +29,10 @@ export default function LoginScreen({ navigation }) {
         </View>
 
         <View style={{ flex: 0.6, justifyContent: 'center' }}>
-          <TextInput style={mainStyles.inputField}
+          <BikeNest_TextInput
             placeholder='E-Mail Adresse'
           />
-          <TextInput style={mainStyles.inputField}
+          <BikeNest_TextInput
             placeholder='Passwort'
             secureTextEntry={true}
           />

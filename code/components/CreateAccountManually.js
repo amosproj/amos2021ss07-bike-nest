@@ -7,6 +7,7 @@ import { mainStyles } from "../styles/MainStyles";
 import BikeNest_CheckBox from './BikeNest_CheckBox';
 import BikeNest_Modal from './BikeNest_Modal';
 import BikeNest_Button, { ButtonStyle } from './BikeNest_Button';
+import BikeNest_TextInput from './BikeNest_TextInput';
 
 export function CreateAccountManually() {
     let userdata = new UserDataService();
@@ -70,28 +71,24 @@ export function CreateAccountManually() {
                 onPress={() => onModalPress()}
                 onRequestClose={() => { setModalVisible(!modalVisible); }}
             />
-            <TextInput
+            <BikeNest_TextInput
                 placeholder='Vorname'
-                style={mainStyles.inputField}
-                onChangeText={setFirstName}
+                onChangeText={() => setFirstName}
                 value={firstName}
             />
-            <TextInput
+            <BikeNest_TextInput
                 placeholder='Name'
-                style={mainStyles.inputField}
                 onChangeText={setLastName}
                 value={lastName}
             />
-            <TextInput
+            <BikeNest_TextInput
                 placeholder='Email'
-                style={mainStyles.inputField}
                 onChangeText={setEmail}
                 value={email}
             />
-            <TextInput
+            <BikeNest_TextInput
                 placeholder="Passwort"
                 secureTextEntry={true}
-                style={mainStyles.inputField}
                 onChangeText={setPassword}
                 value={password}
             />
