@@ -20,12 +20,11 @@ export default function BikeNest_Button(props) {
                 <View style={mainStyles.buttonImage}>
                     <Image source={props.iconPath} />
                 </View>
-
             )
         }
     }
 
-    let showButton = () => {
+    let setButtonStyle = () => {
         let buttonStyle = mainStyles.buttonSmall;
 
         if (props.type != null) {
@@ -39,16 +38,38 @@ export default function BikeNest_Button(props) {
                 buttonStyle = mainStyles.buttonSmall;
             }
 
-            return (
-                <TouchableOpacity style={buttonStyle} onPress={() => onPress()}>
-                    <View style={mainStyles.nestedButtonView}>
-                        {showIcon()}
-                        <Text style={mainStyles.buttonText}>{props.text}</Text>
-                    </View>
-                </TouchableOpacity>
-            );
+            if (props.overrideButtonColor != null) {
+                buttonStyle = [buttonStyle, { backgroundColor: props.overrideButtonColor }];
+            }
         }
+
+        return buttonStyle;
     }
+
+    let setTextStyle = () => {
+        let textStyle = mainStyles.buttonText;
+
+        if (props.overrideTextColor != null) {
+            textStyle = [textStyle, { color: props.overrideTextColor }];
+        }
+
+        return textStyle;
+    }
+
+    let showButton = () => {
+        let buttonStyle = setButtonStyle();
+        let textStyle = setTextStyle();
+
+        return (
+            <TouchableOpacity style={buttonStyle} onPress={() => onPress()}>
+                <View style={mainStyles.nestedButtonView}>
+                    {showIcon()}
+                    <Text style={textStyle}>{props.text}</Text>
+                </View>
+            </TouchableOpacity>
+        );
+    }
+
 
     return (
         <View>

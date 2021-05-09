@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { View, TextInput } from 'react-native';
 import { UserDataService } from "../services/UserData";
 import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
@@ -103,7 +103,6 @@ export function CreateAccountManually() {
             <BikeNest_Button
                 type={ButtonStyle.big}
                 text="Los geht's!"
-                iconPath={require("../assets/facebook_button_logo.png")}
                 onPress={() => validateInput()}
             />
         </View>
