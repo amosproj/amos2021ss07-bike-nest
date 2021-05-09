@@ -48,10 +48,7 @@ export const mainStyles = StyleSheet.create({
     margin: 9,
     paddingLeft: 12,
   },
-  buttonText: {
-    fontSize: 14,
-    color: colors.UI_Light_4
-  },
+
   h1: {
     fontSize: 28,
     fontWeight: 'bold',
@@ -94,7 +91,8 @@ export const mainStyles = StyleSheet.create({
     height: 55,
     borderRadius: 38,
     margin: 9,
-    backgroundColor: colors.UI_Light_2
+    backgroundColor: colors.UI_Light_2,
+    padding: 18,
   },
   buttonMedium: {
     alignItems: 'center',
@@ -104,7 +102,8 @@ export const mainStyles = StyleSheet.create({
     height: 55,
     borderRadius: 38,
     margin: 9,
-    backgroundColor: colors.UI_Light_2
+    backgroundColor: colors.UI_Light_2,
+    padding: 18
   },
   buttonSmall: {
     alignItems: 'center',
@@ -114,7 +113,27 @@ export const mainStyles = StyleSheet.create({
     height: 55,
     borderRadius: 38,
     margin: 9,
-    backgroundColor: colors.UI_Light_2
+    backgroundColor: colors.UI_Light_2,
+    padding: 18
   },
 
+  buttonText: {
+    fontSize: 14,
+    color: colors.UI_Light_4,
+    textAlign: 'center',
+    height: '100%',
+    width: '100%',
+    flex: 1,
+  },
+  buttonImage: {
+    position: 'absolute',
+    width: 32,
+    height: 32,
+    left: 18, 
+    top: 0
+  },
+  nestedButtonView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
 });

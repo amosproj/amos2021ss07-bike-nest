@@ -103,6 +103,7 @@ export function CreateAccountManually() {
             <BikeNest_Button
                 type={ButtonStyle.big}
                 text="Los geht's!"
+                iconPath={require("../assets/facebook_button_logo.png")}
                 onPress={() => validateInput()}
             />
         </View>

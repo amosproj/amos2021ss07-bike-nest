@@ -1,8 +1,8 @@
 import React from 'react';
-import { Button, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View, Image } from 'react-native';
 import { mainStyles } from "../styles/MainStyles";
 
-export const ButtonStyle = Object.freeze({ "big": 1, "medium": 2, "small": 3 });
+export const ButtonStyle = Object.freeze({ "big": 1, "medium": 2, "small": 3, });
 
 export default function BikeNest_Button(props) {
 
@@ -11,6 +11,17 @@ export default function BikeNest_Button(props) {
             props.onPress();
         } else {
             console.error("onPress is null");
+        }
+    }
+
+    let showIcon = () => {
+        if (props.iconPath != null) {
+            return (
+                <View style={mainStyles.buttonImage}>
+                    <Image source={props.iconPath} />
+                </View>
+
+            )
         }
     }
 
@@ -30,7 +41,10 @@ export default function BikeNest_Button(props) {
 
             return (
                 <TouchableOpacity style={buttonStyle} onPress={() => onPress()}>
-                    <Text style={mainStyles.buttonText}>{props.text}</Text>
+                    <View style={mainStyles.nestedButtonView}>
+                        {showIcon()}
+                        <Text style={mainStyles.buttonText}>{props.text}</Text>
+                    </View>
                 </TouchableOpacity>
             );
         }
@@ -40,6 +54,5 @@ export default function BikeNest_Button(props) {
         <View>
             {showButton()}
         </View>
-
     );
 }
