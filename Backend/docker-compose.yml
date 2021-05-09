@@ -36,8 +36,6 @@ services:
     container_name: bikenest
     build: service-bikenest
     restart: always
-    ports:
-     - "9001:9001"
     environment:
      - MYSQL_HOST=bikenest-db
      - MYSQL_PORT=3306
@@ -51,8 +49,6 @@ services:
     container_name: booking
     build: service-booking
     restart: always
-    ports:
-     - "9002:9002"
     environment:
      - MYSQL_HOST=booking-db
      - MYSQL_PORT=3306
@@ -61,6 +57,16 @@ services:
      - MYSQL_PASSWORD=test
     networks:
      - booking-db
+   
+  gateway:
+    container_name: gateway
+    build: apigateway
+    restart: always
+    ports:
+     - "9000:9000"
+    networks:
+     - booking-db
+     - bikenest-db
 networks:
   booking-db:
   bikenest-db:

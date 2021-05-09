@@ -7,11 +7,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
+@RequestMapping(path="/booking")
 public class ServicebookingApplication {
 
-    @RequestMapping("/")
+    @RequestMapping("/info")
     public String home() {
-        return "VERSION 1";
+        return "Booking info 1.";
     }
 
 

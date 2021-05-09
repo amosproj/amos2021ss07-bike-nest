@@ -39,7 +39,6 @@ services:
       dockerfile: Dockerfile_debug
     restart: always
     ports:
-     - "9001:9001"
      - "5005:5005"
     environment:
      - MYSQL_HOST=bikenest-db
@@ -57,7 +56,6 @@ services:
       dockerfile: Dockerfile_debug
     restart: always
     ports:
-     - "9002:9002"
      - "5006:5006"
     environment:
      - MYSQL_HOST=booking-db
@@ -68,6 +66,16 @@ services:
     networks:
      - booking-db
 
+  gateway:
+    container_name: gateway
+    build: apigateway
+    restart: always
+    ports:
+     - "9000:9000"
+     - "5007:5007"
+    networks:
+     - booking-db
+     - bikenest-db
 networks:
   booking-db:
   bikenest-db:

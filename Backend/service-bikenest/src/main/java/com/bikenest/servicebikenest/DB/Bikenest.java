@@ -14,6 +14,8 @@ public class Bikenest {
 
     private String Name;
 
+    private String GPSCoordinates;
+
     private Integer SpotsLeft;
 
     public Integer getId(){
@@ -39,4 +41,8 @@ public class Bikenest {
     public void setName(String Name) {
         this.Name = Name;
     }
+
+    public String getGPSCoordinates(){ return GPSCoordinates; }
+
+    public void setGPSCoordinates(String GPSCoordinates){ this.GPSCoordinates = GPSCoordinates; }
 }

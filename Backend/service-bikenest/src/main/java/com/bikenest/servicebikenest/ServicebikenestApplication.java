@@ -12,13 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @ComponentScan(basePackageClasses = BikenestRepository.class)
 @ComponentScan(basePackageClasses = Bikenest.class)
 @ComponentScan(basePackageClasses = BikenestController.class)
-@RestController
 public class ServicebikenestApplication {
-
-    @RequestMapping("/")
-    public String home() {
-        return "VERSION 1";
-    }
 
     public static void main(String[] args) {
         SpringApplication.run(ServicebikenestApplication.class, args);
