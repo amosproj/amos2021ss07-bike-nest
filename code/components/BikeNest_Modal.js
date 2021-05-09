@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
-import { Alert, Modal } from 'react-native';
+import React from 'react';
+import { Text, View } from 'react-native';
+import { Modal } from 'react-native';
 import { mainStyles } from "../styles/MainStyles";
+import BikeNest_Button, { ButtonStyle } from './BikeNest_Button';
 
 export default function BikeNest_Modal(props) {
-    //const [modalVisible, setModalVisible] = useState(props.isVisible);
 
     function onPress() {
         if (props.onPress != null) {
@@ -33,9 +33,11 @@ export default function BikeNest_Modal(props) {
                 <View style={mainStyles.modalContentContainer}>
                     <Text style={mainStyles.h3}>{props.modalHeadLine}</Text>
                     <Text style={mainStyles.stdText}>{props.modalText}</Text>
-                    <Pressable style={mainStyles.buttonSmall} onPress={() => onPress()}>
-                        <Text style={mainStyles.buttonText}>OK</Text>
-                    </Pressable>
+                    <BikeNest_Button
+                        type={ButtonStyle.small}
+                        text="Ok"
+                        onPress={() => onPress()}>
+                    </BikeNest_Button>
                 </View>
             </View>
         </Modal >);

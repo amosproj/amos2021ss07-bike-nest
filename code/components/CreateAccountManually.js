@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Pressable, Text, View, TextInput } from 'react-native';
+import { Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { UserDataService } from "../services/UserData";
 import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 import { mainStyles } from "../styles/MainStyles";
 import BikeNest_CheckBox from './BikeNest_CheckBox';
 import BikeNest_Modal from './BikeNest_Modal';
+import BikeNest_Button, { ButtonStyle } from './BikeNest_Button';
 
 export function CreateAccountManually() {
     let userdata = new UserDataService();
@@ -99,9 +100,11 @@ export function CreateAccountManually() {
                 toggleText={"Datenschutzrichtlinien gelesen"}
                 initialValue={false}
             />
-            <Pressable style={mainStyles.buttonBig} onPress={() => validateInput()}>
-                <Text style={mainStyles.buttonText}>Los geht's</Text>
-            </Pressable>
+            <BikeNest_Button
+                type={ButtonStyle.big}
+                text="Los geht's!"
+                onPress={() => validateInput()}
+            />
         </View>
     );
 }
