@@ -76,6 +76,15 @@ services:
     networks:
      - booking-db
      - bikenest-db
+     
+  usermanagement:
+    container_name: usermanagement
+    build: usermanagement
+    restart: always
+    ports:
+     - "5008:5008"
+    networks:
+     - usermanagement
 networks:
   booking-db:
   bikenest-db:

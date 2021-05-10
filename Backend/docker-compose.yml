@@ -67,6 +67,15 @@ services:
     networks:
      - booking-db
      - bikenest-db
+     - usermanagement
+     
+  usermanagement:
+    container_name: usermanagement
+    build: usermanagement
+    restart: always
+    networks:
+     - usermanagement
 networks:
+  usermanagement:
   booking-db:
   bikenest-db:

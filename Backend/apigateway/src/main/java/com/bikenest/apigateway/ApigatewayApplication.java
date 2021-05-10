@@ -20,6 +20,8 @@ public class ApigatewayApplication {
                         .uri("http://bikenest:9001"))
                 .route("booking", r -> r.path("/booking/**")
                         .uri("http://booking:9002"))
+                .route("usermanagement", r -> r.path("/usermanagement/**")
+                        .uri("http://usermanagement:9003"))
                 .build();
     }
 }
