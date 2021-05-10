@@ -1,9 +1,7 @@
 package com.bikenest.apigateway;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.gateway.filter.factory.TokenRelayGatewayFilterFactory;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -19,9 +17,9 @@ public class ApigatewayApplication {
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("bikenest", r -> r.path("/bikenest/**")
-                        .uri("http://bikenest:9001/"))
+                        .uri("http://bikenest:9001"))
                 .route("booking", r -> r.path("/booking/**")
-                        .uri("http://booking:9002/"))
+                        .uri("http://booking:9002"))
                 .build();
     }
 }

@@ -27,12 +27,16 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
 
         http.cors().and().authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/", "/bikenest/info", "/bikenest/login").permitAll()
+                .antMatchers(HttpMethod.GET, "/", "/bikenest/info", "/bikenest/all", "/bikenest/login")
+                .permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
                 .addFilterBefore(new JWTAuthenticationFilter(), BasicAuthenticationFilter.class)
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .csrf()
+                .disable();
     }
 }

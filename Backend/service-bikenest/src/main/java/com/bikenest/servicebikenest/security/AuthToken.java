@@ -1,14 +1,17 @@
 package com.bikenest.servicebikenest.security;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
 public class AuthToken implements Authentication {
-    private String username;
-    public AuthToken(String username){
-        this.username = username;
+    private Claims claims;
+
+    public AuthToken(Claims claims){
+        this.claims = claims;
     }
 
     @Override
@@ -28,7 +31,7 @@ public class AuthToken implements Authentication {
 
     @Override
     public Object getPrincipal() {
-        return this.username;
+        return null;
     }
 
     @Override
@@ -38,7 +41,6 @@ public class AuthToken implements Authentication {
 
     @Override
     public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-
     }
 
     @Override
@@ -58,6 +60,6 @@ public class AuthToken implements Authentication {
 
     @Override
     public String getName() {
-        return null;
+        return claims.getSubject();
     }
 }

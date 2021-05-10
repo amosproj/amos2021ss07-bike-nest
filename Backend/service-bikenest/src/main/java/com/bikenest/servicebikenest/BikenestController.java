@@ -2,13 +2,14 @@ package com.bikenest.servicebikenest;
 
 import com.bikenest.servicebikenest.DB.Bikenest;
 import com.bikenest.servicebikenest.DB.BikenestRepository;
-import com.bikenest.servicebikenest.security.TokenAuthenticationService;
-import com.nimbusds.jose.JOSEException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
+import java.security.Key;
 
 @RestController
 @RequestMapping(path="/bikenest")
@@ -18,10 +19,10 @@ public class BikenestController {
 
     //Request Params come from query parameters
     @PostMapping(path="/add")
-    public @ResponseBody String AddNewBikenest (@RequestParam String Name
+    public @ResponseBody String AddNewBikenest (Authentication auth, @RequestParam String Name
             , @RequestParam Integer SpotsLeft, @RequestParam String GPSCoordinates) {
         // @ResponseBody means the returned String is the response, not a view name
-
+        String t = (String) auth.getPrincipal();
         Bikenest bikenest = new Bikenest();
         bikenest.setName(Name);
         bikenest.setSpotsLeft(SpotsLeft);
@@ -32,18 +33,25 @@ public class BikenestController {
     }
 
     @GetMapping(path="/login")
-    public String login(@RequestParam String user) throws JOSEException {
-        TokenAuthenticationService service = new TokenAuthenticationService();
+    public String login(@RequestParam String user) {
         if(user.equals("TEST")){
-            return service.generateToken(user);
+            String jwt = Jwts.builder().signWith(Keys.hmacShaKeyFor("NdRgUkXp2s5v8y/B?D(G+KbPeShVmYq3".getBytes()))
+                    .setSubject("TEST").compact();
+            return jwt;
         }
-        return "Error";
+        return "Invalid user";
+    }
+
+    @GetMapping(path="/getUser")
+    public String getUser(Authentication authentication){
+        authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
     }
 
 
     @GetMapping(path="/info")
     public @ResponseBody String GetInfo(){
-        return "Bikenest Service 1.";
+        return "Bikenest Service 3.";
     }
 
 
