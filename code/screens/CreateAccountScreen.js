@@ -4,6 +4,7 @@ import { CreateAccountManually } from '../components/CreateAccountManually';
 import { CreateAccountVia3rdParty } from '../components/CreateAccountVia3rdParty';
 import { mainStyles } from "../styles/MainStyles";
 
+
 export function CreateAccountScreen() {
   return (
     <View style={mainStyles.container}>
@@ -20,7 +21,7 @@ export function CreateAccountScreen() {
         </View>
 
         <CreateAccountManually />
-      </ScrollView>
+      </ScrollView>  
     </View>
   );
 }

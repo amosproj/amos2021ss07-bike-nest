@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, TouchableOpacity, View, Image } from 'react-native';
 import { mainStyles } from "../styles/MainStyles";
 
-export const ButtonStyle = Object.freeze({ "big": 1, "medium": 2, "small": 3, });
+export const ButtonStyle = Object.freeze({ "big": 1, "medium": 2, "small": 3, "navigationBar": 4 });
 
 export default function BikeNest_Button(props) {
 
@@ -14,10 +14,10 @@ export default function BikeNest_Button(props) {
         }
     }
 
-    let showIcon = () => {
-        if (props.iconPath != null) {
+    let showIcon = (iconStyle) => {
+        if ((props.iconPath != null) && (iconStyle != null)) {
             return (
-                <View style={mainStyles.buttonImage}>
+                <View style={iconStyle}>
                     <Image source={props.iconPath} />
                 </View>
             )
@@ -36,6 +36,9 @@ export default function BikeNest_Button(props) {
             }
             else if (props.type === ButtonStyle.small) {
                 buttonStyle = mainStyles.buttonSmall;
+            }
+            else if (props.type === ButtonStyle.navigationBar) {
+                buttonStyle = mainStyles.buttonNavigationBar;
             }
 
             if (props.overrideButtonColor != null) {
@@ -56,14 +59,36 @@ export default function BikeNest_Button(props) {
         return textStyle;
     }
 
+    let setViewStyle = () => {
+        let viewStyle = mainStyles.nestedButtonViewRow;
+
+        if ((props.type != null) && (props.type === ButtonStyle.navigationBar)) {
+            viewStyle = mainStyles.nestedButtonViewColumn;
+        }
+
+        return viewStyle;
+    }
+
+    let setIconStyle = () => {
+        let imageStyle = mainStyles.buttonImageRow;
+
+        if ((props.type != null) && (props.type === ButtonStyle.navigationBar)) {
+            imageStyle = mainStyles.buttonImageColumn;
+        }
+
+        return imageStyle;
+    }
+
     let showButton = () => {
         let buttonStyle = setButtonStyle();
         let textStyle = setTextStyle();
+        let viewStyle = setViewStyle();
+        let iconStyle = setIconStyle()
 
         return (
             <TouchableOpacity style={buttonStyle} onPress={() => onPress()}>
-                <View style={mainStyles.nestedButtonView}>
-                    {showIcon()}
+                <View style={viewStyle}>
+                    {showIcon(iconStyle)}
                     <Text style={textStyle}>{props.text}</Text>
                 </View>
             </TouchableOpacity>
@@ -72,8 +97,6 @@ export default function BikeNest_Button(props) {
 
 
     return (
-        <View>
-            {showButton()}
-        </View>
+        showButton()
     );
 }

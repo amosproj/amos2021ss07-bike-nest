@@ -39,6 +39,8 @@ export const mainStyles = StyleSheet.create({
     marginBottom: 20,
   },
 
+
+
   inputField: {
     width: 328,
     height: 55,
@@ -123,17 +125,38 @@ export const mainStyles = StyleSheet.create({
     textAlign: 'center',
     height: '100%',
     width: '100%',
-    flex: 1,
+    // flex: 1,
   },
-  buttonImage: {
+  buttonImageRow: {
     position: 'absolute',
     width: 32,
     height: 32,
-    left: 18, 
+    left: 18,
     top: 0
   },
-  nestedButtonView: {
+  buttonImageColumn: {
+    margin: 5,
+  },
+  nestedButtonViewRow: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  nestedButtonViewColumn: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+
+  navigationBar: {
+    flexDirection: 'row',
+    width: '100%',
+    height: 70,
+    justifyContent: 'flex-start'
+  },
+
+  buttonNavigationBar: {
+    flex: 1,
+    backgroundColor: colors.UI_Light_2,
+    padding: 5,
   },
 });
