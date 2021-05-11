@@ -217,7 +217,7 @@ export default function FindBikeNestScreen({navigation}) {
               <Text numberOfLines={1} style={styles.cardDescription}>This Bikenest has <B>{marker.capacity}</B> spots left</Text>
               <View style={styles.button}>
                 <TouchableOpacity
-                  onPress={() => { }}
+                  onPress={()=>navigation.navigate("Payment")}
                   style={[styles.signIn, {
                     borderColor: '#FFF',
                     borderWidth: 1

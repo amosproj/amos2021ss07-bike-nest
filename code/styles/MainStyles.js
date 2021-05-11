@@ -6,7 +6,8 @@ export const mainStyles = StyleSheet.create({
   h1: {
     fontSize: 28,
     fontWeight: 'bold',
-    margin: 30
+    margin: 30,
+    padding: 15
   },
   h2: {
     fontSize: 27,
