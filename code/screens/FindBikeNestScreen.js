@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { getDistance } from 'geolib';
 import { markers } from '../tools/mapData'
+import * as Location from 'expo-location';
 import {
   StyleSheet,
   Alert,
@@ -15,14 +16,14 @@ import {
   Dimensions,
   Platform,
 } from "react-native";
-import * as Location from 'expo-location';
+
 
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = height / 3.5;
 const CARD_WIDTH = width * 0.8;
 const spacing_for_card_inset = width * 0.1 - 10;
 
-export default function FindBikeNestScreen() {
+export default function FindBikeNestScreen({navigation}) {
 
   //states, each state change re-renders scene
   const [displayState, setDisplayState] = useState('flex');
