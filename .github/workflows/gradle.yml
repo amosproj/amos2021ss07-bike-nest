@@ -34,7 +34,7 @@ jobs:
       run: chmod +x gradlew
     - name: Bikenest Service Unit Tests
       working-directory: ${{env.bikenest-service}}
-      run: gradlew test --tests com.bikenest.servicebikenest.unit.*
+      run: ./gradlew test --tests com.bikenest.servicebikenest.unit.*
     - name: Booking Service Unit Tests
       working-directory: ${{env.booking-service}}
-      run: gradlew test --tests com.bikenest.servicebooking.unit.*
+      run: ./gradlew test --tests com.bikenest.servicebooking.unit.*
