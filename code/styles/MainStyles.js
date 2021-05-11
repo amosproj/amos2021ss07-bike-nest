@@ -39,7 +39,7 @@ export const mainStyles = StyleSheet.create({
     height: 55,
     borderRadius: 38,
     margin: 9,
-    backgroundColor: Colors.UI_Light_2
+    backgroundColor: colors.UI_Light_2
   },
   label:{
     fontSize: 18,
