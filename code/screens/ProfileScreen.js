@@ -65,14 +65,12 @@ const myStyles = StyleSheet.create({
         margin: 10,
         alignItems: 'center',
         justifyContent: 'space-around',
-        backgroundColor: 'pink'
     },
     profileInfo:{
         flex: 1,
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'blue'
     },
     logout: {
         flex: 1,
