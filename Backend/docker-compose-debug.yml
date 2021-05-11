@@ -1,0 +1,90 @@
+version: "3.8"
+services:
+  booking-db:
+    container_name: booking-db
+    image: mysql
+    environment:
+     - MYSQL_ROOT_PASSWORD=test
+     - MYSQL_USER=bookingservice
+     - MYSQL_PASSWORD=test
+     - MYSQL_DATABASE=booking
+    networks:
+     - booking-db
+
+  bikenest-db:
+    container_name: bikenest-db
+    image: mysql
+    environment:
+     - MYSQL_ROOT_PASSWORD=test
+     - MYSQL_USER=bikenestservice
+     - MYSQL_PASSWORD=test
+     - MYSQL_DATABASE=bikenest
+    networks:
+     - bikenest-db
+    
+  #php:
+  #  container_name: phpadmin
+  #  image: phpmyadmin/phpmyadmin
+  #  ports:
+  #   - "8080:80"
+  #  environment:
+  #   - PMA_HOST=booking-db
+  #  networks:
+  #   - booking-db
+
+  bikenest:
+    container_name: bikenest
+    build: 
+      context: service-bikenest
+      dockerfile: Dockerfile_debug
+    restart: always
+    ports:
+     - "5005:5005"
+    environment:
+     - MYSQL_HOST=bikenest-db
+     - MYSQL_PORT=3306
+     - MYSQL_DBNAME=bikenest
+     - MYSQL_USER=bikenestservice
+     - MYSQL_PASSWORD=test
+    networks:
+     - bikenest-db
+     
+  booking:
+    container_name: booking
+    build: 
+      context: service-booking
+      dockerfile: Dockerfile_debug
+    restart: always
+    ports:
+     - "5006:5006"
+    environment:
+     - MYSQL_HOST=booking-db
+     - MYSQL_PORT=3306
+     - MYSQL_DBNAME=booking
+     - MYSQL_USER=bookingservice
+     - MYSQL_PASSWORD=test
+    networks:
+     - booking-db
+
+  gateway:
+    container_name: gateway
+    build: apigateway
+    restart: always
+    ports:
+     - "9000:9000"
+     - "5007:5007"
+    networks:
+     - booking-db
+     - bikenest-db
+     
+  usermanagement:
+    container_name: usermanagement
+    build: usermanagement
+    restart: always
+    ports:
+     - "5008:5008"
+    networks:
+     - usermanagement
+networks:
+  booking-db:
+  bikenest-db:
