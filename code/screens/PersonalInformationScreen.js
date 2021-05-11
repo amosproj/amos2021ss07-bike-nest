@@ -1,8 +1,9 @@
 import EditPersonalInformation from "../components/EditPersonalInformation/EditPersonalInformation";
 import EditPassword from "../components/EditPersonalInformation/EditPassword";
 import React, { Component } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { mainStyles } from "../styles/MainStyles";
+import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
 
 // This is the Screen where Personal information is edited
 
@@ -20,6 +21,7 @@ export default class PersonalInformationScreen extends Component {
                         <EditPassword />
                     </View>
                 </ScrollView>
+                <BikeNest_NavigationFooter />
             </View>
         )
     }

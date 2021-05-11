@@ -13,9 +13,9 @@ export default function App() {
   return (
     <NavigationContainer>
       <AppNavigator.Navigator screenOptions={{ headerShown: false }}>
+        <AppNavigator.Screen name='Login' component={LoginScreen} />
         <AppNavigator.Screen name='Profile' component={ProfileScreen} />
         <AppNavigator.Screen name='Payment' component={PaymentScreen} />
-        <AppNavigator.Screen name='Login' component={LoginScreen} />
         <AppNavigator.Screen name='CreateAccount' component={CreateAccountScreen} />
         <AppNavigator.Screen name='EditPersonalInformation' component={PersonalInformationScreen} />
         <AppNavigator.Screen name='FindBikeNest' component={FindBikeNestScreen} />
