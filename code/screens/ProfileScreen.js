@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, Text, View, Image, Pressable } from "react-nati
 import { mainStyles } from "../styles/MainStyles";
 import component from '../components/BikeNest_Button';
 import { Button } from "react-native-elements/dist/buttons/Button";
+import colors from "../styles/Colors";
 import BikeNest_Button, { ButtonStyle } from '../components/BikeNest_Button';
 import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
 
@@ -36,18 +37,26 @@ export default function ProfileScreen({ navigation }) {
                     <BikeNest_Button
                         type={ButtonStyle.big}
                         text="Zahlungsinformationen"
+                        overrideButtonColor={'#ffffff'}
+                        overrideTextColor={colors.UI_BaseGrey_0}
                         onPress={() => console.log('HELLO')}/>
                     <BikeNest_Button
                         type={ButtonStyle.big}
                         text="Über Bike Nest"
+                        overrideButtonColor={'#ffffff'}
+                        overrideTextColor={colors.UI_BaseGrey_0}
                         onPress={() => console.log('HELLO')}/>
                     <BikeNest_Button
                         type={ButtonStyle.big}
                         text="FAQ"
+                        overrideButtonColor={'#ffffff'}
+                        overrideTextColor={colors.UI_BaseGrey_0}
                         onPress={() => console.log('HELLO')}/>
                     <BikeNest_Button
                         type={ButtonStyle.big}
                         text="Hilfe"
+                        overrideButtonColor={'#ffffff'}
+                        overrideTextColor={colors.UI_BaseGrey_0}
                         onPress={() => console.log('HELLO')}/>
                     <Pressable style={[myStyles.logout, mainStyles.stdText]} onPress={()=>console.log('HELLO')}>
                         <Text style={{textDecorationLine:'underline'}}>Log out</Text>
