@@ -68,7 +68,9 @@ services:
 
   gateway:
     container_name: gateway
-    build: apigateway
+    build: 
+      context: apigateway
+      dockerfile: Dockerfile_debug
     restart: always
     ports:
      - "9000:9000"
@@ -76,15 +78,19 @@ services:
     networks:
      - booking-db
      - bikenest-db
+     - usermanagement
      
-  usermanagement:
-    container_name: usermanagement
-    build: usermanagement
+  usermgmt:
+    container_name: usermgmt
+    build: 
+      context: service-usermgmt
+      dockerfile: Dockerfile_debug
     restart: always
     ports:
      - "5008:5008"
     networks:
      - usermanagement
 networks:
+  usermanagement:
   booking-db:
   bikenest-db:
