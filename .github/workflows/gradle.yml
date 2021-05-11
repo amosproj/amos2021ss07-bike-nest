@@ -3,20 +3,16 @@
 
 name: Bikenest-Service CI Gradlew
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: [push]
 
 jobs:
-  build:
+  unittest:
 
     runs-on: ubuntu-latest
     env:
       bikenest-service: ./Backend/service-bikenest
       booking-service: ./Backend/service-booking
-      usermanagement-service: ./Backend/usermanagement
+      usermanagement-service: ./Backend/service-usermgmt
       apigateway: ./Backend/apigateway
 
     steps:
@@ -26,11 +22,17 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
-    - name: Grant execute permission for gradlew in Bikenest Service
+    - name: Execute rights for gradlew in Bikenest Service.
       working-directory: ${{env.bikenest-service}}
       run: chmod +x gradlew
-    - name: Grant execute permission for gradlew in Booking Service
+    - name: Execute rights for gradlew in in Booking Service
       working-directory: ${{env.booking-service}}
+      run: chmod +x gradlew
+    - name: Execute rights for gradlew in in UserMGMT Service
+      working-directory: ${{env.usermanagement-service}}
+      run: chmod +x gradlew
+    - name: Execute rights for gradlew in in API Gateway
+      working-directory: ${{env.apigateway}}
       run: chmod +x gradlew
     - name: Bikenest Service Unit Tests
       working-directory: ${{env.bikenest-service}}
@@ -38,3 +40,9 @@ jobs:
     - name: Booking Service Unit Tests
       working-directory: ${{env.booking-service}}
       run: ./gradlew test --tests com.bikenest.servicebooking.unit.*
+    - name: UserMGMT Service Unit Tests
+      working-directory: ${{env.usermanagement-service}}
+      run: ./gradlew test --tests com.bikenest.serviceusermgmt.unit.*
+    - name: API Gateway Unit Tests
+      working-directory: ${{env.apigateway}}
+      run: ./gradlew test --tests com.bikenest.apigateway.unit.*
