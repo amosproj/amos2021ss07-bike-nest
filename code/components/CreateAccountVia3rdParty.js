@@ -27,7 +27,12 @@ export function CreateAccountVia3rdParty() {
                 iconPath={require('../assets/google_button_logo.png')}
                 overrideButtonColor={colors.UI_BaseGrey_5}
                 overrideTextColor={colors.UI_BaseGrey_0}
-                onPress={() => navigation.navigate("EditPersonalInformation")}
+                onPress={() => Alert.alert("Nice!",
+                    "Du hast erfolgreich einen Account erstellt.",
+                    [
+                        { text: "OK", onPress: () => navigation.navigate("FindBikeNest") }
+                    ]
+                )}
             />
         </View>
     );

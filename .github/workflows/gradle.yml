@@ -1,18 +1,19 @@
 # This workflow will build a Java project with Gradle
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
 
-name: Bikenest-Service CI Gradlew
+name: Backend Unit Tests (Gradle)
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: [push]
 
 jobs:
-  build:
+  unittest:
 
     runs-on: ubuntu-latest
+    env:
+      bikenest-service: ./Backend/service-bikenest
+      booking-service: ./Backend/service-booking
+      usermanagement-service: ./Backend/service-usermgmt
+      apigateway: ./Backend/apigateway
 
     steps:
     - uses: actions/checkout@v2
@@ -21,11 +22,27 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
-    - name: Grant execute permission for gradlew in Bikenest Service
-      run: chmod +x ./Backend/service-bikenest/gradlew
-    - name: Grant execute permission for gradlew in Booking Service
-      run: chmod +x ./Backend/service-booking/gradlew
+    - name: Execute rights for gradlew in Bikenest Service.
+      working-directory: ${{env.bikenest-service}}
+      run: chmod +x gradlew
+    - name: Execute rights for gradlew in in Booking Service
+      working-directory: ${{env.booking-service}}
+      run: chmod +x gradlew
+    - name: Execute rights for gradlew in in UserMGMT Service
+      working-directory: ${{env.usermanagement-service}}
+      run: chmod +x gradlew
+    - name: Execute rights for gradlew in in API Gateway
+      working-directory: ${{env.apigateway}}
+      run: chmod +x gradlew
     - name: Bikenest Service Unit Tests
-      run: ./Backend/service-bikenest/gradlew test --tests com.bikenest.servicebikenest.unit.*
+      working-directory: ${{env.bikenest-service}}
+      run: ./gradlew test --tests com.bikenest.servicebikenest.unit.*
     - name: Booking Service Unit Tests
-      run: ./Backend/service-booking/gradlew test --tests com.bikenest.servicebooking.unit.*
+      working-directory: ${{env.booking-service}}
+      run: ./gradlew test --tests com.bikenest.servicebooking.unit.*
+    - name: UserMGMT Service Unit Tests
+      working-directory: ${{env.usermanagement-service}}
+      run: ./gradlew test --tests com.bikenest.serviceusermgmt.unit.*
+    - name: API Gateway Unit Tests
+      working-directory: ${{env.apigateway}}
+      run: ./gradlew test --tests com.bikenest.apigateway.unit.*

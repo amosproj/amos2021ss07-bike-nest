@@ -73,7 +73,7 @@ export function CreateAccountManually() {
             />
             <BikeNest_TextInput
                 placeholder='Vorname'
-                onChangeText={() => setFirstName}
+                onChangeText={setFirstName}
                 value={firstName}
             />
             <BikeNest_TextInput
