@@ -4,13 +4,17 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { CreateAccountScreen } from './screens/CreateAccountScreen';
 import PersonalInformationScreen from './screens/PersonalInformationScreen';
 import LoginScreen from './screens/LoginScreen';
+import PaymentScreen from './screens/PaymentScreen';
 import FindBikeNestScreen from './screens/FindBikeNestScreen';
 import HistoryScreen from './screens/HistoryScreen';
+import ProfileScreen from './screens/ProfileScreen';
 
 export default function App() {
   return (
     <NavigationContainer>
       <AppNavigator.Navigator screenOptions={{ headerShown: false }}>
+        <AppNavigator.Screen name='Profile' component={ProfileScreen} />
+        <AppNavigator.Screen name='Payment' component={PaymentScreen} />
         <AppNavigator.Screen name='Login' component={LoginScreen} />
         <AppNavigator.Screen name='CreateAccount' component={CreateAccountScreen} />
         <AppNavigator.Screen name='EditPersonalInformation' component={PersonalInformationScreen} />
@@ -22,5 +26,3 @@ export default function App() {
 }
 
 const AppNavigator = createStackNavigator();
-
-

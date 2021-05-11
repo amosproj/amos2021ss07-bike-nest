@@ -2,21 +2,17 @@ import { StyleSheet } from 'react-native';
 import colors from './Colors';
 
 export const mainStyles = StyleSheet.create({
-
   //Text
   h1: {
-    fontSize: 39,
-    letterSpacing: 4,
-    fontWeight: "500",
-    marginBottom: 16,
+    fontSize: 28,
+    fontWeight: 'bold',
+    margin: 30
   },
-
   h2: {
     fontSize: 27,
     letterSpacing: 2,
     fontWeight: "400",
   },
-
   h3: {
     fontSize: 18,
     fontWeight: "300",
@@ -25,11 +21,9 @@ export const mainStyles = StyleSheet.create({
   stdText: {
     fontSize: 14
   },
-
-
-
   container: {
     flex: 1,
+    padding: 25,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
@@ -38,9 +32,22 @@ export const mainStyles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 20,
   },
-
-
-
+  button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 3,
+    width: 328,
+    height: 55,
+    borderRadius: 38,
+    margin: 9,
+    backgroundColor: colors.UI_Light_2
+  },
+  label:{
+    fontSize: 18,
+    display: 'flex',
+    width: 150,
+    alignSelf: 'flex-start',
+  },
   inputField: {
     width: 328,
     height: 55,
@@ -49,12 +56,6 @@ export const mainStyles = StyleSheet.create({
     borderRadius: 15,
     margin: 9,
     paddingLeft: 12,
-  },
-
-  h1: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    margin: 30
   },
   checkbox: {
     borderRadius: 2,

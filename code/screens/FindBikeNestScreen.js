@@ -16,6 +16,7 @@ import {
   Dimensions,
   Platform,
 } from "react-native";
+import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
 
 
 const { width, height } = Dimensions.get("window");
@@ -238,6 +239,7 @@ export default function FindBikeNestScreen({navigation}) {
           </View>
         ))}
       </Animated.ScrollView>
+      <BikeNest_NavigationFooter/>
     </View>
   );
 }
@@ -275,6 +277,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
     marginHorizontal: 10,
+    marginBottom: 70,
     shadowColor: "#000",
     shadowRadius: 5,
     shadowOpacity: 0.3,
@@ -284,13 +287,13 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   cardImage: {
-    flex: 3,
+    flex: 1,
     width: "100%",
     height: "100%",
     alignSelf: "center",
   },
   textContent: {
-    flex: 2,
+    flex: 1,
     padding: 10,
     justifyContent: 'space-between',
   },

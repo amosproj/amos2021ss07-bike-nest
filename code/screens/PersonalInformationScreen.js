@@ -4,6 +4,8 @@ import React, { Component } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { mainStyles } from "../styles/MainStyles";
 
+// This is the Screen where Personal information is edited
+
 export default class PersonalInformationScreen extends Component {
     render() {
         return (
