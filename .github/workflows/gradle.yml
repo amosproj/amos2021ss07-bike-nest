@@ -25,6 +25,8 @@ jobs:
       run: chmod +x ./Backend/service-bikenest/gradlew
     - name: Grant execute permission for gradlew in Booking Service
       run: chmod +x ./Backend/service-booking/gradlew
+    - name: Check the available gradle tasks
+      run: ./Backend/service-bikenest/gradlew tasks
     - name: Bikenest Service Unit Tests
       run: ./Backend/service-bikenest/gradlew test --tests com.bikenest.servicebikenest.unit.*
     - name: Booking Service Unit Tests
