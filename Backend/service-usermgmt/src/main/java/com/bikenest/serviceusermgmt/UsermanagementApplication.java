@@ -1,4 +1,4 @@
-package com.bikenest.usermanagement;
+package com.bikenest.serviceusermgmt;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

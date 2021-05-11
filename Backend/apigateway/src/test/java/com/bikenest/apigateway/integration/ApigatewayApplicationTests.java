@@ -1,4 +1,4 @@
-package com.bikenest.apigateway;
+package com.bikenest.apigateway.integration;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
