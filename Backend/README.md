@@ -1,3 +1,7 @@
+## Note
+- Docker required
+- JDK 11 required to build
+- Java path has to be set (restart after installation)
 
 ## General
 This folder contains all of the Microservices used inside the backend.
