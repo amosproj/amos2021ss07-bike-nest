@@ -9,9 +9,26 @@ var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
 export default function PaymentScreen({ navigation }) {
-  const onPressChange = () => {
-    //zurück zu Stundenauswahl? 
+  var [ isPress, setIsPress ] = React.useState(false);
+
+  var touchProps = {
+    activeOpacity: 1,
+    underlayColor: 'white',                               // <-- "backgroundColor" will be always overwritten by "underlayColor"
+    style: isPress ? myStyles.btnPress : myStyles.button, // <-- but you can still apply other style changes
+    onHideUnderlay: () => setIsPress(false),
+    onShowUnderlay: () => setIsPress(true),
+    onPress: () => console.log('HELLO'),                 // <-- "onPress" is apparently required
   };
+
+  const onPressPaypal = () => {
+    //reconnect to paypal
+    //change style to border orange
+    //change style of pressable Visa to no border
+    
+    borderWidth: 1
+    borderColor: Colors.UI_Light_2
+  };
+
   const onPressAdd = () => {
     //Zu Zahlungsmethodenauswahl?
   };
@@ -52,7 +69,7 @@ export default function PaymentScreen({ navigation }) {
       </View>
       <View style={myStyles.headline}>
           <Text style={myStyles.h3}> Details </Text>
-          <Text style={[myStyles.h3, {fontWeight: 'bold'}]} onPress={onPressChange}> Ändern </Text>
+          <Text style={[myStyles.h3, {fontWeight: 'bold'}]} onPress={()=>navigation.navigate("FindBikeNest")}> Ändern </Text>
       </View>
       <View style={myStyles.headline}>
           <Text style={myStyles.stdText}>
@@ -71,15 +88,19 @@ export default function PaymentScreen({ navigation }) {
       <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider}/>
       <View style={myStyles.headline}>
           <Text style={myStyles.h3}> Zahlungsmethode </Text>
-          <Text style={[myStyles.h3, {fontWeight: 'bold'}]} onPress={onPressAdd}> <Image source={require('../assets/payment/plus.png')}/> Hinzufügen </Text>
+          <Text style={[myStyles.h3, {fontWeight: 'bold'}]} onPress={onPressAdd()}> <Image source={require('../assets/payment/plus.png')}/> Hinzufügen </Text>
       </View>
       <View style={myStyles.zahlungsmethode}>
-          <Pressable style={[myStyles.button, { backgroundColor: '#ffffff' }]}>
-          <View style={myStyles.buttonContent}>
-              <Image style={[myStyles.buttonImage, { maxWidth: 150, resizeMode: 'contain' }]} source={require('../assets/payment/Paypal1.png')} />
-          </View>
+          <Pressable {...touchProps} >
+            <View style={myStyles.buttonContent}>
+                <Image style={[myStyles.buttonImage, { maxWidth: 150, resizeMode: 'contain' }]} source={require('../assets/payment/Paypal1.png')} />
+            </View>
           </Pressable>
-          <Pressable style={[myStyles.button, { backgroundColor: '#ffffff' , borderColor: Colors.UI_Light_2, borderWidth: 1 }]}>
+          <Pressable style={({ pressed }) => [{
+            borderColor: pressed
+              ? Colors.UI_Light_2
+              : '#ffffff'},
+          myStyles.button, {backgroundColor: '#ffffff'}]}>
           <View style={myStyles.buttonContent}>
               <Image style={myStyles.buttonImage} source={require('../assets/payment/Visa.png')} />
           </View>
@@ -165,7 +186,18 @@ const myStyles = StyleSheet.create({
       height: 55,
       borderRadius: 38,
       margin: 9,
-      backgroundColor: Colors.UI_Light_2
+      backgroundColor: Colors.UI_Light_4
+  },
+  btnPress: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 3,
+    width: 328,
+    height: 55,
+    borderRadius: 38,
+    margin: 9,
+    backgroundColor: Colors.UI_Light_4,
+    borderColor: Colors.UI_Light_3,
   },
   buttonContent: {
       flexDirection: 'row',
