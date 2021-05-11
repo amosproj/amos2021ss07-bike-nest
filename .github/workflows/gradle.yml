@@ -13,6 +13,11 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      bikenest-service: ./Backend/service-bikenest
+      booking-service: ./Backend/service-booking
+      usermanagement-service: ./Backend/usermanagement
+      apigateway: ./Backend/apigateway
 
     steps:
     - uses: actions/checkout@v2
@@ -22,12 +27,14 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
     - name: Grant execute permission for gradlew in Bikenest Service
-      run: chmod +x ./Backend/service-bikenest/gradlew
+      working-directory: ${{env.bikenest-service}}
+      run: chmod +x gradlew
     - name: Grant execute permission for gradlew in Booking Service
+      working-directory: ${{env.booking-service}}
       run: chmod +x ./Backend/service-booking/gradlew
-    - name: Check the available gradle tasks
-      run: ./Backend/service-bikenest/gradlew tasks
     - name: Bikenest Service Unit Tests
-      run: ./Backend/service-bikenest/gradlew test --tests com.bikenest.servicebikenest.unit.*
+      working-directory: ${{env.bikenest-service}}
+      run: gradlew test --tests com.bikenest.servicebikenest.unit.*
     - name: Booking Service Unit Tests
-      run: ./Backend/service-booking/gradlew test --tests com.bikenest.servicebooking.unit.*
+      working-directory: ${{env.booking-service}}
+      run: gradlew test --tests com.bikenest.servicebooking.unit.*
