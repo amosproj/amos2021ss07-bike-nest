@@ -141,7 +141,7 @@ export default function PaymentScreen({ navigation }) {
 const myStyles = StyleSheet.create({
   container: {
       flex: 1,
-      padding: 15,
+      padding: 25,
       backgroundColor: '#ffffff',
   },
   h2: {
