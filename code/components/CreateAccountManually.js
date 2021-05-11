@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Pressable, Text, View, TextInput, StyleSheet } from 'react-native';
+import { View, TextInput } from 'react-native';
 import { UserDataService } from "../services/UserData";
-import { styles } from "./EditPersonalInformation/styles";
 import { useNavigation } from '@react-navigation/native';
-import { Alert, Modal } from 'react-native';
+import { Alert } from 'react-native';
 import { mainStyles } from "../styles/MainStyles";
-import CheckBox from '@react-native-community/checkbox';
+import BikeNest_CheckBox from './BikeNest_CheckBox';
+import BikeNest_Modal from './BikeNest_Modal';
+import BikeNest_Button, { ButtonStyle } from './BikeNest_Button';
+import BikeNest_TextInput from './BikeNest_TextInput';
 
 export function CreateAccountManually() {
     let userdata = new UserDataService();
@@ -15,8 +17,8 @@ export function CreateAccountManually() {
     const [password, setPassword] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
     const [modalText, setModalText] = useState("");
+    const [modalHeadline, setModalHeadline] = useState("");
     const [isValidInput, setIsValidInput] = useState(false);
-    const [toggleCheckBox, setToggleCheckBox] = useState(false);
     const navigation = useNavigation();
 
     //TODO: real Validation + Checkbox
@@ -25,12 +27,17 @@ export function CreateAccountManually() {
         setIsValidInput(isValid);
 
         if (!newEmail()) {
+            setModalHeadline("Sorry!");
             setModalText("Ein Account mit der Email " + email + " existiert bereits.");
         } else {
-            if (isValid)
-                setModalText("Hurra! Dein Account wurde erfolgreich eingerichtet");
-            else
+            if (isValid) {
+                setModalHeadline("Hurra!");
+                setModalText("Dein Account wurde erfolgreich eingerichtet");
+            }
+            else {
+                setModalHeadline("Sorry!");
                 setModalText("Oops da ist etwas schief gelaufen. Fülle bitte alle Felder aus.")
+            }
         }
         setModalVisible(true);
     }
@@ -56,81 +63,46 @@ export function CreateAccountManually() {
 
     //TODO: Replace Modal (not working in web)
     return (
-        <View style={styles.container}>
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    setModalVisible(!modalVisible);
-                }}
-            >
-                <View style={stylesTest.modalContainer}>
-                    <View style={stylesTest.modalContentContainer}>
-                        <Text style={mainStyles.stdText}>{modalText}</Text>
-                        <Pressable style={mainStyles.buttonSmall} onPress={() => onModalPress()}>
-                            <Text style={styles.buttonText}>OK</Text>
-                        </Pressable>
-                    </View>
-                </View>
-            </Modal>
-            <TextInput
+        <View style={mainStyles.container}>
+            <BikeNest_Modal
+                modalHeadLine={modalHeadline}
+                modalText={modalText}
+                isVisible={modalVisible}
+                onPress={() => onModalPress()}
+                onRequestClose={() => { setModalVisible(!modalVisible); }}
+            />
+            <BikeNest_TextInput
                 placeholder='Vorname'
-                style={styles.inputField}
-                onChangeText={setFirstName}
+                onChangeText={() => setFirstName}
                 value={firstName}
             />
-            <TextInput
+            <BikeNest_TextInput
                 placeholder='Name'
-                style={styles.inputField}
                 onChangeText={setLastName}
                 value={lastName}
             />
-            <TextInput
+            <BikeNest_TextInput
                 placeholder='Email'
-                style={styles.inputField}
                 onChangeText={setEmail}
                 value={email}
             />
-            <TextInput
+            <BikeNest_TextInput
                 placeholder="Passwort"
                 secureTextEntry={true}
-                style={styles.inputField}
                 onChangeText={setPassword}
                 value={password}
             />
-            <View style={styles.checkBoxContainer}>
-                <Text style={styles.checkboxText}
-                    onPress={() => Alert.alert("Lorem ipsum")}>Datenschutzrichtlinien gelesen</Text>
-                <CheckBox style={styles.checkbox}
-                    onValueChange={(newValue) => setToggleCheckBox(newValue)}
-                    value={toggleCheckBox}
-                />
-            </View>
-            <Pressable style={mainStyles.buttonBig} onPress={() => validateInput()}>
-                <Text style={styles.buttonText}>Los geht's</Text>
-            </Pressable>
+            <BikeNest_CheckBox
+                onPressText={() => Alert.alert("Lorem ipsum")}
+                toggleText={"Datenschutzrichtlinien gelesen"}
+                initialValue={false}
+            />
+            <BikeNest_Button
+                type={ButtonStyle.big}
+                text="Los geht's!"
+                onPress={() => validateInput()}
+            />
         </View>
     );
 }
 
-const stylesTest = StyleSheet.create({
-    modalContentContainer: {
-        width: 288,
-        height: 184,
-        borderRadius: 15,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#fff',
-        elevation: 3,
-        padding: 18,
-    },
-    modalContainer: {
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#00000090',
-
-    }
-});

@@ -1,5 +1,5 @@
 
-export default class Colors {
+export default class colors {
   //TODO: dark-light theme? Categories like Support, UI, Base 
   static get UI_Light_0() { return "#D6F2C9"; }
   static get UI_Light_1() { return "#B5D99C"; }
@@ -9,6 +9,13 @@ export default class Colors {
 
   static get Facebook_Blue() { return "#4267B2"; }
   static get Google_Grey() { return "#EBEAEC"; }
+
+  static get UI_BaseGrey_0() { return "#000000"; }
+  static get UI_BaseGrey_1() { return "#2D3436"; }
+  static get UI_BaseGrey_2() { return "#636E72"; }
+  static get UI_BaseGrey_3() { return "#B2BEC3"; }
+  static get UI_BaseGrey_4() { return "#DFE6E9"; }
+  static get UI_BaseGrey_5() { return "#ffffff"; }
 
   //Opacity
   static get Opacity_0() { return 1.0; }

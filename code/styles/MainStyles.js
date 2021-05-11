@@ -1,13 +1,12 @@
 import { StyleSheet } from 'react-native';
-import Colors from './Colors';
+import colors from './Colors';
 
 export const mainStyles = StyleSheet.create({
   //Text
   h1: {
-    fontSize: 39,
-    letterSpacing: 4,
-    fontWeight: "500",
-    marginBottom: 16,
+    fontSize: 28,
+    fontWeight: 'bold',
+    margin: 30
   },
   h2: {
     fontSize: 27,
@@ -18,11 +17,9 @@ export const mainStyles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "300",
   },
-  stdText:{
+
+  stdText: {
     fontSize: 14
-  },
-  p: {
-    fontSize: 16,
   },
   container: {
     flex: 1,
@@ -50,19 +47,14 @@ export const mainStyles = StyleSheet.create({
     width: 150,
     alignSelf: 'flex-start',
   },
-
   inputField: {
     width: 328,
     height: 55,
     color: '#333333',
-    backgroundColor: Colors.UI_Light_4,
+    backgroundColor: colors.UI_Light_4,
     borderRadius: 15,
     margin: 9,
     paddingLeft: 12,
-  },
-  buttonText: {
-    fontSize: 14,
-    color: Colors.UI_Light_4
   },
   checkbox: {
     borderRadius: 2,
@@ -70,6 +62,26 @@ export const mainStyles = StyleSheet.create({
   },
   checkboxText: {
     margin: 8,
+  },
+
+  //Modal
+  modalContentContainer: {
+    width: 288,
+    height: 184,
+    borderRadius: 15,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    elevation: 3,
+    padding: 18,
+  },
+  modalContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#00000090',
+
   },
 
   //Buttons
@@ -81,7 +93,8 @@ export const mainStyles = StyleSheet.create({
     height: 55,
     borderRadius: 38,
     margin: 9,
-    backgroundColor: Colors.UI_Light_2
+    backgroundColor: colors.UI_Light_2,
+    padding: 18,
   },
   buttonMedium: {
     alignItems: 'center',
@@ -91,7 +104,8 @@ export const mainStyles = StyleSheet.create({
     height: 55,
     borderRadius: 38,
     margin: 9,
-    backgroundColor: Colors.UI_Light_2
+    backgroundColor: colors.UI_Light_2,
+    padding: 18
   },
   buttonSmall: {
     alignItems: 'center',
@@ -101,7 +115,48 @@ export const mainStyles = StyleSheet.create({
     height: 55,
     borderRadius: 38,
     margin: 9,
-    backgroundColor: Colors.UI_Light_2
+    backgroundColor: colors.UI_Light_2,
+    padding: 18
   },
 
+  buttonText: {
+    fontSize: 14,
+    color: colors.UI_Light_4,
+    textAlign: 'center',
+    height: '100%',
+    width: '100%',
+    // flex: 1,
+  },
+  buttonImageRow: {
+    position: 'absolute',
+    width: 32,
+    height: 32,
+    left: 18,
+    top: 0
+  },
+  buttonImageColumn: {
+    margin: 5,
+  },
+  nestedButtonViewRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  nestedButtonViewColumn: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+
+  navigationBar: {
+    flexDirection: 'row',
+    width: '100%',
+    height: 70,
+    justifyContent: 'flex-start'
+  },
+
+  buttonNavigationBar: {
+    flex: 1,
+    backgroundColor: colors.UI_Light_2,
+    padding: 5,
+  },
 });
