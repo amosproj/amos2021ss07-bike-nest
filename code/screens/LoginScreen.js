@@ -41,7 +41,7 @@ export default function LoginScreen({ navigation }) {
         <BikeNest_Button
           type={ButtonStyle.big}
           text="Los geht's!"
-          onPress={() => navigation.navigate("History")}
+          onPress={() => navigation.navigate("FindBikeNest")}
         />
 
         <View style={{ flex: 0.4, alignItems: 'center', justifyContent: 'space-between', marginBottom: 65 }}>
