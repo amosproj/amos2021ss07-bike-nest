@@ -13,7 +13,7 @@ export default function BikeNest_NavigationFooter() {
                 type={ButtonStyle.navigationBar}
                 iconPath={require("../assets/icons/user.png")}
                 text="Profil"
-                onPress={() => navigation.navigate("EditPersonalInformation")}
+                onPress={() => navigation.navigate("Profile")}
             />
             <BikeNest_Button
                 type={ButtonStyle.navigationBar}
