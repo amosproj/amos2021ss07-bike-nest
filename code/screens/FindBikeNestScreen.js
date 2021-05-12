@@ -46,19 +46,17 @@ export default function FindBikeNestScreen({navigation}) {
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      // if (status !== 'granted') {
-      //   Alert.alert('Permission to access location was denied');
-      //   return;
-      // }
-
-      let location = await Location.getCurrentPositionAsync({});
-      let localdistances = []
-      stateMarkers.map((marker, index) => {
-        localdistances.push(getDistanceToUser(marker, location));
-      });
-      setDistances(localdistances);
-
-      //setLocation(location);
+      if (status !== 'granted') {
+        Alert.alert('Permission to access location was denied');     
+      } else {
+        let location = await Location.getCurrentPositionAsync({ enableHighAccuracy: true });
+        let localdistances = []
+        stateMarkers.map((marker, index) => {
+          localdistances.push(getDistanceToUser(marker, location));
+        });
+        setDistances(localdistances);
+        //setLocation(location);
+      }
     })();
   }, []);
 
@@ -121,7 +119,6 @@ export default function FindBikeNestScreen({navigation}) {
 
   // moves cards at the bottom of screen
   const onMarkerPress = (mapEventData) => {
-    console.log(isLoggedIn);
     const markerID = mapEventData._targetInst.return.key;
 
     if(!isLoggedIn){setLogin(true);}
@@ -205,7 +202,7 @@ export default function FindBikeNestScreen({navigation}) {
           { useNativeDriver: true }
         )}
       >
-        { isLoggedIn && stateMarkers.map((marker, index) => (
+        { /*isLoggedIn &&*/ stateMarkers.map((marker, index) => (
           <View style={[styles.card, { backgroundColor: marker.color, display: displayState }]} key={index}>
             <Image
               source={marker.image}
