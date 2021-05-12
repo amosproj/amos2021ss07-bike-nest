@@ -17,6 +17,7 @@ ext {
 }
 
 dependencies {
+    implementation 'junit:junit:4.12'
     compile 'io.jsonwebtoken:jjwt-api:0.11.2'
     runtime 'io.jsonwebtoken:jjwt-impl:0.11.2',
             'io.jsonwebtoken:jjwt-jackson:0.11.2'
