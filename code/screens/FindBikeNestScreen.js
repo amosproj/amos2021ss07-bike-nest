@@ -42,14 +42,17 @@ export default function FindBikeNestScreen({navigation}) {
     latitudeDelta: 0.06,
     longitudeDelta: 0.04,
   }
-  // asks for user location permission
+
+  //asks for user location permission
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         Alert.alert('Permission to access location was denied');     
-      } else {
-        let location = await Location.getCurrentPositionAsync({ enableHighAccuracy: true });
+      } else if (distances != [0,0,0,0]){
+        console.log('location permission granted')
+        let location = await Location.getCurrentPositionAsync({});
+        console.log('location arrived')
         let localdistances = []
         stateMarkers.map((marker, index) => {
           localdistances.push(getDistanceToUser(marker, location));
@@ -59,8 +62,6 @@ export default function FindBikeNestScreen({navigation}) {
       }
     })();
   }, []);
-
-
 
   // compute scaling of markers
   const interpolations = stateMarkers.map((marker, index) => {
@@ -121,7 +122,7 @@ export default function FindBikeNestScreen({navigation}) {
   const onMarkerPress = (mapEventData) => {
     const markerID = mapEventData._targetInst.return.key;
 
-    if(!isLoggedIn){setLogin(true);}
+    //if(!isLoggedIn){setLogin(true);}
 
     // stateArr = [...stateMarkers];
     // console.log('setting markers')
