@@ -31,8 +31,9 @@ export function CreateAccountManually() {
             setModalText("Ein Account mit der Email " + email + " existiert bereits.");
         } else {
             if (isValid) {
-                setModalHeadline("Hurra!");
-                setModalText("Dein Account wurde erfolgreich eingerichtet");
+                createAccount();
+                // setModalHeadline("Hurra!");
+                // setModalText("Dein Account wurde erfolgreich eingerichtet");
             }
             else {
                 setModalHeadline("Sorry!");
@@ -59,6 +60,33 @@ export function CreateAccountManually() {
             isNewEmail = false;
 
         return isNewEmail;
+    }
+
+    let setModalInfo = (json) => {
+        if (json.accountCreated) {
+            setModalHeadline("Hurra!");
+            setModalText("Dein Account wurde erfolgreich eingerichtet");
+        }
+        else {
+            setModalHeadline("Oops!");
+            setModalText(json.errorMsg);
+        }
+    }
+
+    let createAccount = () => {
+        let data = { firstName, lastName, email, password };
+
+        return fetch("URL", {
+            method: 'POST',
+            body: JSON.stringify(data)
+        })
+            .then((response) => response.json())
+            .then((json) => {
+                setModalInfo(json);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     }
 
 
