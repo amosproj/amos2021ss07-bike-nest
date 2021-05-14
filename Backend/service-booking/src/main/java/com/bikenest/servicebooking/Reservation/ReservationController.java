@@ -1,4 +1,4 @@
-package com.bikenest.servicebooking;
+package com.bikenest.servicebooking.Reservation;
 
 import com.bikenest.servicebooking.DB.Reservation;
 import com.bikenest.servicebooking.DB.ReservationRepository;
