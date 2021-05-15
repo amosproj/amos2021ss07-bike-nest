@@ -25,8 +25,6 @@ public class AuthenticationFilter implements GatewayFilter {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
 
-        //Check if the route is secured?
-
         //Check if the JWT is valid, if not then strip it
         if(!this.isAuthMissing(request)) {
             final String authToken = this.getAuthHeader(request);
