@@ -3,12 +3,13 @@ import { Alert, View } from 'react-native';
 import colors from "../styles/Colors";
 import { useNavigation } from '@react-navigation/native';
 import BikeNest_Button, { ButtonStyle } from './BikeNest_Button';
+import { mainStyles } from "../styles/MainStyles";
 
 export function CreateAccountVia3rdParty() {
     const navigation = useNavigation();
 
     return (
-        <View>
+        <View style={[mainStyles.container, {backgroundColor: 'transparent'}]}>
             <BikeNest_Button
                 type={ButtonStyle.big}
                 text="MIT FACEBOOK ANMELDEN"

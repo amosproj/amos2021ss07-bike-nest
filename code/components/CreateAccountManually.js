@@ -128,7 +128,7 @@ export function CreateAccountManually() {
 
     //TODO: Replace Modal (not working in web)
     return (
-        <View style={mainStyles.container}>
+        <View style={[mainStyles.container, {backgroundColor: 'transparent'}]}>
             <BikeNest_Modal
                 modalHeadLine={modalHeadline}
                 modalText={modalText}
