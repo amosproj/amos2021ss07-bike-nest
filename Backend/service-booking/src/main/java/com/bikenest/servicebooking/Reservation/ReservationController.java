@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Optional;
 
 @RestController
@@ -40,7 +42,7 @@ public class ReservationController {
         if(!reservation.isPresent()){
             return ResponseEntity.notFound().build();
         }
-        reservation.get().setActualStartDateTime(LocalDateTime.now());
+        reservation.get().setActualStartDateTime(LocalDateTime.now(ZoneId.of("Europe/Berlin")));
         reservationRepository.save(reservation.get());
         return ResponseEntity.ok(reservation.get());
     }
@@ -52,7 +54,7 @@ public class ReservationController {
         if(!reservation.isPresent()){
             return ResponseEntity.notFound().build();
         }
-        reservation.get().setActualEndDateTime(LocalDateTime.now());
+        reservation.get().setActualEndDateTime(LocalDateTime.now(ZoneId.of("Europe/Berlin")));
         reservationRepository.save(reservation.get());
         return ResponseEntity.ok(reservation.get());
     }

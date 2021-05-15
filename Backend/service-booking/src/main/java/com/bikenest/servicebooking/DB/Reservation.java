@@ -3,8 +3,10 @@ package com.bikenest.servicebooking.DB;
 import com.bikenest.servicebooking.Reservation.NewReservationPOJO;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 @Entity
@@ -102,6 +104,8 @@ public class Reservation {
     private Date LocalDateTimeToDate(LocalDateTime ldt){
         if(ldt == null)
             return null;
-        return Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
+        ZonedDateTime zdt = ldt.atZone(ZoneId.systemDefault());
+        Instant in = zdt.toInstant();
+        return Date.from(zdt.toInstant());
     }
 }
