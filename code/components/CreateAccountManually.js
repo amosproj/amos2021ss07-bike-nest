@@ -19,32 +19,41 @@ export function CreateAccountManually() {
     const [modalText, setModalText] = useState("");
     const [modalHeadline, setModalHeadline] = useState("");
     const [isValidInput, setIsValidInput] = useState(false);
+    const [accountCreated, setAccountCreated] = useState(false);
     const navigation = useNavigation();
 
     //TODO: real Validation + Checkbox
     let validateInput = () => {
-        let isValid = newEmail() && (firstName.length > 0) && (lastName.length > 0) && (email.length > 0) && (password.length > 0);
+        let isValid = (firstName.length > 0) && (lastName.length > 0) && (email.length > 0) && (password.length > 0);
         setIsValidInput(isValid);
 
-        if (!newEmail()) {
-            setModalHeadline("Sorry!");
-            setModalText("Ein Account mit der Email " + email + " existiert bereits.");
-        } else {
-            if (isValid) {
-                createAccount();
-                // setModalHeadline("Hurra!");
-                // setModalText("Dein Account wurde erfolgreich eingerichtet");
-            }
-            else {
-                setModalHeadline("Sorry!");
-                setModalText("Oops da ist etwas schief gelaufen. Fülle bitte alle Felder aus.")
-            }
+        if (isValid) {
+            tryCreateAccount();
         }
-        setModalVisible(true);
+        else {
+            setModalHeadline("Sorry!");
+            setModalText("Oops da ist etwas schief gelaufen. Fülle bitte alle Felder mit den passenden Infos aus.");
+            setModalVisible(true);
+        }
+        // if (!newEmail()) {
+        //     setModalHeadline("Sorry!");
+        //     setModalText("Ein Account mit der Email " + email + " existiert bereits.");
+        // } else {
+        // if (isValid) {
+        //     tryCreateAccount();
+        //     // setModalHeadline("Hurra!");
+        //     // setModalText("Dein Account wurde erfolgreich eingerichtet");
+        // }
+        // else {
+        //     setModalHeadline("Sorry!");
+        //     setModalText("Oops da ist etwas schief gelaufen. Fülle bitte alle Felder aus.")
+        // }
+        // // }
+        // setModalVisible(true);
     }
 
     let onModalPress = () => {
-        if (isValidInput) {
+        if (accountCreated) {
             setModalVisible(false);
             navigation.navigate("FindBikeNest");
         }
@@ -53,38 +62,65 @@ export function CreateAccountManually() {
     }
 
     //TODO: real check
-    let newEmail = () => {
-        let isNewEmail = true;
+    // let newEmail = () => {
+    //     let isNewEmail = true;
 
-        if (email === '1')
-            isNewEmail = false;
+    //     if (email === '1')
+    //         isNewEmail = false;
 
-        return isNewEmail;
-    }
+    //     return isNewEmail;
+    // }
 
     let setModalInfo = (json) => {
-        if (json.accountCreated) {
+        //setAccountCreated(json.accountCreated);
+        setAccountCreated(json.mockAccountCreated);
+
+        if (json.mockAccountCreated) {
             setModalHeadline("Hurra!");
             setModalText("Dein Account wurde erfolgreich eingerichtet");
         }
         else {
             setModalHeadline("Oops!");
-            setModalText(json.errorMsg);
+            setModalText(json.mockErrorMsg);
         }
+
+
+        // if (json.accountCreated) {
+        //     setModalHeadline("Hurra!");
+        //     setModalText("Dein Account wurde erfolgreich eingerichtet");
+        // }
+        // else {
+        //     setModalHeadline("Oops!");
+        //     setModalText(json.errorMsg);
+        // }
+
+        setModalVisible(true);
     }
 
-    let createAccount = () => {
+    let tryCreateAccount = () => {
         let data = { firstName, lastName, email, password };
 
-        return fetch("URL", {
+        return fetch("http://192.168.2.129:9000/bikenest/info", {
             method: 'POST',
             body: JSON.stringify(data)
         })
             .then((response) => response.json())
             .then((json) => {
-                setModalInfo(json);
+                //console.log(json);
+
+                //Testing
+                let mockAccountCreated = true;
+                let mockErrorMsg = "Error Msg test";
+                let mockData = {mockAccountCreated, mockErrorMsg};
+
+                setModalInfo(mockData);
+
+                //setModalInfo(json);
             })
             .catch((error) => {
+                setModalHeadline("Sorry!");
+                setModalText("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
+                setModalVisible(true);
                 console.error(error);
             });
     }
