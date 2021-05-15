@@ -3,10 +3,10 @@ package com.bikenest.servicebooking.Reservation;
 import com.bikenest.servicebooking.DB.Reservation;
 import com.bikenest.servicebooking.DB.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.function.EntityResponse;
 
 @RestController
 @RequestMapping(path="/booking")
@@ -20,8 +20,8 @@ public class ReservationController {
         return reservationRepository.findAll();
     }
 
-    @PostMapping("/add")
-    public String AddNewReservation(){
-        return "Success";
+    @PostMapping(value = "/add", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<NewReservation> AddNewReservation(@RequestBody NewReservation reservation){
+        return ResponseEntity.ok(reservation);
     }
 }
