@@ -1,8 +1,8 @@
 package com.bikenest.servicebooking.Services;
 
+import com.bikenest.common.interfaces.booking.AddReservationInterface;
 import com.bikenest.servicebooking.DB.Reservation;
 import com.bikenest.servicebooking.DB.ReservationRepository;
-import com.bikenest.servicebooking.Reservation.NewReservationPOJO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,19 +20,13 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
-    public Optional<Reservation> CreateReservation(Integer userId, NewReservationPOJO newReservationPOJO) throws Exception {
-        if(newReservationPOJO.getBikenestId() == null || newReservationPOJO.getStartDateTime() == null ||
-                newReservationPOJO.getEndDateTime() == null)
+    public Optional<Reservation> CreateReservation(Integer userId, AddReservationInterface newReservation) throws Exception {
+        if(newReservation.getBikenestId() == null || newReservation.getStartDateTime() == null ||
+                newReservation.getEndDateTime() == null)
             throw new Exception("Invalid request.");
 
 
-        Reservation reservation = new Reservation();
-        reservation.setBikenestId(newReservationPOJO.getBikenestId());
-        reservation.setStartDateTime(newReservationPOJO.getStartDateTime());
-        reservation.setEndDateTime(newReservationPOJO.getEndDateTime());
-        reservation.setUserId(userId);
-        reservation.setActualStartDateTime(null);
-        reservation.setActualEndDateTime(null);
+        Reservation reservation = Reservation.FromNewReservation(userId, newReservation);
 
         return Optional.of(reservationRepository.save(reservation));
     }

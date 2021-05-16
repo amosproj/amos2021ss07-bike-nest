@@ -1,5 +1,6 @@
-package com.bikenest.servicebooking.Reservation;
+package com.bikenest.servicebooking.Controllers;
 
+import com.bikenest.common.interfaces.booking.AddReservationInterface;
 import com.bikenest.servicebooking.DB.Reservation;
 import com.bikenest.servicebooking.Services.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class ReservationController {
     }
 
     @PostMapping(value = "/add", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Reservation> AddNewReservation(@RequestBody NewReservationPOJO newReservation) throws Exception {
+    public ResponseEntity<Reservation> AddNewReservation(@RequestBody AddReservationInterface newReservation) throws Exception {
         //TODO: Retrieve UserId from JWT
         Optional<Reservation> reservation = reservationService.CreateReservation(10, newReservation);
 

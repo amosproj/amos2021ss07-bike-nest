@@ -1,6 +1,6 @@
 package com.bikenest.servicebooking;
 
-import com.bikenest.common.*;
+import com.bikenest.common.interfaces.bikenest.ExampleInterface;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.PostMapping;
