@@ -1,1 +1,3 @@
-rootProject.name = 'servicebooking'
+rootProject.name = 'service-booking'
+
+includeBuild "../common"

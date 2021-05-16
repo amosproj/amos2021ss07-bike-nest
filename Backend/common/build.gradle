@@ -12,21 +12,18 @@ repositories {
     mavenCentral()
 }
 
-bootJar {
-    enabled = false
-}
-
-jar {
-    enabled = true
-}
-
 ext {
     set('springCloudVersion', "2020.0.2")
 }
 
+bootJar.enabled = false
+jar.enabled = true
+
+
 dependencies {
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation 'org.springframework.boot:spring-boot-starter'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 }
 
 dependencyManagement {
