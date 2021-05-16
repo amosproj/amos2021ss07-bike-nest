@@ -36,15 +36,19 @@ So by just running docker-compose up, you can get the whole backend running inde
 
 ## Building
 
-As explained in General, the docker container is built by copying the application jar into the container filesystem. This means before building the container, you have  to make sure that the Spring Project has been built using gradle.
+As explained in General, the docker container is built by copying the application jar into the container filesystem. This means before building the container, you have to make sure that the Spring Project has been built using gradle.
 
-Do this for each service:
+You can build all of the Backend Projects by executing
+- `gradlew bootJar jar`
+    - Builds the jar files for each subproject
+    
+Or if you want to build the jar of a service manually:
 - Navigate to the service folder
-- Execute `gradlew build` to build the application (you need a JDK Version 11 for this)
+- Execute `gradlew build`
 
-Now navigate to the folder `Backend` and
-- Execute `docker-compose build` to build all the docker containers
-- or Execute `docker-compose -f docker-compose-debug.yml build` to build debuggable docker containers.
+To build the docker containers you have to execute
+- `docker-compose build` to build in release mode
+- `docker-compose -f docker-compose-debug.yml build` to build in debug mode
 
 All docker containers are successfully built now and are ready to be executed.
 
@@ -55,7 +59,16 @@ Starting all the containers:
 - `docker-compose -f docker-compose-debug.yml up` for debug mode
 
 If you make any changes to a backend service, you have to build the service with gradlew again and rebuilt the corresponding container.
-This can be done by stopping the container execution and running `docker-compose build SERVICE` using the right service name.
+
+The easy approach is to:
+- Stop the container execution
+- rebuild all jars using `gradlew bootJar jar`
+- rebuild all containers using `docker-compose build` or
+`docker-compose -f docker-compose-debug.yml build`
+- start the containers up using the **docker-compose up** command from above
+
+It is possible to only rebuild a single container by executing
+`docker-compose build {NAME}`
 
 ## Debugging
  
@@ -73,7 +86,8 @@ One important note for debugging: the JDK version you are using on your host mac
 
 ## Testing
 
-Testing is done by executing `gradlew test` for each service.
+Testing is done by executing `gradlew test` in each project directory or directly executing all tests by running
+this command inside the Backend folder.
 In some cases it might be required that another service is running or else the test will fail. (For example a MySQL server might have to be running to execute integration tests for the Bikenest service)
 
 ## CI/CD
