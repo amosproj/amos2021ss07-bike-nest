@@ -1,16 +1,19 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { ImageBackground, Pressable, StyleSheet, Text, TextInput, View, Image, TouchableWithoutFeedback } from 'react-native';
+import { ImageBackground, Pressable, StyleSheet, Text, TextInput, View, Image} from 'react-native';
 import { Keyboard } from 'react-native'
 import { Dimensions } from "react-native";
 import Colors from '../styles/Colors';
 import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
 import { mainStyles } from "../styles/MainStyles";
+import BikeNest_Button, { ButtonStyle } from '../components/BikeNest_Button';
+import {Picker} from '@react-native-picker/picker';
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
-export default function PaymentScreen({ navigation }) {
+export default function BookingScreen({ navigation }) {
+  const [selectedLanguage, setSelectedLanguage] = React.useState();
   var [ isPress, setIsPress ] = React.useState(false);
 
   var touchProps = {
@@ -39,11 +42,7 @@ export default function PaymentScreen({ navigation }) {
     alert('this is an info.');
   };
   const onPressOrder = () => {
-    //Daten an Backend senden
-    console.log('HELLO')
-    //paymentContainer zu display none
-    //paymentClosed Container zu display: flex
-    //nach timer reconnect to findBikenest? 
+    //weiter zu order verarbeitung
   }
   const getSlots = () => {
     return "1 Slot";
@@ -71,7 +70,7 @@ export default function PaymentScreen({ navigation }) {
       <View style={myStyles.paymentContainer}>
         <View style={{alignSelf:'center'}}>
             <Text style={myStyles.h2}>
-                Meine Bestellung <Image onPress={onPressInfo} source={require('../assets/payment/info.png')}/>
+                Buchungsinformationen <Image onPress={onPressInfo} source={require('../assets/payment/info.png')}/>
             </Text>
         </View>
         <View style={myStyles.headline}>
@@ -80,77 +79,66 @@ export default function PaymentScreen({ navigation }) {
         </View>
         <View style={myStyles.headline}>
             <Text style={myStyles.stdText}>
+              BIKE NEST {"\n"}
+              {getLocation()}
+            </Text>
+        </View>
+        <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider}/>
+        <View style={myStyles.headline}>
+            <Text style={myStyles.h3}> {"\n"} Zusätzliche Informationen </Text>
+        </View>
+        <View style={myStyles.headline}>
+          <Text style={myStyles.h3}> Wie viele Slots? </Text>
+          <Picker
+            selectedValue={selectedLanguage}
+            onValueChange={(itemValue, itemIndex) =>
+              setSelectedLanguage(itemValue)
+            }>
+            <Picker.Item label="Java" value="java" />
+            <Picker.Item label="JavaScript" value="js" />
+          </Picker>
+        </View>
+        <View style={myStyles.headline}>
+          <Text style={myStyles.h3}> Wie lange buchen? </Text>
+          <Picker
+            selectedValue={selectedLanguage}
+            onValueChange={(itemValue, itemIndex) =>
+              setSelectedLanguage(itemValue)
+            }>
+            <Picker.Item label="Java" value="java" />
+            <Picker.Item label="JavaScript" value="js" />
+          </Picker>
+        </View>
+        <View style={myStyles.headline}>
+          <Text style={myStyles.h3}> E-Bike Ladestation? </Text>
+          <Picker
+            selectedValue={selectedLanguage}
+            onValueChange={(itemValue, itemIndex) =>
+              setSelectedLanguage(itemValue)
+            }>
+            <Picker.Item label="Java" value="java" />
+            <Picker.Item label="JavaScript" value="js" />
+          </Picker>
+        </View>
+
+        <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider}/>
+        <View style={myStyles.headline}>
+          <Text style={myStyles.h3}> Zusammenfassung</Text>
+        </View>
+        <View style={myStyles.headline}>
+          <Text style={myStyles.stdText}>
                 {"\n"} 
-                {getSlots()} im BIKE NEST {"\n"}
-                {getLocation()}
-            </Text>
-            <Text style={myStyles.stdText}> {getHours()} </Text>
+                BIKE NEST {"\n"}
+                {getLocation()} {"\n"}
+                {/* {getSlots()} {"\n"}
+                {getHours()} {"\n"}
+                {getEbike()} */}
+              </Text>
         </View>
-        <View style={myStyles.reserved}>
-            <Image source={require('../assets/payment/clock.png')} style={{margin: 10}} />
-            <Text style={myStyles.stdText, {color: Colors.UI_Light_2}}>
-                Reserviert für 30min
-            </Text>
-        </View>
-        <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider}/>
-        <View style={myStyles.headline}>
-            <Text style={myStyles.h3}> Zahlungsmethode </Text>
-            <Text style={[myStyles.h3, {fontWeight: 'bold'}]} onPress={onPressAdd()}> <Image source={require('../assets/payment/plus.png')}/> Hinzufügen </Text>
-        </View>
-        <View style={myStyles.zahlungsmethode}>
-            <Pressable {...touchProps} >
-              <View style={myStyles.buttonContent}>
-                  <Image style={[myStyles.buttonImage, { maxWidth: 150, resizeMode: 'contain' }]} source={require('../assets/payment/Paypal1.png')} />
-              </View>
-            </Pressable>
-            <Pressable style={({ pressed }) => [{
-              borderColor: pressed
-                ? Colors.UI_Light_2
-                : '#ffffff'},
-            myStyles.button, {backgroundColor: '#ffffff'}]}>
-            <View style={myStyles.buttonContent}>
-                <Image style={myStyles.buttonImage} source={require('../assets/payment/Visa.png')} />
-            </View>
-            </Pressable>
-        </View>
-        <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider}/>
-        <View style={myStyles.headline}>
-            <Text style={myStyles.h3}> Promocode </Text>
-            <TextInput style={[myStyles.halfButton, { fontWeight: 'bold', color: Colors.UI_Light_2}]}
-                placeholder='BIKE NEST'/>
-        </View>
-        <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider}/>
-        <View style={myStyles.headline}>
-            <Text style={myStyles.stdText}>Gesamt exkl. Mwst.</Text>
-            <Text style={[myStyles.stdText, { fontWeight: 'bold', color: Colors.UI_Light_2}]}> {getPrice()} </Text>
-        </View>
-        <View style={myStyles.headline}>
-            <Text style={myStyles.stdText}>Mwst. 19%</Text>
-            <Text style={[myStyles.stdText, { fontWeight: 'bold', color: Colors.UI_Light_2}]}> {getMwst()} </Text>
-        </View>
-        <View style={myStyles.headline}>
-            <Text style={myStyles.stdText}>Rabatt</Text>
-            <Text style={[myStyles.stdText, { fontWeight: 'bold', color: Colors.UI_Light_2}]}> {getDiscount()} </Text>
-        </View>
-        <Image style={{margin: 10}}source={require('../assets/payment/Line.png')}/>
-        <View style={myStyles.headline}>
-            <Text style={myStyles.h3}>Gesamt</Text>
-            <Text style={[myStyles.h3, { fontWeight: 'bold', color: Colors.UI_Light_2}]}> {getSum()} </Text>
-        </View>
-        <View style={[myStyles.reserved, {justifyContent: 'flex-end'}]} onPress={onPressOrder()}>
-            <Text style={myStyles.h3}>Jetzt kostenpflichtig Bestellen</Text> 
+        <View style={[myStyles.reserved, {justifyContent: 'flex-end'}]} onPress={onPressOrder}>
+            <Text style={myStyles.h3}>Weiter</Text> 
             <Image style={{margin: 10}} source={require('../assets/payment/mail-send.png')} />
         </View>
-      </View>
-      <View style={myStyles.paymentClosedContainer}>
-        <View style={{alignSelf:'center'}}>
-            <Text style={myStyles.h2}>
-                Meine Bestellung <Image onPress={onPressInfo} source={require('../assets/payment/info.png')}/>
-            </Text>
-        </View>
-            <Text style={myStyles.h3}> Vielen Dank für Ihre Bestellung. </Text>
-            <Text style={myStyles.h3}> Bitte begeben Sie sich zu folgendem BIKE NEST: </Text>
-            <Text style={myStyles.h3}> {getLocation()} </Text>
       </View>
       <BikeNest_NavigationFooter/>
     </View>
@@ -166,12 +154,6 @@ const myStyles = StyleSheet.create({
     flex: 1,
     padding: 15,
     marginTop: 30,
-  },
-  paymentClosedContainer:{
-    flex: 1,
-    padding: 15,
-    marginTop: 30,
-    display: 'none',
   },
   h2: {
       fontSize: 27,
