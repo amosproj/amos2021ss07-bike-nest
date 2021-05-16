@@ -1,1 +1,11 @@
-rootProject.name = 'servicebikenest'
+pluginManagement {
+    plugins {
+        id 'org.springframework.boot' version '2.4.5'
+        id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+        id 'java'
+    }
+}
+rootProject.name = 'service-bikenest'
+
+include ':common'
+project(':common').projectDir = new File('../common')
