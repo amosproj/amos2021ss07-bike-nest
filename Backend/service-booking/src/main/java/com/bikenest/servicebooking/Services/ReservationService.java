@@ -1,11 +1,9 @@
 package com.bikenest.servicebooking.Services;
 
-import com.bikenest.servicebooking.Common.RestResponsePOJO;
 import com.bikenest.servicebooking.DB.Reservation;
 import com.bikenest.servicebooking.DB.ReservationRepository;
 import com.bikenest.servicebooking.Reservation.NewReservationPOJO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
