@@ -4,12 +4,53 @@ import colors from "../styles/Colors";
 import { useNavigation } from '@react-navigation/native';
 import BikeNest_Button, { ButtonStyle } from './BikeNest_Button';
 import { mainStyles } from "../styles/MainStyles";
+import * as WebBrowser from 'expo-web-browser';
+import * as Google from 'expo-auth-session/providers/google';
 
 export function CreateAccountVia3rdParty() {
     const navigation = useNavigation();
 
+    // const signInWithGoogle = () => {
+    //     signInWithGoogleAsync()
+    // }
+
+    // async function signInWithGoogleAsync() {
+    //     try {
+    //         const result = await Google.logInAsync({
+    //             behavior: 'web',
+    //             //iosClientId: IOS_CLIENT_ID,
+    //             //TODO:Hide client id 
+    //             androidClientId: "1066777740971-p4f0ja4gl7sc8h1ingn9lo2gorc3qjts.apps.googleusercontent.com",
+    //             scopes: ['profile', 'email'],
+    //         });
+
+    //         if (result.type === 'success') {
+    //             return result.accessToken;
+    //         } else {
+    //             return { cancelled: true };
+    //         }
+    //     } catch (e) {
+    //         return { error: true };
+    //     }
+    // }
+
+    const [request, response, promptAsync] = Google.useAuthRequest({
+        expoClientId: '1066777740971-sa5hjlbu6ucmequmlumjo5mresuh11n4.apps.googleusercontent.com',
+        iosClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
+        androidClientId: "1066777740971-p4f0ja4gl7sc8h1ingn9lo2gorc3qjts.apps.googleusercontent.com",
+        webClientId: '1066777740971-sa5hjlbu6ucmequmlumjo5mresuh11n4.apps.googleusercontent.com',
+      });
+    
+      React.useEffect(() => {
+        console.log("test");
+        if (response?.type === 'success') {
+          const { authentication } = response;
+          console.log("success");
+          }
+      }, [response]);
+
     return (
-        <View style={[mainStyles.container, {backgroundColor: 'transparent'}]}>
+        <View style={[mainStyles.container, { backgroundColor: 'transparent' }]}>
             <BikeNest_Button
                 type={ButtonStyle.big}
                 text="MIT FACEBOOK ANMELDEN"
@@ -28,12 +69,7 @@ export function CreateAccountVia3rdParty() {
                 iconPath={require('../assets/google_button_logo.png')}
                 overrideButtonColor={colors.UI_BaseGrey_5}
                 overrideTextColor={colors.UI_BaseGrey_0}
-                onPress={() => Alert.alert("Nice!",
-                    "Du hast erfolgreich einen Account erstellt.",
-                    [
-                        { text: "OK", onPress: () => navigation.navigate("FindBikeNest") }
-                    ]
-                )}
+                onPress={() => promptAsync()}
             />
         </View>
     );
