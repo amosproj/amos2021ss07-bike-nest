@@ -1,5 +1,6 @@
 package com.bikenest.servicebikenest;
 
+import com.bikenest.common.security.AuthToken;
 import com.bikenest.servicebikenest.DB.Bikenest;
 import com.bikenest.servicebikenest.DB.BikenestRepository;
 import io.jsonwebtoken.Jwts;
@@ -8,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Key;
 
 @RestController
 @RequestMapping(path="/bikenest")
@@ -43,8 +42,8 @@ public class BikenestController {
     }
 
     @GetMapping(path="/getUser")
-    public String getUser(Authentication authentication){
-        authentication = SecurityContextHolder.getContext().getAuthentication();
+    public String getUser(){
+        AuthToken authentication = (AuthToken) SecurityContextHolder.getContext().getAuthentication();
         return authentication.getName();
     }
 
