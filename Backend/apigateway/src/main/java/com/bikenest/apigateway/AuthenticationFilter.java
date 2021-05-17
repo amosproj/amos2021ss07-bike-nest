@@ -30,7 +30,9 @@ public class AuthenticationFilter implements GatewayFilter {
             //Validate the JWT with the use of the UserMgmt Service
             //If Token is not valid, strip the authorization Header away
             if(!usermgmtClient.ValidateJwt(authToken)) {
-                request.getHeaders().remove(HttpHeaders.AUTHORIZATION);
+                ServerHttpRequest newRequest = request.mutate()
+                        .headers(httpHeaders -> httpHeaders.remove("Authorization")).build();
+                exchange = exchange.mutate().request(newRequest).build();
             }
         }
 
