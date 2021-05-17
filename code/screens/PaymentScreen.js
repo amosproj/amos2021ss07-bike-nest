@@ -1,36 +1,42 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { ImageBackground, Pressable, StyleSheet, Text, TextInput, View, Image } from 'react-native';
+import React, { useState } from 'react';
+import { Alert, ImageBackground, Pressable, StyleSheet, Text, TextInput, View, Image } from 'react-native';
 import { Keyboard } from 'react-native'
 import { Dimensions } from "react-native";
 import Colors from '../styles/Colors';
 import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
 import { mainStyles } from "../styles/MainStyles";
+import { TouchableOpacity } from 'react-native';
+import BikeNest_TextInput from '../components/BikeNest_TextInput';
+import BikeNest_Button, { ButtonStyle } from '../components/BikeNest_Button';
+import { BookingService } from "../services/Booking";
+import { ScrollView } from 'react-native';
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
 export default function PaymentScreen({ navigation }) {
-  var [ isPress, setIsPress ] = React.useState(false);
-
-  var touchProps = {
-    activeOpacity: 1,
-    underlayColor: 'white',                               // <-- "backgroundColor" will be always overwritten by "underlayColor"
-    style: isPress ? myStyles.btnPress : myStyles.button, // <-- but you can still apply other style changes
-    onHideUnderlay: () => setIsPress(false),
-    onShowUnderlay: () => setIsPress(true),
-    onPress: () => console.log('HELLO'),                 // <-- "onPress" is apparently required
-  };
+  let bookingData = new BookingService();
+    const [ID, SetID] = useState("");
+    const [BIKENEST, setBikeNest] = useState("");
+    const [slots, setSlots] = useState("");
+    const [hours, setHours] = useState("");
+    const [ebike, setEbike] = useState("");
+    const [promocode, setPromoCode] = useState("");
 
   const onPressPaypal = () => {
     //reconnect to paypal
     //change style to border orange
     //change style of pressable Visa to no border
-    
-    borderWidth: 1
-    borderColor: Colors.UI_Light_2
+    Alert.alert("Paypal",
+                    "Du wirst jetzt zu Paypal weitergeleitet.",
+                    [
+                      //API Call Paypal
+                        { text: "OK", onPress: () => navigation.navigate("Payment") }
+                    ]);
   };
-
+  const onPressVisa = () => {
+    //Not implemented yet
+  };
   const onPressAdd = () => {
     //Zu Zahlungsmethodenauswahl?
   };
@@ -67,6 +73,7 @@ export default function PaymentScreen({ navigation }) {
   };
   return (
     <View style={myStyles.container}>
+      <ScrollView>
       <View style={myStyles.paymentContainer}>
         <View style={{alignSelf:'center'}}>
             <Text style={myStyles.h2}>
@@ -94,29 +101,27 @@ export default function PaymentScreen({ navigation }) {
         <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider}/>
         <View style={myStyles.headline}>
             <Text style={myStyles.h3}> Zahlungsmethode </Text>
-            <Text style={[myStyles.h3, {fontWeight: 'bold'}]} onPress={() => onPressAdd(this)}> <Image source={require('../assets/payment/plus.png')}/> Hinzufügen </Text>
+            {/* <Text style={[myStyles.h3, {fontWeight: 'bold'}]} onPress={() => onPressAdd(this)}> <Image source={require('../assets/payment/plus.png')}/> Hinzufügen </Text> */}
         </View>
         <View style={myStyles.zahlungsmethode}>
-            <Pressable {...touchProps} >
+            <TouchableOpacity style={[mainStyles.buttonBig, {backgroundColor: '#ffffff'}]} onPress = {() => onPressPaypal(this)}>
               <View style={myStyles.buttonContent}>
                   <Image style={[myStyles.buttonImage, { maxWidth: 150, resizeMode: 'contain' }]} source={require('../assets/payment/Paypal1.png')} />
               </View>
-            </Pressable>
-            <Pressable style={({ pressed }) => [{
-              borderColor: pressed
-                ? Colors.UI_Light_2
-                : '#ffffff'},
-            myStyles.button, {backgroundColor: '#ffffff'}]}>
-            <View style={myStyles.buttonContent}>
-                <Image style={myStyles.buttonImage} source={require('../assets/payment/Visa.png')} />
-            </View>
-            </Pressable>
+            </TouchableOpacity>
+            <TouchableOpacity style={[mainStyles.buttonBig, {backgroundColor: '#ffffff'}]} onPress = {() => onPressVisa(this)}>
+              <View style={myStyles.buttonContent}>
+                  <Image style={[myStyles.buttonImage, { maxWidth: 150, resizeMode: 'contain' }]} source={require('../assets/payment/Visa.png')} />
+              </View>
+            </TouchableOpacity>
         </View>
         <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider}/>
         <View style={myStyles.headline}>
             <Text style={myStyles.h3}> Promocode </Text>
             <TextInput style={[myStyles.halfButton, { fontWeight: 'bold', color: Colors.UI_Light_2}]}
-                placeholder='BIKE NEST'/>
+              placeholder='BIKE NEST'
+              onChangeText={(promocode) => setPromoCode(promocode)}
+              value={promocode} /> 
         </View>
         <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider}/>
         <View style={myStyles.headline}>
@@ -151,6 +156,7 @@ export default function PaymentScreen({ navigation }) {
             <Text style={myStyles.h3}> Bitte begeben Sie sich zu folgendem BIKE NEST: </Text>
             <Text style={myStyles.h3}> {getLocation()} </Text>
       </View>
+      </ScrollView>
       <BikeNest_NavigationFooter/>
     </View>
   )
