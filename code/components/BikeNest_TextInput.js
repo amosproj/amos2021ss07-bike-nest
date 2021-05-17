@@ -5,9 +5,9 @@ import { TextInput } from 'react-native';
 
 export default function BikeNest_TextInput(props) {
 
-    function onChangeText() {
+    function onChangeText(value) {
         if (props.onChangeText != null) {
-            props.onChangeText();
+            props.onChangeText(value);
         }
     }
 
@@ -16,7 +16,7 @@ export default function BikeNest_TextInput(props) {
             placeholder={props.placeholder}
             secureTextEntry={props.secureTextEntry}
             style={mainStyles.inputField}
-            onChangeText={() => onChangeText()}
+            onChangeText={(value) => onChangeText(value)}
             value={props.value}
         />
     );

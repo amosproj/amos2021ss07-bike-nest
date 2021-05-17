@@ -42,27 +42,26 @@ export default function FindBikeNestScreen({navigation}) {
     latitudeDelta: 0.06,
     longitudeDelta: 0.04,
   }
-  // asks for user location permission
+
+  //asks for user location permission
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      // if (status !== 'granted') {
-      //   Alert.alert('Permission to access location was denied');
-      //   return;
-      // }
-
-      let location = await Location.getCurrentPositionAsync({});
-      let localdistances = []
-      stateMarkers.map((marker, index) => {
-        localdistances.push(getDistanceToUser(marker, location));
-      });
-      setDistances(localdistances);
-
-      //setLocation(location);
+      if (status !== 'granted') {
+        Alert.alert('Permission to access location was denied');     
+      } else if (distances != [0,0,0,0]){
+        console.log('location permission granted')
+        let location = await Location.getCurrentPositionAsync({});
+        console.log('location arrived')
+        let localdistances = []
+        stateMarkers.map((marker, index) => {
+          localdistances.push(getDistanceToUser(marker, location));
+        });
+        setDistances(localdistances);
+        //setLocation(location);
+      }
     })();
   }, []);
-
-
 
   // compute scaling of markers
   const interpolations = stateMarkers.map((marker, index) => {
@@ -121,10 +120,9 @@ export default function FindBikeNestScreen({navigation}) {
 
   // moves cards at the bottom of screen
   const onMarkerPress = (mapEventData) => {
-    console.log(isLoggedIn);
     const markerID = mapEventData._targetInst.return.key;
 
-    if(!isLoggedIn){setLogin(true);}
+    //if(!isLoggedIn){setLogin(true);}
 
     // stateArr = [...stateMarkers];
     // console.log('setting markers')
@@ -205,7 +203,7 @@ export default function FindBikeNestScreen({navigation}) {
           { useNativeDriver: true }
         )}
       >
-        { isLoggedIn && stateMarkers.map((marker, index) => (
+        { /*isLoggedIn &&*/ stateMarkers.map((marker, index) => (
           <View style={[styles.card, { backgroundColor: marker.color, display: displayState }]} key={index}>
             <Image
               source={marker.image}

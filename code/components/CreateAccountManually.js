@@ -61,6 +61,7 @@ export function CreateAccountManually() {
         return isNewEmail;
     }
 
+
     //TODO: Replace Modal (not working in web)
     return (
         <View style={mainStyles.container}>
@@ -73,23 +74,23 @@ export function CreateAccountManually() {
             />
             <BikeNest_TextInput
                 placeholder='Vorname'
-                onChangeText={setFirstName}
+                onChangeText={(firstName) => setFirstName(firstName)}
                 value={firstName}
             />
             <BikeNest_TextInput
                 placeholder='Name'
-                onChangeText={setLastName}
+                onChangeText={(lastName) => setLastName(lastName)}
                 value={lastName}
             />
             <BikeNest_TextInput
                 placeholder='Email'
-                onChangeText={setEmail}
+                onChangeText={(email) => setEmail(email)}
                 value={email}
             />
             <BikeNest_TextInput
                 placeholder="Passwort"
                 secureTextEntry={true}
-                onChangeText={setPassword}
+                onChangeText={(password) => setPassword(password)}
                 value={password}
             />
             <BikeNest_CheckBox

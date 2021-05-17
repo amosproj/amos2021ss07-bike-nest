@@ -1,7 +1,6 @@
-package com.bikenest.servicebikenest.security;
+package com.bikenest.common.security;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -25,13 +24,13 @@ public class AuthToken implements Authentication {
     }
 
     @Override
-    public Object getDetails() {
-        return null;
+    public Claims getDetails() {
+        return claims;
     }
 
     @Override
     public Object getPrincipal() {
-        return null;
+        return claims;
     }
 
     @Override
