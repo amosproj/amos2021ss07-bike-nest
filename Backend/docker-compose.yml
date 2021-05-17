@@ -21,6 +21,17 @@ services:
      - MYSQL_DATABASE=bikenest
     networks:
      - bikenest-db
+
+  user-db:
+    container_name: user-db
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=test
+      - MYSQL_USER=userservice
+      - MYSQL_PASSWORD=test
+      - MYSQL_DATABASE=user
+    networks:
+      - user-db
     
   #php:
   #  container_name: phpadmin
@@ -67,15 +78,22 @@ services:
     networks:
      - booking-db
      - bikenest-db
-     - usermanagement
+     - user-db
      
   usermgmt:
     container_name: usermgmt
     build: service-usermgmt
     restart: always
+    environment:
+      - MYSQL_HOST=user-db
+      - MYSQL_PORT=3306
+      - MYSQL_DBNAME=user
+      - MYSQL_USER=userservice
+      - MYSQL_PASSWORD=test
     networks:
-     - usermanagement
+      - user-db
+
 networks:
-  usermanagement:
   booking-db:
   bikenest-db:
+  user-db:
