@@ -6,10 +6,20 @@ import BikeNest_Button, { ButtonStyle } from './BikeNest_Button';
 import { mainStyles } from "../styles/MainStyles";
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
+import * as SecureStore from 'expo-secure-store';
 
 export function CreateAccountVia3rdParty() {
     const navigation = useNavigation();
+    const MY_SECURE_AUTH_STATE_KEY = 'MySecureAuthStateKey';
 
+    async function getValueFor(key) {
+        let result = await SecureStore.getItemAsync(key);
+        if (result) {
+            alert("🔐 Here's your value 🔐 \n" + result);
+        } else {
+            alert('No values stored under that key.');
+        }
+    }
     // const signInWithGoogle = () => {
     //     signInWithGoogleAsync()
     // }
@@ -39,15 +49,29 @@ export function CreateAccountVia3rdParty() {
         iosClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
         androidClientId: "1066777740971-p4f0ja4gl7sc8h1ingn9lo2gorc3qjts.apps.googleusercontent.com",
         webClientId: '1066777740971-sa5hjlbu6ucmequmlumjo5mresuh11n4.apps.googleusercontent.com',
-      });
-    
-      React.useEffect(() => {
+    });
+
+    React.useEffect(() => {
         console.log("test");
         if (response?.type === 'success') {
-          const { authentication } = response;
-          console.log("success");
-          }
-      }, [response]);
+            const { authentication } = response;
+            console.log("success");
+
+            const auth = response.params;
+            const storageValue = JSON.stringify(auth);
+
+            if (Platform.OS !== 'web') {
+                // Securely store the auth on your device
+                SecureStore.setItemAsync(MY_SECURE_AUTH_STATE_KEY, storageValue);
+            }
+            //let value = SecureStore.getItemAsync(MY_SECURE_AUTH_STATE_KEY)
+            getValueFor(MY_SECURE_AUTH_STATE_KEY);
+            navigation.navigate("FindBikeNest");
+        }
+        else {
+            console.log(response?.type);
+        }
+    }, [response]);
 
     return (
         <View style={[mainStyles.container, { backgroundColor: 'transparent' }]}>
