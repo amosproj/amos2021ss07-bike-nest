@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { ImageBackground, Pressable, StyleSheet, Text, TextInput, View, Image, TouchableWithoutFeedback } from 'react-native';
+import { ImageBackground, Pressable, StyleSheet, Text, TextInput, View, Image } from 'react-native';
 import { Keyboard } from 'react-native'
 import { Dimensions } from "react-native";
 import Colors from '../styles/Colors';
@@ -40,7 +40,6 @@ export default function PaymentScreen({ navigation }) {
   };
   const onPressOrder = () => {
     //Daten an Backend senden
-    console.log('HELLO')
     //paymentContainer zu display none
     //paymentClosed Container zu display: flex
     //nach timer reconnect to findBikenest? 
@@ -71,7 +70,7 @@ export default function PaymentScreen({ navigation }) {
       <View style={myStyles.paymentContainer}>
         <View style={{alignSelf:'center'}}>
             <Text style={myStyles.h2}>
-                Meine Bestellung <Image onPress={onPressInfo} source={require('../assets/payment/info.png')}/>
+                Meine Bestellung <Image onPress={() => onPressInfo(this)} source={require('../assets/payment/info.png')}/>
             </Text>
         </View>
         <View style={myStyles.headline}>
@@ -95,7 +94,7 @@ export default function PaymentScreen({ navigation }) {
         <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider}/>
         <View style={myStyles.headline}>
             <Text style={myStyles.h3}> Zahlungsmethode </Text>
-            <Text style={[myStyles.h3, {fontWeight: 'bold'}]} onPress={onPressAdd()}> <Image source={require('../assets/payment/plus.png')}/> Hinzufügen </Text>
+            <Text style={[myStyles.h3, {fontWeight: 'bold'}]} onPress={() => onPressAdd(this)}> <Image source={require('../assets/payment/plus.png')}/> Hinzufügen </Text>
         </View>
         <View style={myStyles.zahlungsmethode}>
             <Pressable {...touchProps} >
@@ -134,18 +133,18 @@ export default function PaymentScreen({ navigation }) {
         </View>
         <Image style={{margin: 10}}source={require('../assets/payment/Line.png')}/>
         <View style={myStyles.headline}>
-            <Text style={myStyles.h3}>Gesamt</Text>
+            <Text style={myStyles.h3}>Gesamt (für {getHours()})</Text>
             <Text style={[myStyles.h3, { fontWeight: 'bold', color: Colors.UI_Light_2}]}> {getSum()} </Text>
         </View>
-        <View style={[myStyles.reserved, {justifyContent: 'flex-end'}]} onPress={onPressOrder()}>
-            <Text style={myStyles.h3}>Jetzt kostenpflichtig Bestellen</Text> 
+        <Pressable style={[myStyles.reserved, {justifyContent: 'flex-end'}]} onPress={() => onPressOrder(this)}>
+            <Text style={myStyles.h3}>Jetzt Reservieren</Text> 
             <Image style={{margin: 10}} source={require('../assets/payment/mail-send.png')} />
-        </View>
+        </Pressable>
       </View>
       <View style={myStyles.paymentClosedContainer}>
         <View style={{alignSelf:'center'}}>
             <Text style={myStyles.h2}>
-                Meine Bestellung <Image onPress={onPressInfo} source={require('../assets/payment/info.png')}/>
+                Meine Bestellung <Image onPress={() => onPressInfo(this)} source={require('../assets/payment/info.png')}/>
             </Text>
         </View>
             <Text style={myStyles.h3}> Vielen Dank für Ihre Bestellung. </Text>

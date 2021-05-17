@@ -43,6 +43,7 @@ export default function BookingScreen({ navigation }) {
   };
   const onPressOrder = () => {
     //weiter zu order verarbeitung
+    navigation.navigate("Payment");
   }
   const getSlots = () => {
     return "1 Slot";
@@ -135,10 +136,10 @@ export default function BookingScreen({ navigation }) {
                 {getEbike()} */}
               </Text>
         </View>
-        <View style={[myStyles.reserved, {justifyContent: 'flex-end'}]} onPress={onPressOrder}>
+          <Pressable style={[myStyles.reserved, {justifyContent: 'flex-end'}]}  onPress={() => onPressOrder(this)}>
             <Text style={myStyles.h3}>Weiter</Text> 
             <Image style={{margin: 10}} source={require('../assets/payment/mail-send.png')} />
-        </View>
+          </Pressable>
       </View>
       <BikeNest_NavigationFooter/>
     </View>
