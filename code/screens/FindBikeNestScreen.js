@@ -18,7 +18,6 @@ import {
 } from "react-native";
 import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
 
-
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = height / 3.5;
 const CARD_WIDTH = width * 0.8;

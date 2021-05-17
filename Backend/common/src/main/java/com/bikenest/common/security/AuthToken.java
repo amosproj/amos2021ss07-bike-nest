@@ -13,6 +13,8 @@ public class AuthToken implements Authentication {
         this.claims = claims;
     }
 
+    //This can be used with @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    //TODO: Implement this later...
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
