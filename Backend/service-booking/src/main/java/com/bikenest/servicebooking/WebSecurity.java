@@ -22,9 +22,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
 
         http.cors().and().authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/*", "/booking/*")
+                .anyRequest()
                 .permitAll()
-                .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()

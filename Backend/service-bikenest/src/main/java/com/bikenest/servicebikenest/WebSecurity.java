@@ -1,4 +1,4 @@
-package com.bikenest.servicebikenest.security;
+package com.bikenest.servicebikenest;
 
 import com.bikenest.common.security.JWTAuthenticationEntrypoint;
 import com.bikenest.common.security.JWTAuthenticationFilter;

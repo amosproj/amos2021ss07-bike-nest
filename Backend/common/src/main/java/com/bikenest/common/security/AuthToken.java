@@ -30,7 +30,7 @@ public class AuthToken implements Authentication {
 
     @Override
     public Object getPrincipal() {
-        return null;
+        return claims;
     }
 
     @Override
