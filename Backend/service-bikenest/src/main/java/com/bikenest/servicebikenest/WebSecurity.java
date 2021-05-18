@@ -2,6 +2,8 @@ package com.bikenest.servicebikenest;
 
 import com.bikenest.common.security.JWTAuthenticationEntrypoint;
 import com.bikenest.common.security.JWTAuthenticationFilter;
+import com.bikenest.common.security.JWTAuthenticationEntrypoint;
+import com.bikenest.common.security.JWTAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -16,8 +18,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @EnableWebSecurity
-public class WebSecurity extends WebSecurityConfigurerAdapter {
-
+    private JWTAuthenticationEntrypoint jwtAuthenticationEntryPoint = new JWTAuthenticationEntrypoint();
     private JWTAuthenticationEntrypoint jwtAuthenticationEntryPoint = new JWTAuthenticationEntrypoint();
 
     @Override
