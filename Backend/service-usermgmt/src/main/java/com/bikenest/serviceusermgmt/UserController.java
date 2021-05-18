@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import java.security.Key;
 
 import java.util.Date;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -44,19 +45,23 @@ public class UserController {
 
 	@PostMapping("/signin")
 	public ResponseEntity<String> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-		if(loginRequest.getUsername().equals("Test") && loginRequest.getPassword().equals("Test"))
+		Optional<User> user = userRepository.findByUsername(loginRequest.getUsername());
+		if(!user.isPresent()){
+			return ResponseEntity.badRequest().body("Username not found!");
+		}
+		if(loginRequest.getPassword().equals(user.get().getPassword()))
 		{
 			//BUILD JWT
 			String jwt = Jwts.builder()
 							.signWith(SECRET_KEY)
-							.setSubject("Test")
+							.setSubject(user.get().getUsername())
 							.setIssuedAt(new Date())
 							.claim("Role", "User")
 							.setExpiration(new Date((new Date()).getTime() + 1000000))
 							.compact();
 			return ResponseEntity.ok(jwt);
 		}
-		return ResponseEntity.badRequest().build();
+		return ResponseEntity.badRequest().body("Invalid password provided!");
 	}
 
 	@PostMapping("/signup")
