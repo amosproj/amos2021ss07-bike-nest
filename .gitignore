@@ -21,3 +21,9 @@ web-build/
 Backend/.settings/org.eclipse.buildship.core.prefs
 Backend/apigateway/.settings/org.eclipse.buildship.core.prefs
 Backend/service-usermgmt/.settings/org.eclipse.buildship.core.prefs
+*\bin
+*.classpath
+*.project
+Backend/.settings/org.eclipse.buildship.core.prefs
+Backend/apigateway/.settings/org.eclipse.buildship.core.prefs
+Backend/service-usermgmt/.settings/org.eclipse.buildship.core.prefs
