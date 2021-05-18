@@ -11,6 +11,7 @@ import BikeNest_Button, { ButtonStyle } from '../components/BikeNest_Button';
 import { BookingService } from "../services/Booking";
 import { ScrollView } from 'react-native';
 import BikeNest_Modal from '../components/BikeNest_Modal';
+import global from '../components/GlobalVars';
 import moment from "moment";
 
 var width = Dimensions.get('window').width; //full width
@@ -27,20 +28,15 @@ export default function PaymentScreen({ navigation }) {
     const [modalHeadline, setModalHeadline] = useState("");
 
     let tryCreateBooking = (bikenestId, startTime, endTime) => {
-      // What we have to provider
-      // userId (This is implicitly provided by the JWT)
-      //   - bikenestId
-      //   - startDateTime
-      //   - endDateTime
-      // let data = {bikenestId, startDateTime, endDateTime};
-      let data = {"bikenestId": bikenestId, "startDateTime": startTime, "endDateTime": endTime};
-      console.log('start adding reservation');
 
-      return fetch("http://192.168.2.124:9000/booking/add", {
+      let data = {"bikenestId": bikenestId, "startDateTime": startTime, "endDateTime": endTime};
+
+      return fetch(global.globalIPAddress + "/booking/add", {
           method: 'POST',
           body: JSON.stringify(data),
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            // 'Authorization': 'jwt-token'
           },
       })
           .then((response) => response.json())
@@ -52,6 +48,9 @@ export default function PaymentScreen({ navigation }) {
               let mockAccountCreated = true;
               let mockErrorMsg = "Error Msg test";
               let mockData = {mockAccountCreated, mockErrorMsg};
+
+              //Pageforwarding
+              navigation.navigate("History");
 
               // console.log(mockData);
               // setModalInfo(mockData);

@@ -1,10 +1,11 @@
-import React from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity  } from 'react-native';
+import React, { useState } from 'react';
+import { Pressable, StyleSheet, Text, View, Image, TouchableOpacity  } from 'react-native';
 import { Dimensions } from "react-native";
 import Avatar from '../assets/Avatar.png'; 
 import bike from '../assets/bike.png'; 
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import global from '../components/GlobalVars';
 
 
 var width = Dimensions.get('window').width; //full width
@@ -12,6 +13,27 @@ var height = Dimensions.get('window').height; //full height
 
 
 export default function HistoryScreen({ navigation }) {
+  // const [myListData, setData] = useState("");
+
+  let tryGETBooking = () => {
+    console.log('start pulling reservation info');
+
+    return fetch(global.globalIPAddress + "/booking/all", {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+    })
+        .then((response) => response.json())
+        .then((json) => {
+          alert(JSON.stringify(json));
+          console.log(json);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+}
+
   return (
     <View style={styles.container}>
       <Image source={Avatar} style={styles.avatar} />
@@ -20,12 +42,13 @@ export default function HistoryScreen({ navigation }) {
         Max Muster </Text>
       <Text style={styles.welcome} >
         Willkommen Zurück! </Text>
-
-      <Image source={bike} style={styles.bike} />
-      <Text style={styles.place} >
-        Du hast einen Platz in: </Text>
-      <Text style={styles.nest} >
-        Fetch data of where bike is parked </Text>
+      <TouchableOpacity  onPress={() => navigation.navigate("Lock") }>
+        <Image source={bike} style={styles.bike}/>
+        <Text style={styles.place} >
+          Du hast einen Platz in: </Text>
+        <Text style={styles.nest} >
+          Fetch data of where bike is parked </Text>
+      </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate("EditPersonalInformation")} style={styles.buttonLock}>
         <Text style={styles.buttonLockOwner}> Max Muster's bike </Text>
@@ -44,7 +67,7 @@ export default function HistoryScreen({ navigation }) {
         <Text style={styles.costRecord}> 50 $ </Text> 
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => alert('go to next screen')} style={styles.buttonHistory}>
+      <TouchableOpacity onPress={() => tryGETBooking(this)} style={styles.buttonHistory}>
         <Text style={styles.buttonHistoryText}> Frühere Reservierungen und Zahlungen </Text>
       </TouchableOpacity>
 

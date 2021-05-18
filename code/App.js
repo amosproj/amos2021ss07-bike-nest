@@ -13,7 +13,6 @@ import LockScreen from './screens/LockScreen';
 
 export default function App() {
   //TODO set global IP variable for API Calls 
-  //TODO globale klasse für API Calls fetchBooking(); etc...
   return (
     <NavigationContainer>
       <AppNavigator.Navigator screenOptions={{ headerShown: false }}>
