@@ -1,6 +1,6 @@
 package com.bikenest.servicebooking;
 
-import com.bikenest.common.*;
+import com.bikenest.common.interfaces.bikenest.ExampleInterface;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +15,7 @@ public class ServicebookingApplication {
 
     @RequestMapping("/info")
     public String home() {
-        return "Booking info 1.";
+        return "Booking info 2.";
     }
 
     @PostMapping("/commontest")
@@ -27,5 +27,4 @@ public class ServicebookingApplication {
     public static void main(String[] args) {
         SpringApplication.run(ServicebookingApplication.class, args);
     }
-
 }

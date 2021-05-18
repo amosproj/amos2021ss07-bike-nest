@@ -1,36 +1,85 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { ImageBackground, Pressable, StyleSheet, Text, TextInput, View, Image, TouchableWithoutFeedback } from 'react-native';
+import React, { useState } from 'react';
+import { Alert, ImageBackground, Pressable, StyleSheet, Text, TextInput, View, Image } from 'react-native';
 import { Keyboard } from 'react-native'
 import { Dimensions } from "react-native";
 import Colors from '../styles/Colors';
 import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
 import { mainStyles } from "../styles/MainStyles";
+import { TouchableOpacity } from 'react-native';
+import BikeNest_TextInput from '../components/BikeNest_TextInput';
+import BikeNest_Button, { ButtonStyle } from '../components/BikeNest_Button';
+import { BookingService } from "../services/Booking";
+import { ScrollView } from 'react-native';
+import BikeNest_Modal from '../components/BikeNest_Modal';
+import moment from "moment";
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
 export default function PaymentScreen({ navigation }) {
-  var [ isPress, setIsPress ] = React.useState(false);
+    let bookingData = new BookingService();
+    const [slots, setSlots] = useState("");
+    const [hours, setHours] = useState("");
+    const [ebike, setEbike] = useState("");
+    const [promocode, setPromoCode] = useState("");
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalText, setModalText] = useState("");
+    const [modalHeadline, setModalHeadline] = useState("");
 
-  var touchProps = {
-    activeOpacity: 1,
-    underlayColor: 'white',                               // <-- "backgroundColor" will be always overwritten by "underlayColor"
-    style: isPress ? myStyles.btnPress : myStyles.button, // <-- but you can still apply other style changes
-    onHideUnderlay: () => setIsPress(false),
-    onShowUnderlay: () => setIsPress(true),
-    onPress: () => console.log('HELLO'),                 // <-- "onPress" is apparently required
-  };
+    let tryCreateBooking = (bikenestId, startTime, endTime) => {
+      // What we have to provider
+      // userId (This is implicitly provided by the JWT)
+      //   - bikenestId
+      //   - startDateTime
+      //   - endDateTime
+      // let data = {bikenestId, startDateTime, endDateTime};
+      let data = {"bikenestId": bikenestId, "startDateTime": startTime, "endDateTime": endTime};
+      console.log('start adding reservation');
+
+      return fetch("http://192.168.2.124:9000/booking/add", {
+          method: 'POST',
+          body: JSON.stringify(data),
+          headers: {
+            'Content-Type': 'application/json'
+          },
+      })
+          .then((response) => response.json())
+          .then((json) => {
+              console.log('is this working?');
+              console.log(JSON.stringify(data));
+
+              //Testing
+              let mockAccountCreated = true;
+              let mockErrorMsg = "Error Msg test";
+              let mockData = {mockAccountCreated, mockErrorMsg};
+
+              // console.log(mockData);
+              // setModalInfo(mockData);
+
+              //setModalInfo(json);
+          })
+          .catch((error) => {
+              setModalHeadline("Sorry!");
+              setModalText("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
+              setModalVisible(true);
+              console.error(error);
+          });
+  }
 
   const onPressPaypal = () => {
     //reconnect to paypal
     //change style to border orange
     //change style of pressable Visa to no border
-    
-    borderWidth: 1
-    borderColor: Colors.UI_Light_2
+    Alert.alert("Paypal",
+                    "Du wirst jetzt zu Paypal weitergeleitet.",
+                    [
+                      //API Call Paypal
+                        { text: "OK", onPress: () => navigation.navigate("History") }
+                    ]);
   };
-
+  const onPressVisa = () => {
+    //Not implemented yet
+  };
   const onPressAdd = () => {
     //Zu Zahlungsmethodenauswahl?
   };
@@ -39,7 +88,26 @@ export default function PaymentScreen({ navigation }) {
     alert('this is an info.');
   };
   const onPressOrder = () => {
-    //weiter zu order verarbeitung
+
+    var dateStart = moment()
+    .utcOffset('+05:30')
+    .format('yyyy-MM-DD');
+    var timeStart =  moment()
+    .utcOffset('+02:00')
+    .format('HH:mm:ss');
+    var dateEnd = moment()
+    .utcOffset('+05:30')
+    .format('yyyy-MM-DD');
+    var timeEnd =  moment()
+    .utcOffset('+02:30')
+    .format('HH:mm:ss');
+
+    var bikenestId = '1';
+    var startTime = dateStart + 'T' + timeStart; 
+    var endTime = dateEnd + 'T' + timeEnd;
+    console.log(' start: ' + startTime + ' end: ' + endTime);
+
+    tryCreateBooking(bikenestId, startTime, endTime);
   }
   const getSlots = () => {
     return "1 Slot";
@@ -64,10 +132,18 @@ export default function PaymentScreen({ navigation }) {
   };
   return (
     <View style={myStyles.container}>
+      <BikeNest_Modal
+          modalHeadLine={modalHeadline}
+          modalText={modalText}
+          isVisible={modalVisible}
+          onPress={() => setModalVisible(false)}
+          onRequestClose={() => { setModalVisible(!modalVisible); }}
+        />
+      <ScrollView>
       <View style={myStyles.paymentContainer}>
         <View style={{alignSelf:'center'}}>
             <Text style={myStyles.h2}>
-                Meine Bestellung <Image onPress={onPressInfo} source={require('../assets/payment/info.png')}/>
+                Meine Bestellung <Image onPress={() => onPressInfo(this)} source={require('../assets/payment/info.png')}/>
             </Text>
         </View>
         <View style={myStyles.headline}>
@@ -91,29 +167,27 @@ export default function PaymentScreen({ navigation }) {
         <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider}/>
         <View style={myStyles.headline}>
             <Text style={myStyles.h3}> Zahlungsmethode </Text>
-            <Text style={[myStyles.h3, {fontWeight: 'bold'}]} onPress={onPressAdd()}> <Image source={require('../assets/payment/plus.png')}/> Hinzufügen </Text>
+            {/* <Text style={[myStyles.h3, {fontWeight: 'bold'}]} onPress={() => onPressAdd(this)}> <Image source={require('../assets/payment/plus.png')}/> Hinzufügen </Text> */}
         </View>
         <View style={myStyles.zahlungsmethode}>
-            <Pressable {...touchProps} >
+            <TouchableOpacity style={[mainStyles.buttonBig, {backgroundColor: '#ffffff'}]} onPress = {() => onPressPaypal(this)}>
               <View style={myStyles.buttonContent}>
                   <Image style={[myStyles.buttonImage, { maxWidth: 150, resizeMode: 'contain' }]} source={require('../assets/payment/Paypal1.png')} />
               </View>
-            </Pressable>
-            <Pressable style={({ pressed }) => [{
-              borderColor: pressed
-                ? Colors.UI_Light_2
-                : '#ffffff'},
-            myStyles.button, {backgroundColor: '#ffffff'}]}>
-            <View style={myStyles.buttonContent}>
-                <Image style={myStyles.buttonImage} source={require('../assets/payment/Visa.png')} />
-            </View>
-            </Pressable>
+            </TouchableOpacity>
+            <TouchableOpacity style={[mainStyles.buttonBig, {backgroundColor: '#ffffff'}]} onPress = {() => onPressVisa(this)}>
+              <View style={myStyles.buttonContent}>
+                  <Image style={[myStyles.buttonImage, { maxWidth: 150, resizeMode: 'contain' }]} source={require('../assets/payment/Visa.png')} />
+              </View>
+            </TouchableOpacity>
         </View>
         <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider}/>
         <View style={myStyles.headline}>
             <Text style={myStyles.h3}> Promocode </Text>
             <TextInput style={[myStyles.halfButton, { fontWeight: 'bold', color: Colors.UI_Light_2}]}
-                placeholder='BIKE NEST'/>
+              placeholder='BIKE NEST'
+              onChangeText={(promocode) => setPromoCode(promocode)}
+              value={promocode} /> 
         </View>
         <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider}/>
         <View style={myStyles.headline}>
@@ -130,14 +204,25 @@ export default function PaymentScreen({ navigation }) {
         </View>
         <Image style={{margin: 10}}source={require('../assets/payment/Line.png')}/>
         <View style={myStyles.headline}>
-            <Text style={myStyles.h3}>Gesamt</Text>
+            <Text style={myStyles.h3}>Gesamt (für {getHours()})</Text>
             <Text style={[myStyles.h3, { fontWeight: 'bold', color: Colors.UI_Light_2}]}> {getSum()} </Text>
         </View>
-        <View style={[myStyles.reserved, {justifyContent: 'flex-end'}]} onPress={onPressOrder}>
-            <Text style={myStyles.h3}>Jetzt kostenpflichtig Bestellen</Text> 
+        <Pressable style={[myStyles.reserved, {justifyContent: 'flex-end'}]} onPress={() => onPressOrder(this)}>
+            <Text style={myStyles.h3}>Jetzt Reservieren</Text> 
             <Image style={{margin: 10}} source={require('../assets/payment/mail-send.png')} />
-        </View>
+        </Pressable>
       </View>
+      <View style={myStyles.paymentClosedContainer}>
+        <View style={{alignSelf:'center'}}>
+            <Text style={myStyles.h2}>
+                Meine Bestellung <Image onPress={() => onPressInfo(this)} source={require('../assets/payment/info.png')}/>
+            </Text>
+        </View>
+            <Text style={myStyles.h3}> Vielen Dank für Ihre Bestellung. </Text>
+            <Text style={myStyles.h3}> Bitte begeben Sie sich zu folgendem BIKE NEST: </Text>
+            <Text style={myStyles.h3}> {getLocation()} </Text>
+      </View>
+      </ScrollView>
       <BikeNest_NavigationFooter/>
     </View>
   )
@@ -152,6 +237,12 @@ const myStyles = StyleSheet.create({
     flex: 1,
     padding: 15,
     marginTop: 30,
+  },
+  paymentClosedContainer:{
+    flex: 1,
+    padding: 15,
+    marginTop: 30,
+    display: 'none',
   },
   h2: {
       fontSize: 27,

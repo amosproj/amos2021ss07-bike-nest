@@ -1,15 +1,16 @@
 package com.bikenest.servicebikenest;
 
+import com.bikenest.common.security.AuthToken;
 import com.bikenest.servicebikenest.DB.Bikenest;
 import com.bikenest.servicebikenest.DB.BikenestRepository;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Key;
 
 @RestController
 @RequestMapping(path="/bikenest")
@@ -19,10 +20,10 @@ public class BikenestController {
 
     //Request Params come from query parameters
     @PostMapping(path="/add")
-    public @ResponseBody String AddNewBikenest (Authentication auth, @RequestParam String Name
+    public @ResponseBody String AddNewBikenest (@RequestParam String Name
             , @RequestParam Integer SpotsLeft, @RequestParam String GPSCoordinates) {
         // @ResponseBody means the returned String is the response, not a view name
-        String t = (String) auth.getPrincipal();
+
         Bikenest bikenest = new Bikenest();
         bikenest.setName(Name);
         bikenest.setSpotsLeft(SpotsLeft);
@@ -43,9 +44,8 @@ public class BikenestController {
     }
 
     @GetMapping(path="/getUser")
-    public String getUser(Authentication authentication){
-        authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication.getName();
+    public String getUser(@AuthenticationPrincipal Claims claims){
+        return claims.getSubject();
     }
 
 

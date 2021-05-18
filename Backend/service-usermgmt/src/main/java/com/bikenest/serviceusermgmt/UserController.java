@@ -1,98 +1,62 @@
 package com.bikenest.serviceusermgmt;
 
+import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 import java.security.Key;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Date;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bikenest.serviceusermgmt.models.ERole;
-import com.bikenest.serviceusermgmt.models.Role;
 import com.bikenest.serviceusermgmt.models.User;
 import com.bikenest.serviceusermgmt.payload.LoginRequest;
 import com.bikenest.serviceusermgmt.payload.SignupRequest;
-import com.bikenest.serviceusermgmt.payload.JwtResponse;
 import com.bikenest.serviceusermgmt.payload.MessageResponse;
-import com.bikenest.serviceusermgmt.repository.RoleRepository;
 import com.bikenest.serviceusermgmt.repository.UserRepository;
-import com.bikenest.serviceusermgmt.security.JwtUtils;
-import com.bikenest.serviceusermgmt.security.UserDetailsImpl;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(path="/usermanagement")
 public class UserController {
-    private Key SECRET_KEY = Keys.hmacShaKeyFor("NdRgUkXp2s5v8y/B?D(G+KbPeShVmYq3".getBytes());
-
-    @Autowired
-	AuthenticationManager authenticationManager;
+    private Key SECRET_KEY = Keys.hmacShaKeyFor("NdRgUkXp2s5v8yzB?D(G+KbPeShVmYq3".getBytes());
 
 	@Autowired
 	UserRepository userRepository;
 
-	@Autowired
-	RoleRepository roleRepository;
-
-	@Autowired
-	PasswordEncoder encoder;
-
-	@Autowired
-	JwtUtils jwtUtils;
-
-    //Login Endpoint
-
-    //Signup Endpoint
-
     //jwtauth Endpoint
     @PostMapping(path="/validatejwt")
     public ResponseEntity<Boolean> ValidateJWT(@RequestBody String JWT){
-        if(!Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().isSigned(JWT))
-        {
-            return ResponseEntity.ok(false);
-        }
+    	try {
+			Jwt parsed = Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parse(JWT);
+		}catch(Exception ex){
+			return ResponseEntity.ok(false);
+		}
         return ResponseEntity.ok(true);
     }
 
 	@PostMapping("/signin")
-	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-
-		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		String jwt = jwtUtils.generateJwtToken(authentication);
-		
-		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();		
-		List<String> roles = userDetails.getAuthorities().stream()
-				.map(item -> item.getAuthority())
-				.collect(Collectors.toList());
-
-		return ResponseEntity.ok(new JwtResponse(jwt, 
-												 userDetails.getId(), 
-												 userDetails.getUsername(), 
-												 userDetails.getEmail(), 
-												 roles));
+	public ResponseEntity<String> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+		if(loginRequest.getUsername().equals("Test") && loginRequest.getPassword().equals("Test"))
+		{
+			//BUILD JWT
+			String jwt = Jwts.builder()
+							.signWith(SECRET_KEY)
+							.setSubject("Test")
+							.setIssuedAt(new Date())
+							.claim("Role", "User")
+							.setExpiration(new Date((new Date()).getTime() + 1000000))
+							.compact();
+			return ResponseEntity.ok(jwt);
+		}
+		return ResponseEntity.badRequest().build();
 	}
 
 	@PostMapping("/signup")
@@ -112,39 +76,8 @@ public class UserController {
 		// Create new user's account
 		User user = new User(signUpRequest.getUsername(), 
 							 signUpRequest.getEmail(),
-							 encoder.encode(signUpRequest.getPassword()));
+							 signUpRequest.getPassword());
 
-		Set<String> strRoles = signUpRequest.getRole();
-		Set<Role> roles = new HashSet<>();
-
-		if (strRoles == null) {
-			Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-			roles.add(userRole);
-		} else {
-			strRoles.forEach(role -> {
-				switch (role) {
-				case "admin":
-					Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-					roles.add(adminRole);
-
-					break;
-				case "mod":
-					Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
-							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-					roles.add(modRole);
-
-					break;
-				default:
-					Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-					roles.add(userRole);
-				}
-			});
-		}
-
-		user.setRoles(roles);
 		userRepository.save(user);
 
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));

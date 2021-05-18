@@ -1,4 +1,4 @@
-package com.bikenest.common;
+package com.bikenest.common.interfaces.bikenest;
 
 public class ExampleInterface {
     private String test;
