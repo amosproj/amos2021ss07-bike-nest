@@ -8,6 +8,7 @@ import BikeNest_CheckBox from './BikeNest_CheckBox';
 import BikeNest_Modal from './BikeNest_Modal';
 import BikeNest_Button, { ButtonStyle } from './BikeNest_Button';
 import BikeNest_TextInput from './BikeNest_TextInput';
+import global from '../components/GlobalVars';
 
 export function CreateAccountManually() {
     let userdata = new UserDataService();
@@ -100,7 +101,7 @@ export function CreateAccountManually() {
     let tryCreateAccount = () => {
         let data = { firstName, lastName, email, password };
 
-        return fetch("http://192.168.2.129:9000/bikenest/info", {
+        return fetch(global.globalIPAddress + "/bikenest/info", {
             method: 'POST',
             body: JSON.stringify(data)
         })
