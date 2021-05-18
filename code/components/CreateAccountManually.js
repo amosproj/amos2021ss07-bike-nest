@@ -73,9 +73,9 @@ export function CreateAccountManually() {
 
     let setModalInfo = (json) => {
         //setAccountCreated(json.accountCreated);
-        setAccountCreated(json.mockAccountCreated);
+        //setAccountCreated(json.mockAccountCreated);
 
-        if (json.mockAccountCreated) {
+        if (!json.badRequest) {
             setModalHeadline("Hurra!");
             setModalText("Dein Account wurde erfolgreich eingerichtet");
         }
@@ -98,23 +98,25 @@ export function CreateAccountManually() {
     }
 
     let tryCreateAccount = () => {
-        let data = { firstName, lastName, email, password };
+        let username = firstName;
+        let data = { username, email, password };
 
-        return fetch("http://192.168.2.129:9000/bikenest/info", {
+        return fetch("http://192.168.2.129:9000/usermanagement/signup", {
             method: 'POST',
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
+            headers: { Accept: 'application/json', 'Content-Type': 'application/json' }
         })
             .then((response) => response.json())
             .then((json) => {
                 //console.log(json);
 
                 //Testing
-                let mockAccountCreated = true;
-                let mockErrorMsg = "Error Msg test";
-                let mockData = {mockAccountCreated, mockErrorMsg};
+                // let mockAccountCreated = true;
+                // let mockErrorMsg = "Error Msg test";
+                // let mockData = {mockAccountCreated, mockErrorMsg};
 
-                setModalInfo(mockData);
-
+                //setModalInfo(mockData);
+                console.log(json);
                 //setModalInfo(json);
             })
             .catch((error) => {
@@ -128,7 +130,7 @@ export function CreateAccountManually() {
 
     //TODO: Replace Modal (not working in web)
     return (
-        <View style={[mainStyles.container, {backgroundColor: 'transparent'}]}>
+        <View style={[mainStyles.container, { backgroundColor: 'transparent' }]}>
             <BikeNest_Modal
                 modalHeadLine={modalHeadline}
                 modalText={modalText}
