@@ -4,7 +4,6 @@ import colors from "../styles/Colors";
 import { useNavigation } from '@react-navigation/native';
 import BikeNest_Button, { ButtonStyle } from './BikeNest_Button';
 import { mainStyles } from "../styles/MainStyles";
-import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 import * as SecureStore from 'expo-secure-store';
 
@@ -20,29 +19,6 @@ export function CreateAccountVia3rdParty() {
             alert('No values stored under that key.');
         }
     }
-    // const signInWithGoogle = () => {
-    //     signInWithGoogleAsync()
-    // }
-
-    // async function signInWithGoogleAsync() {
-    //     try {
-    //         const result = await Google.logInAsync({
-    //             behavior: 'web',
-    //             //iosClientId: IOS_CLIENT_ID,
-    //             //TODO:Hide client id 
-    //             androidClientId: "1066777740971-p4f0ja4gl7sc8h1ingn9lo2gorc3qjts.apps.googleusercontent.com",
-    //             scopes: ['profile', 'email'],
-    //         });
-
-    //         if (result.type === 'success') {
-    //             return result.accessToken;
-    //         } else {
-    //             return { cancelled: true };
-    //         }
-    //     } catch (e) {
-    //         return { error: true };
-    //     }
-    // }
 
     const [request, response, promptAsync] = Google.useAuthRequest({
         expoClientId: '1066777740971-sa5hjlbu6ucmequmlumjo5mresuh11n4.apps.googleusercontent.com',
@@ -64,8 +40,6 @@ export function CreateAccountVia3rdParty() {
                 // Securely store the auth on your device
                 SecureStore.setItemAsync(MY_SECURE_AUTH_STATE_KEY, storageValue);
             }
-            //let value = SecureStore.getItemAsync(MY_SECURE_AUTH_STATE_KEY)
-            getValueFor(MY_SECURE_AUTH_STATE_KEY);
             navigation.navigate("FindBikeNest");
         }
         else {
