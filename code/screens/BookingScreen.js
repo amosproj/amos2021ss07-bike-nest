@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { ImageBackground, Pressable, StyleSheet, Text, TextInput, View, Image} from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, View, Image} from 'react-native';
 import { Keyboard } from 'react-native'
 import { Dimensions } from "react-native";
 import Colors from '../styles/Colors';
@@ -8,35 +8,27 @@ import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
 import { mainStyles } from "../styles/MainStyles";
 import BikeNest_Button, { ButtonStyle } from '../components/BikeNest_Button';
 import {Picker} from '@react-native-picker/picker';
+import { ScrollView } from 'react-native';
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
 export default function BookingScreen({ navigation }) {
-  const [selectedLanguage, setSelectedLanguage] = React.useState();
-  var [ isPress, setIsPress ] = React.useState(false);
 
-  var touchProps = {
-    activeOpacity: 1,
-    underlayColor: 'white',                               // <-- "backgroundColor" will be always overwritten by "underlayColor"
-    style: isPress ? myStyles.btnPress : myStyles.button, // <-- but you can still apply other style changes
-    onHideUnderlay: () => setIsPress(false),
-    onShowUnderlay: () => setIsPress(true),
-    onPress: () => console.log('HELLO'),                 // <-- "onPress" is apparently required
-  };
+  const [selectedHours, setSelectedHours] = React.useState();
+  const [selectedSlots, setSelectedSlots] = React.useState();
+  const [selectedEbike, setSelectedEbike] = React.useState();
 
-  const onPressPaypal = () => {
-    //reconnect to paypal
-    //change style to border orange
-    //change style of pressable Visa to no border
-    
-    borderWidth: 1
-    borderColor: Colors.UI_Light_2
-  };
+  const pickerRef = React.useRef();
 
-  const onPressAdd = () => {
-    //Zu Zahlungsmethodenauswahl?
-  };
+  function open() {
+    pickerRef.current.focus();
+  }
+  
+  function close() {
+    pickerRef.current.blur();
+  }
+
   const onPressInfo = () => {
     //zurück zu Find Bike Nest
     alert('this is an info.');
@@ -90,35 +82,41 @@ export default function BookingScreen({ navigation }) {
         </View>
         <View style={myStyles.headline}>
           <Text style={myStyles.h3}> Wie viele Slots? </Text>
-          <Picker
-            selectedValue={selectedLanguage}
-            onValueChange={(itemValue, itemIndex) =>
-              setSelectedLanguage(itemValue)
-            }>
-            <Picker.Item label="Java" value="java" />
-            <Picker.Item label="JavaScript" value="js" />
-          </Picker>
+            <Picker
+              ref={pickerRef}
+              selectedValue={selectedSlots}
+              onValueChange={(itemValue, itemIndex) =>
+                setSelectedSlots(itemValue)
+              }>
+              <Picker.Item label="1" value="1" />
+              <Picker.Item label="2" value="2" />
+            </Picker>
+
         </View>
         <View style={myStyles.headline}>
           <Text style={myStyles.h3}> Wie lange buchen? </Text>
           <Picker
-            selectedValue={selectedLanguage}
+            ref={pickerRef}
+            selectedValue={selectedHours}
             onValueChange={(itemValue, itemIndex) =>
-              setSelectedLanguage(itemValue)
+              setSelectedHours(itemValue)
             }>
-            <Picker.Item label="Java" value="java" />
-            <Picker.Item label="JavaScript" value="js" />
+            <Picker.Item label="1 Hour" value="1" />
+            <Picker.Item label="2 Hours" value="2" />
+            <Picker.Item label="3 Hours" value="3" />
+            <Picker.Item label="4 Hours" value="4" />
           </Picker>
         </View>
         <View style={myStyles.headline}>
           <Text style={myStyles.h3}> E-Bike Ladestation? </Text>
           <Picker
-            selectedValue={selectedLanguage}
+            ref={pickerRef}
+            selectedValue={selectedEbike}
             onValueChange={(itemValue, itemIndex) =>
-              setSelectedLanguage(itemValue)
+              setSelectedEbike(itemValue)
             }>
-            <Picker.Item label="Java" value="java" />
-            <Picker.Item label="JavaScript" value="js" />
+            <Picker.Item label="yes" value="yes" />
+            <Picker.Item label="no" value="no" />
           </Picker>
         </View>
 
