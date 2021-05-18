@@ -24,6 +24,7 @@ public class ReservationController {
     @PostMapping(value = "/add", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Reservation> AddNewReservation(@RequestBody AddReservationInterface newReservation) throws Exception {
         //TODO: Retrieve UserId from JWT
+        //TODO: Validate RequestBody (all fields provided???)
         Optional<Reservation> reservation = reservationService.CreateReservation(10, newReservation);
 
         return ResponseEntity.ok(reservation.get());
