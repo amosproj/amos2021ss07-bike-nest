@@ -10,18 +10,61 @@ import BikeNest_TextInput from '../components/BikeNest_TextInput';
 import BikeNest_Button, { ButtonStyle } from '../components/BikeNest_Button';
 import { BookingService } from "../services/Booking";
 import { ScrollView } from 'react-native';
+import BikeNest_Modal from '../components/BikeNest_Modal';
+import moment from "moment";
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
 export default function PaymentScreen({ navigation }) {
-  let bookingData = new BookingService();
-    const [ID, SetID] = useState("");
-    const [BIKENEST, setBikeNest] = useState("");
+    let bookingData = new BookingService();
     const [slots, setSlots] = useState("");
     const [hours, setHours] = useState("");
     const [ebike, setEbike] = useState("");
     const [promocode, setPromoCode] = useState("");
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalText, setModalText] = useState("");
+    const [modalHeadline, setModalHeadline] = useState("");
+
+    let tryCreateBooking = (bikenestId, startTime, endTime) => {
+      // What we have to provider
+      // userId (This is implicitly provided by the JWT)
+      //   - bikenestId
+      //   - startDateTime
+      //   - endDateTime
+      // let data = {bikenestId, startDateTime, endDateTime};
+      let data = {"bikenestId": bikenestId, "startDateTime": startTime, "endDateTime": endTime};
+      console.log('start adding reservation');
+
+      return fetch("http://192.168.2.124:9000/booking/add", {
+          method: 'POST',
+          body: JSON.stringify(data),
+          headers: {
+            'Content-Type': 'application/json'
+          },
+      })
+          .then((response) => response.json())
+          .then((json) => {
+              console.log('is this working?');
+              console.log(JSON.stringify(data));
+
+              //Testing
+              let mockAccountCreated = true;
+              let mockErrorMsg = "Error Msg test";
+              let mockData = {mockAccountCreated, mockErrorMsg};
+
+              // console.log(mockData);
+              // setModalInfo(mockData);
+
+              //setModalInfo(json);
+          })
+          .catch((error) => {
+              setModalHeadline("Sorry!");
+              setModalText("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
+              setModalVisible(true);
+              console.error(error);
+          });
+  }
 
   const onPressPaypal = () => {
     //reconnect to paypal
@@ -31,7 +74,7 @@ export default function PaymentScreen({ navigation }) {
                     "Du wirst jetzt zu Paypal weitergeleitet.",
                     [
                       //API Call Paypal
-                        { text: "OK", onPress: () => navigation.navigate("Payment") }
+                        { text: "OK", onPress: () => navigation.navigate("History") }
                     ]);
   };
   const onPressVisa = () => {
@@ -45,10 +88,26 @@ export default function PaymentScreen({ navigation }) {
     alert('this is an info.');
   };
   const onPressOrder = () => {
-    //Daten an Backend senden
-    //paymentContainer zu display none
-    //paymentClosed Container zu display: flex
-    //nach timer reconnect to findBikenest? 
+
+    var dateStart = moment()
+    .utcOffset('+05:30')
+    .format('yyyy-MM-DD');
+    var timeStart =  moment()
+    .utcOffset('+02:00')
+    .format('HH:mm:ss');
+    var dateEnd = moment()
+    .utcOffset('+05:30')
+    .format('yyyy-MM-DD');
+    var timeEnd =  moment()
+    .utcOffset('+02:30')
+    .format('HH:mm:ss');
+
+    var bikenestId = '1';
+    var startTime = dateStart + 'T' + timeStart; 
+    var endTime = dateEnd + 'T' + timeEnd;
+    console.log(' start: ' + startTime + ' end: ' + endTime);
+
+    tryCreateBooking(bikenestId, startTime, endTime);
   }
   const getSlots = () => {
     return "1 Slot";
@@ -73,6 +132,13 @@ export default function PaymentScreen({ navigation }) {
   };
   return (
     <View style={myStyles.container}>
+      <BikeNest_Modal
+          modalHeadLine={modalHeadline}
+          modalText={modalText}
+          isVisible={modalVisible}
+          onPress={() => setModalVisible(false)}
+          onRequestClose={() => { setModalVisible(!modalVisible); }}
+        />
       <ScrollView>
       <View style={myStyles.paymentContainer}>
         <View style={{alignSelf:'center'}}>

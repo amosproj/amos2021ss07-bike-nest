@@ -15,7 +15,7 @@ public class ServicebookingApplication {
 
     @RequestMapping("/info")
     public String home() {
-        return "Booking info 1.";
+        return "Booking info 2.";
     }
 
     @PostMapping("/commontest")

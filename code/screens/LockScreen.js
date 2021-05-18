@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity  } from 'react-native';
 import { Dimensions } from "react-native";
 import { SimpleLineIcons } from '@expo/vector-icons';
-import {styles} from "./styles";
+// import {styles} from "./styles";
 
 export default function LockScreen({ navigation }) {
     return(
