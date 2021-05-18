@@ -40,7 +40,8 @@ export default function PaymentScreen({ navigation }) {
           method: 'POST',
           body: JSON.stringify(data),
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            // 'Authorization': 'jwt-token'
           },
       })
           .then((response) => response.json())
@@ -52,6 +53,9 @@ export default function PaymentScreen({ navigation }) {
               let mockAccountCreated = true;
               let mockErrorMsg = "Error Msg test";
               let mockData = {mockAccountCreated, mockErrorMsg};
+
+              //Pageforwarding
+              navigation.navigate("History");
 
               // console.log(mockData);
               // setModalInfo(mockData);
