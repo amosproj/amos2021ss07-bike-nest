@@ -15,3 +15,9 @@ web-build/
 # backend
 *\build
 *\.gradle
+*\bin
+*.classpath
+*.project
+Backend/.settings/org.eclipse.buildship.core.prefs
+Backend/apigateway/.settings/org.eclipse.buildship.core.prefs
+Backend/service-usermgmt/.settings/org.eclipse.buildship.core.prefs
