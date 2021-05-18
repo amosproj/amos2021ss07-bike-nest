@@ -1,5 +1,6 @@
 package com.bikenest.serviceusermgmt;
 
+import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.http.ResponseEntity;
@@ -33,10 +34,11 @@ public class UserController {
     //jwtauth Endpoint
     @PostMapping(path="/validatejwt")
     public ResponseEntity<Boolean> ValidateJWT(@RequestBody String JWT){
-        if(!Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().isSigned(JWT))
-        {
-            return ResponseEntity.ok(false);
-        }
+    	try {
+			Jwt parsed = Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parse(JWT);
+		}catch(Exception ex){
+			return ResponseEntity.ok(false);
+		}
         return ResponseEntity.ok(true);
     }
 
