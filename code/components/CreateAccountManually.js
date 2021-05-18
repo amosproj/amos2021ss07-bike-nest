@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput } from 'react-native';
+import { View } from 'react-native';
 import { UserDataService } from "../services/UserData";
 import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
@@ -36,27 +36,12 @@ export function CreateAccountManually() {
             setModalText("Oops da ist etwas schief gelaufen. Fülle bitte alle Felder mit den passenden Infos aus.");
             setModalVisible(true);
         }
-        // if (!newEmail()) {
-        //     setModalHeadline("Sorry!");
-        //     setModalText("Ein Account mit der Email " + email + " existiert bereits.");
-        // } else {
-        // if (isValid) {
-        //     tryCreateAccount();
-        //     // setModalHeadline("Hurra!");
-        //     // setModalText("Dein Account wurde erfolgreich eingerichtet");
-        // }
-        // else {
-        //     setModalHeadline("Sorry!");
-        //     setModalText("Oops da ist etwas schief gelaufen. Fülle bitte alle Felder aus.")
-        // }
-        // // }
-        // setModalVisible(true);
     }
 
     let onModalPress = () => {
         if (accountCreated) {
             setModalVisible(false);
-            navigation.navigate("FindBikeNest");
+            navigation.navigate("Login");
         }
         else
             setModalVisible(false);
@@ -74,49 +59,52 @@ export function CreateAccountManually() {
 
     let setModalInfo = (json) => {
         //setAccountCreated(json.accountCreated);
-        setAccountCreated(json.mockAccountCreated);
+        //setAccountCreated(json.mockAccountCreated);
 
-        if (json.mockAccountCreated) {
+        //TODO: Refactor when backend is ready
+        if (json.error != null) {
+            setModalHeadline("Oops!");
+            setModalText(json.error);
+            setAccountCreated(false);
+        }
+        else if (json.message === "Error: Username is already taken!") {
+            setModalHeadline("Oops!");
+            setModalText("Der Benutzername existiert bereits!");
+            setAccountCreated(false);
+        }
+        else if (json.message === "User registered successfully!") {
             setModalHeadline("Hurra!");
             setModalText("Dein Account wurde erfolgreich eingerichtet");
+            setAccountCreated(true);
+        }
+        else if (json.message === "Error: Email is already in use!") {
+            setModalHeadline("Oops!!");
+            setModalText("Die Email wird schon verwendet, versuche es mit einer anderen Email.");
+            setAccountCreated(true);
         }
         else {
-            setModalHeadline("Oops!");
-            setModalText(json.mockErrorMsg);
+            setModalHeadline("Oops!!");
+            setModalText("Etwas ist schief gelaufen versuche es nochmale");
+            setAccountCreated(false);
         }
-
-
-        // if (json.accountCreated) {
-        //     setModalHeadline("Hurra!");
-        //     setModalText("Dein Account wurde erfolgreich eingerichtet");
-        // }
-        // else {
-        //     setModalHeadline("Oops!");
-        //     setModalText(json.errorMsg);
-        // }
 
         setModalVisible(true);
     }
 
     let tryCreateAccount = () => {
-        let data = { firstName, lastName, email, password };
+        let username = firstName;
+        let data = { username, email, password };
+      
+        return fetch(global.globalIPAddress + "/usermanagement/signup", {
 
-        return fetch(global.globalIPAddress + "/bikenest/info", {
             method: 'POST',
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
+            headers: { Accept: 'application/json', 'Content-Type': 'application/json' }
         })
             .then((response) => response.json())
             .then((json) => {
-                //console.log(json);
-
-                //Testing
-                let mockAccountCreated = true;
-                let mockErrorMsg = "Error Msg test";
-                let mockData = {mockAccountCreated, mockErrorMsg};
-
-                setModalInfo(mockData);
-
-                //setModalInfo(json);
+                console.log(json);
+                setModalInfo(json);
             })
             .catch((error) => {
                 setModalHeadline("Sorry!");
@@ -129,7 +117,7 @@ export function CreateAccountManually() {
 
     //TODO: Replace Modal (not working in web)
     return (
-        <View style={[mainStyles.container, {backgroundColor: 'transparent'}]}>
+        <View style={[mainStyles.container, { backgroundColor: 'transparent' }]}>
             <BikeNest_Modal
                 modalHeadLine={modalHeadline}
                 modalText={modalText}
