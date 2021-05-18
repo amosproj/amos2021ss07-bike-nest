@@ -8,6 +8,7 @@ import PaymentScreen from './screens/PaymentScreen';
 import FindBikeNestScreen from './screens/FindBikeNestScreen';
 import HistoryScreen from './screens/HistoryScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import LockManagement from './screens/Lock_management';
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
         <AppNavigator.Screen name='EditPersonalInformation' component={PersonalInformationScreen} />
         <AppNavigator.Screen name='FindBikeNest' component={FindBikeNestScreen} />
         <AppNavigator.Screen name='History' component={HistoryScreen} />
+        <AppNavigator.Screen name='LockManagement' component={LockManagement} />
       </AppNavigator.Navigator>
     </NavigationContainer>
   );
