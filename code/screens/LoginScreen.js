@@ -20,47 +20,45 @@ export default function LoginScreen({ navigation }) {
   const [modalText, setModalText] = useState("");
   const [modalHeadline, setModalHeadline] = useState("");
 
-  let setModalInfo = (json) => {
+  let setModalInfo = (jwt) => {
     //setAccountCreated(json.accountCreated);
-    setAccountCreated(json.mockAccountCreated);
+    //setAccountCreated(jwt.mockAccountCreated);
 
-    if (json.mockAccountCreated) {
-      setModalHeadline("Hurra!");
-      setModalText("Dein Account wurde erfolgreich eingerichtet");
+    //TODO: Refactor when backend is ready, don't hint which option(username or password) is wrong
+    if (jwt === "Username not found!") {
+      setModalHeadline("Oops!");
+      setModalText("Der Benutzername existiert nicht!");
+      setModalVisible(true);
+    }
+    else if (jwt === "Invalid password provided!") {
+      setModalHeadline("Oops!");
+      setModalText("Passwort ist falsch!");
+      setModalVisible(true);
     }
     else {
-      setModalHeadline("Oops!");
-      setModalText(json.mockErrorMsg);
+      navigation.navigate("FindBikeNest");
     }
   }
 
+  let log = (response) => {
+    let response_ = response.json();
+    console.log(response_);
+  }
+
   let tryLogIn = () => {
-    let data = { email, password };
+    let username = email;
+    let data = { username, password };
 
-    return fetch(global.globalIPAddress + "/bikenest/info", {
+    return fetch(global.globalIPAddress + "/usermanagement/signin", {
+
       method: 'POST',
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'application/json' }
     })
-      .then((response) => response.json())
-      .then((json) => {
-        //console.log(json);
-
-        //Testing
-        let mockLogInSuccessful = false;
-        let mockErrorMsg = "Error Msg test";
-        let mockData = { mockLogInSuccessful, mockErrorMsg };
-
-        if (mockLogInSuccessful) {
-          //TODO: Set JsonToken
-          navigation.navigate("FindBikeNest");
-        }
-        else {
-          setModalHeadline("Oops!");
-          setModalText(mockErrorMsg);
-          setModalVisible(true);
-        }
-
-        //setModalInfo(json);
+      .then((response) => response.text())
+      .then((jwt) => {
+        //console.log(jwt);
+        setModalInfo(jwt);
       })
       .catch((error) => {
         setModalHeadline("Sorry!");
@@ -95,10 +93,12 @@ export default function LoginScreen({ navigation }) {
         <View style={[mainStyles.container, { backgroundColor: 'transparent' }]}>
           <BikeNest_TextInput
             placeholder='E-Mail Adresse'
+            onChangeText={(text) => setEmail(text)}
           />
           <BikeNest_TextInput
             placeholder='Passwort'
             secureTextEntry={true}
+            onChangeText={(password) => setPassword(password)}
           />
         </View>
 
