@@ -7,6 +7,7 @@ import { mainStyles } from '../styles/MainStyles';
 import BikeNest_Button, { ButtonStyle } from '../components/BikeNest_Button';
 import BikeNest_TextInput from '../components/BikeNest_TextInput';
 import BikeNest_Modal from '../components/BikeNest_Modal';
+import global from '../components/GlobalVars';
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
@@ -36,7 +37,7 @@ export default function LoginScreen({ navigation }) {
   let tryLogIn = () => {
     let data = { email, password };
 
-    return fetch("http://192.168.2.129:9000/bikenest/info", {
+    return fetch(global.globalIPAddress + "/bikenest/info", {
       method: 'POST',
       body: JSON.stringify(data)
     })
