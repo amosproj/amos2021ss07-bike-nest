@@ -59,4 +59,12 @@ public class BikenestController {
     public @ResponseBody Iterable<Bikenest> GetAllBikenests() {
         return bikenestRepository.findAll();
     }
+
+   @GetMapping(path="/deleteAll") 
+    public @ResponseBody String deleteAll(Authentication authentication) {
+        authentication = SecurityContextHolder.getContext().getAuthentication();
+        bikenestRepository.deleteAll();
+        return "All Entities deleted.";
+    }
+
 }
