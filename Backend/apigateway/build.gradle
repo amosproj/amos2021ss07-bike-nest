@@ -13,12 +13,12 @@ repositories {
 }
 
 dependencies {
-	implementation project(':common')
     implementation 'junit:junit:4.12'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation project(':common')
 }
 
 //Dependency Management required for the common project.
