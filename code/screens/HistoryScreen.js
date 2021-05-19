@@ -40,7 +40,9 @@ export default function HistoryScreen({ navigation }) {
     <View style={mainStyles.container}>
       <View style={styles.historyContainer}>
         <View style={styles.containerRow}>
+        <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
           <Image source={Avatar} style={styles.avatar} />
+          </TouchableOpacity>
           <Text style={styles.name} >
             Max Muster </Text>
         </View>
@@ -48,7 +50,7 @@ export default function HistoryScreen({ navigation }) {
           style={styles.heightBike, {
             backgroundColor: '#FFF',
             height: 230,
-            width: 360,
+            width: 370,
             margin: 10,
             position: 'relative'
           }}>
@@ -56,7 +58,7 @@ export default function HistoryScreen({ navigation }) {
             source={bike}
             style={{
               height: 230,
-              width: 360,
+              width: 370,
               position: 'absolute',
             }}
           />
@@ -105,9 +107,9 @@ const styles = StyleSheet.create({
   historyContainer: {
     flex: 1,
     padding: 15,
-    marginTop: 20,
+    marginTop: 10,
     margin: 10,
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-around',
     position: 'relative',
   },
   containerRow:{
@@ -129,25 +131,13 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontSize: 18,
     fontWeight: 'bold',
-    margin: 10,
+    marginLeft: 10,
   },
   welcome: {
     flex: 1,
     color: '#000000',
     fontSize: 15,
     fontWeight: 'normal',
-  },
-  heightBike: {
-    height: 200,
-    position: 'relative',           
-  },
-  textBike: {
-    position: 'absolute',
-    color: '#000000',
-    fontSize:16,
-    fontWeight:'bold',
-    flex: 1,                    
-    // backgroundColor: 'yellow',
   },
   place: {
     flex: 1,
@@ -165,6 +155,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFA500',
     borderRadius: 30,
+    margin: 10,
   },
   buttonLockOwner: {
     flex: 1,
@@ -237,6 +228,7 @@ const styles = StyleSheet.create({
     borderColor: '#E6E5F2',
     borderWidth:1,
     maxHeight: 50,
+    margin: 10,
   },
   buttonHistoryText: {
     flex: 1,
