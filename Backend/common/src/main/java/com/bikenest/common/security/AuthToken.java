@@ -7,10 +7,10 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.Collection;
 
 public class AuthToken implements Authentication {
-    private Claims claims;
+    private UserInformation userInformation;
 
     public AuthToken(Claims claims){
-        this.claims = claims;
+        this.userInformation = new UserInformation(claims);
     }
 
     //This can be used with @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
@@ -26,13 +26,13 @@ public class AuthToken implements Authentication {
     }
 
     @Override
-    public Claims getDetails() {
-        return claims;
+    public Object getDetails() {
+        return null;
     }
 
     @Override
     public Object getPrincipal() {
-        return claims;
+        return userInformation;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class AuthToken implements Authentication {
 
     @Override
     public String toString() {
-        return null;
+        return this.userInformation.toString();
     }
 
     @Override
@@ -61,6 +61,6 @@ public class AuthToken implements Authentication {
 
     @Override
     public String getName() {
-        return claims.getSubject();
+        return this.userInformation.getEmail();
     }
 }
