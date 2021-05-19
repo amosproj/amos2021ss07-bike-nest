@@ -20,7 +20,9 @@ public class JWTAuthenticationFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest)request;
         String jwt = httpRequest.getHeader("Authorization");
+
         if(jwt != null){
+            //Parse JWT without checking the Signature. That was already done by the APIGateway, if the request got here
             String withoutSignature = jwt.substring(0, jwt.lastIndexOf('.')+1);
             Jwt<Header, Claims> claims = Jwts.parserBuilder().build().parseClaimsJwt(withoutSignature);
             AuthToken auth = new AuthToken(claims.getBody());

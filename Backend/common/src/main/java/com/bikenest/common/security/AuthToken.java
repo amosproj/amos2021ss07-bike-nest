@@ -31,7 +31,7 @@ public class AuthToken implements Authentication {
     }
 
     @Override
-    public Object getPrincipal() {
+    public UserInformation getPrincipal() {
         return userInformation;
     }
 

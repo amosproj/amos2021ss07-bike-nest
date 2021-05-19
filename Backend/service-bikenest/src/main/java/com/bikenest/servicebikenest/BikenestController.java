@@ -1,6 +1,8 @@
 package com.bikenest.servicebikenest;
 
 import com.bikenest.common.security.AuthToken;
+import com.bikenest.common.security.UserInformation;
+import com.bikenest.common.security.UserRole;
 import com.bikenest.servicebikenest.DB.Bikenest;
 import com.bikenest.servicebikenest.DB.BikenestRepository;
 import io.jsonwebtoken.Claims;
@@ -44,8 +46,8 @@ public class BikenestController {
     }
 
     @GetMapping(path="/getUser")
-    public String getUser(@AuthenticationPrincipal Claims claims){
-        return claims.getSubject();
+    public String getUser(@AuthenticationPrincipal UserInformation user){
+        return user.toString();
     }
 
 
@@ -61,10 +63,11 @@ public class BikenestController {
     }
 
    @GetMapping(path="/deleteAll") 
-    public @ResponseBody String deleteAll(Authentication authentication) {
-        authentication = SecurityContextHolder.getContext().getAuthentication();
-        bikenestRepository.deleteAll();
-        return "All Entities deleted.";
+    public @ResponseBody String deleteAll(@AuthenticationPrincipal UserInformation user) {
+        if(user.getRole() == UserRole.Admin){
+            bikenestRepository.deleteAll();
+            return "All Entities deleted.";
+        }
+        return "No permission to do this!";
     }
-
 }

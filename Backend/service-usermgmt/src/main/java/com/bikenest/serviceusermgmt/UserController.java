@@ -1,5 +1,6 @@
 package com.bikenest.serviceusermgmt;
 
+import com.bikenest.serviceusermgmt.helper.JWTHelper;
 import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -35,12 +36,7 @@ public class UserController {
     //jwtauth Endpoint
     @PostMapping(path="/validatejwt")
     public ResponseEntity<Boolean> ValidateJWT(@RequestBody String JWT){
-    	try {
-			Jwt parsed = Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parse(JWT);
-		}catch(Exception ex){
-			return ResponseEntity.ok(false);
-		}
-        return ResponseEntity.ok(true);
+    	return ResponseEntity.ok(JWTHelper.GetSingleton().ValidateJWT(JWT));
     }
 
 	@PostMapping("/signin")
@@ -51,14 +47,7 @@ public class UserController {
 		}
 		if(loginRequest.getPassword().equals(user.get().getPassword()))
 		{
-			//BUILD JWT
-			String jwt = Jwts.builder()
-							.signWith(SECRET_KEY)
-							.setSubject(user.get().getUsername())
-							.setIssuedAt(new Date())
-							.claim("Role", "User")
-							.setExpiration(new Date((new Date()).getTime() + 1000000))
-							.compact();
+			String jwt = JWTHelper.GetSingleton().BuildJwtFromUser(user.get());
 			return ResponseEntity.ok(jwt);
 		}
 		return ResponseEntity.badRequest().body("Invalid password provided!");
