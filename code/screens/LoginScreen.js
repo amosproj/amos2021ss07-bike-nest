@@ -9,6 +9,7 @@ import BikeNest_TextInput from '../components/BikeNest_TextInput';
 import BikeNest_Modal from '../components/BikeNest_Modal';
 import global from '../components/GlobalVars';
 
+
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
@@ -36,13 +37,9 @@ export default function LoginScreen({ navigation }) {
       setModalVisible(true);
     }
     else {
-      navigation.navigate("FindBikeNest");
+      global.saveAuthenticationToken(jwt)
+        .then(navigation.navigate("FindBikeNest"));
     }
-  }
-
-  let log = (response) => {
-    let response_ = response.json();
-    console.log(response_);
   }
 
   let tryLogIn = () => {
