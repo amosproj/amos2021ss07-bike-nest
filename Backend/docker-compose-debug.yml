@@ -21,7 +21,17 @@ services:
      - MYSQL_DATABASE=bikenest
     networks:
      - bikenest-db
-    
+
+  user-db:
+    container_name: user-db
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=test
+      - MYSQL_USER=userservice
+      - MYSQL_PASSWORD=test
+      - MYSQL_DATABASE=user
+    networks:
+      - user-db
   #php:
   #  container_name: phpadmin
   #  image: phpmyadmin/phpmyadmin
@@ -40,6 +50,7 @@ services:
     restart: always
     ports:
      - "5005:5005"
+     - "9001:9001"
     environment:
      - MYSQL_HOST=bikenest-db
      - MYSQL_PORT=3306
@@ -57,6 +68,7 @@ services:
     restart: always
     ports:
      - "5006:5006"
+     - "9002:9002"
     environment:
      - MYSQL_HOST=booking-db
      - MYSQL_PORT=3306
@@ -78,7 +90,7 @@ services:
     networks:
      - booking-db
      - bikenest-db
-     - usermanagement
+     - user-db
      
   usermgmt:
     container_name: usermgmt
@@ -86,11 +98,18 @@ services:
       context: service-usermgmt
       dockerfile: Dockerfile_debug
     restart: always
+    environment:
+      - MYSQL_HOST=user-db
+      - MYSQL_PORT=3306
+      - MYSQL_DBNAME=user
+      - MYSQL_USER=userservice
+      - MYSQL_PASSWORD=test
     ports:
      - "5008:5008"
+     - "9003:9003"
     networks:
-     - usermanagement
+     - user-db
 networks:
-  usermanagement:
+  user-db:
   booking-db:
   bikenest-db:

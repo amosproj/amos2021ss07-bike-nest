@@ -8,8 +8,11 @@ import PaymentScreen from './screens/PaymentScreen';
 import FindBikeNestScreen from './screens/FindBikeNestScreen';
 import HistoryScreen from './screens/HistoryScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import BookingScreen from './screens/BookingScreen';
+import LockScreen from './screens/LockScreen';
 
 export default function App() {
+  //TODO set global IP variable for API Calls 
   return (
     <NavigationContainer>
       <AppNavigator.Navigator screenOptions={{ headerShown: false }}>
@@ -20,6 +23,8 @@ export default function App() {
         <AppNavigator.Screen name='EditPersonalInformation' component={PersonalInformationScreen} />
         <AppNavigator.Screen name='FindBikeNest' component={FindBikeNestScreen} />
         <AppNavigator.Screen name='History' component={HistoryScreen} />
+        <AppNavigator.Screen name='Booking' component={BookingScreen} />
+        <AppNavigator.Screen name='Lock' component={LockScreen} />
       </AppNavigator.Navigator>
     </NavigationContainer>
   );
