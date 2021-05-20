@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
-@ComponentScan({"com.bikenest.common", "com.bikenest.apigateway"})
+@ComponentScan({"com.bikenest.common.feignclients", "com.bikenest.apigateway"})
 @EnableFeignClients(basePackageClasses = UsermgmtClient.class)
 public class ApigatewayApplication {
 
