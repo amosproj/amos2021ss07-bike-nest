@@ -2,10 +2,11 @@ package com.bikenest.common.security;
 
 import io.jsonwebtoken.Claims;
 
-// This Object will hold all of the Information that will be accessible for each Authenticated Endpoint
-// You can access it in such an endpoint, by adding a parameter like this: "@AuthenticationPrinciple UserInformation user"
-// Spring will auto inject it.
-// If the Claims that were provided for construction of this Object do not contain all Information, an error is thrown.
+/** This Object will hold all of the Information that will be accessible for each Authenticated Endpoint
+ * You can access it in such an endpoint, by adding a parameter like this: "@AuthenticationPrinciple UserInformation user"
+ * Spring will auto inject it.
+ * If the Claims that were provided for construction of this Object do not contain all Information, an error is thrown.
+ */
 public class UserInformation {
     Claims claims;
 

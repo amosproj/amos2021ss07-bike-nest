@@ -9,6 +9,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * This Authentication Object is used exclusivly for services. A service that wants to use another service sets the
+ * Authorization Header to "SERVICE". The JWTAuthenticationFilter will create a ServiceAuthentication Object upon recognizing
+ * this Authorization Header and sets the local SecurityContext.
+ */
 public class ServiceAuthentication implements Authentication {
     Logger logger = LoggerFactory.getLogger(ServiceAuthentication.class);
 
