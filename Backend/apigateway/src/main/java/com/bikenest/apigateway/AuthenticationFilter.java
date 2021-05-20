@@ -32,7 +32,7 @@ public class AuthenticationFilter implements GatewayFilter {
              * because the services use this header to communicate with on and another (when that header is set
              * the JWTAuthentication will create a AuthToken, that has the SERVICE Role).
              */
-            if(authToken.equals("SERVICE") || !usermgmtClient.ValidateJwt(authToken)) {
+            if(authToken.contains("SERVICE") || !usermgmtClient.ValidateJwt(authToken)) {
                 ServerHttpRequest newRequest = request.mutate()
                         .headers(httpHeaders -> httpHeaders.remove("Authorization")).build();
                 exchange = exchange.mutate().request(newRequest).build();
