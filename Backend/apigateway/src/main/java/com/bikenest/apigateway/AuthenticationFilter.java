@@ -15,20 +15,24 @@ import reactor.core.publisher.Mono;
 @Component
 public class AuthenticationFilter implements GatewayFilter {
 
-    @Autowired()
+    @Autowired
     UsermgmtClient usermgmtClient;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
 
-        //Check if the JWT is valid, if not then strip it
+        // Check if the JWT is valid, if not then strip it
         if(!this.isAuthMissing(request)) {
             final String authToken = this.getAuthHeader(request);
 
-            //Validate the JWT with the use of the UserMgmt Service
-            //If Token is not valid, strip the authorization Header away
-            if(!usermgmtClient.ValidateJwt(authToken)) {
+            /* Validate the JWT with the use of the UserMgmt Service
+             * If Token is not valid, strip the authorization Header away
+             * Also if the Authorization Header has the value "SERVICE" we also strip it away,
+             * because the services use this header to communicate with on and another (when that header is set
+             * the JWTAuthentication will create a AuthToken, that has the SERVICE Role).
+             */
+            if(authToken.equals("SERVICE") || !usermgmtClient.ValidateJwt(authToken)) {
                 ServerHttpRequest newRequest = request.mutate()
                         .headers(httpHeaders -> httpHeaders.remove("Authorization")).build();
                 exchange = exchange.mutate().request(newRequest).build();
