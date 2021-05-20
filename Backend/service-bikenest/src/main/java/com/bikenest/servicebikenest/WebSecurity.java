@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -16,6 +18,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)  // This Enables the @PreAuthorize @PostAuthorize Annotations
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     private JWTAuthenticationEntrypoint jwtAuthenticationEntryPoint = new JWTAuthenticationEntrypoint();
@@ -26,11 +29,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.formLogin().disable();
         http.httpBasic().disable();
 
-
-        http.cors().and().authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/", "/bikenest/info", "/bikenest/all", "/bikenest/login", "/bikenest/deleteAll")
-                .permitAll()
-                .anyRequest().authenticated()
+        http.cors().and()
+                .authorizeRequests().anyRequest().permitAll()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
