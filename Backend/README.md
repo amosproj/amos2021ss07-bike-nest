@@ -39,7 +39,7 @@ So by just running docker-compose up, you can get the whole backend running inde
 As explained in General, the docker container is built by copying the application jar into the container filesystem. This means before building the container, you have to make sure that the Spring Project has been built using gradle.
 
 You can build all of the Backend Projects by executing
-- `gradlew bootJar jar`
+- `gradlew assemble`
     - Builds the jar files for each subproject
     
 Or if you want to build the jar of a service manually:
