@@ -16,10 +16,10 @@ import java.util.List;
  * to annotate a UserInformation Paramter in an controller endpoint with @AuthenticationPrincipal. Spring will then autoinject
  * the UserInformation Object.
  */
-public class AuthToken implements Authentication {
+public class JWTAuthentication implements Authentication {
     private UserInformation userInformation;
 
-    public AuthToken(Claims claims) {
+    public JWTAuthentication(Claims claims) {
         this.userInformation = new UserInformation(claims);
     }
 
