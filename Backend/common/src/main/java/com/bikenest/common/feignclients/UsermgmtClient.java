@@ -1,4 +1,4 @@
-package com.bikenest.apigateway;
+package com.bikenest.common.feignclients;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
