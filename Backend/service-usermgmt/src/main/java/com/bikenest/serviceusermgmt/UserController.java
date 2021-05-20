@@ -1,6 +1,7 @@
 package com.bikenest.serviceusermgmt;
 
 import com.bikenest.common.interfaces.usermgmt.SigninResponse;
+import com.bikenest.common.interfaces.usermgmt.SignUpResponse;
 import com.bikenest.serviceusermgmt.helper.JWTHelper;
 import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
@@ -62,11 +63,11 @@ public class UserController {
 	}
 
 	@PostMapping("/signup")
-	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+	public ResponseEntity<SignUpResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 		if (userRepository.existsByEmail(signUpRequest.getEmail())) {
 			return ResponseEntity
 					.badRequest()
-					.body(new MessageResponse("Error: Email is already taken!"));
+					.body(new SignUpResponse(false, "Email is already taken!"));
 		}
 
 		// Create new user's account
@@ -75,7 +76,7 @@ public class UserController {
 
 		userRepository.save(user);
 
-		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+		return ResponseEntity.ok(new SignUpResponse(true, "User registered successfully!"));
 	}
 }
 
