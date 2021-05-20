@@ -13,7 +13,7 @@ public interface UsermgmtClient {
     @RequestMapping(method = RequestMethod.POST, value = "/usermanagement/validatejwt",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE},
-            headers = {"Authorization: 12345"})
+            headers = {"Authorization=SERVICE"})
     @ResponseBody
     boolean ValidateJwt(@RequestBody String JWT);
 }

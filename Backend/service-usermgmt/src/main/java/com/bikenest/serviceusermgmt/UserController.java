@@ -15,6 +15,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +37,7 @@ public class UserController {
 
     //jwtauth Endpoint
     @PostMapping(path="/validatejwt")
+	@PreAuthorize("hasRole('SERVICE')")
     public ResponseEntity<Boolean> ValidateJWT(@RequestBody String JWT){
     	return ResponseEntity.ok(JWTHelper.GetSingleton().ValidateJWT(JWT));
     }
