@@ -9,11 +9,6 @@ import BikeNest_TextInput from '../components/BikeNest_TextInput';
 import BikeNest_Modal from '../components/BikeNest_Modal';
 import global from '../components/GlobalVars';
 
-
-var width = Dimensions.get('window').width; //full width
-var height = Dimensions.get('window').height; //full height
-
-
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
