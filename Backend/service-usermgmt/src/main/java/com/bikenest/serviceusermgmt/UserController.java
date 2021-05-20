@@ -1,5 +1,6 @@
 package com.bikenest.serviceusermgmt;
 
+import com.bikenest.common.interfaces.usermgmt.SigninResponse;
 import com.bikenest.serviceusermgmt.helper.JWTHelper;
 import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
@@ -47,17 +48,17 @@ public class UserController {
 	}
 
 	@PostMapping("/signin")
-	public ResponseEntity<String> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+	public ResponseEntity<SigninResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 		Optional<User> user = userRepository.findByEmail(loginRequest.getEmail());
 		if(!user.isPresent()){
-			return ResponseEntity.badRequest().body("No account with this email was found!");
+			return ResponseEntity.badRequest().body(new SigninResponse(false, "Email not found!", null));
 		}
 		if(loginRequest.getPassword().equals(user.get().getPassword()))
 		{
 			String jwt = JWTHelper.GetSingleton().BuildJwtFromUser(user.get());
-			return ResponseEntity.ok(jwt);
+			return ResponseEntity.ok(new SigninResponse(true, null, jwt));
 		}
-		return ResponseEntity.badRequest().body("Invalid password provided!");
+		return ResponseEntity.badRequest().body(new SigninResponse(false, "Invalid password!", null));
 	}
 
 	@PostMapping("/signup")
