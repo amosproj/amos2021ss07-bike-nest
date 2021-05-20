@@ -5,12 +5,15 @@ import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.http.ResponseEntity;
 
 import java.security.Key;
 import java.util.Date;
 
-//Singleton Class used here, because we want exactly one secret key generated per startup
+/**
+ * A Singleton Class is used here, because exactly one secret key should be generated per application startup.
+ * With this Key, all of the JSON Web Tokens will be built. This means of course, that all generated JWTs will be invalid,
+ * after a server reboot.
+ */
 public class JWTHelper {
     private JWTHelper(){
     }
@@ -22,21 +25,34 @@ public class JWTHelper {
         return singleton;
     }
 
-    private Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
     public String BuildJwtFromUser(User user){
         String jwt = Jwts.builder()
                 .signWith(secretKey)
                 .setSubject(user.getEmail())
-                //TODO: Fill these claims correctly, have a look at UserInformation in Common Project to see whats expected
                 .claim("Role", "User")
-                .claim("FirstName", user.getUsername())
-                .claim("LastName", user.getUsername())
+                .claim("FirstName", user.getName())
+                .claim("LastName", user.getLastname())
                 .claim("UserId", user.getId())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + 1000000))
                 .compact();
 
+        return jwt;
+    }
+
+    public String BuildAdminJwt(){
+        String jwt = Jwts.builder()
+                .signWith(secretKey)
+                .setSubject("ADMIN")
+                .claim("FirstName", "")
+                .claim("LastName", "")
+                .claim("UserId", "")
+                .claim("Role", "Admin")
+                .setIssuedAt(new Date())
+                .setExpiration(new Date((new Date()).getTime() + 1000000))
+                .compact();
         return jwt;
     }
 

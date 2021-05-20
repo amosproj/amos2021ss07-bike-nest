@@ -39,11 +39,18 @@ public class UserController {
     	return ResponseEntity.ok(JWTHelper.GetSingleton().ValidateJWT(JWT));
     }
 
+    //THIS IS JUST FOR TESTING
+	//TODO: Remove this
+    @PostMapping("/signinadmin")
+	public ResponseEntity<String> authenticateAdmin(){
+    	return ResponseEntity.ok(JWTHelper.GetSingleton().BuildAdminJwt());
+	}
+
 	@PostMapping("/signin")
 	public ResponseEntity<String> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-		Optional<User> user = userRepository.findByUsername(loginRequest.getUsername());
+		Optional<User> user = userRepository.findByEmail(loginRequest.getEmail());
 		if(!user.isPresent()){
-			return ResponseEntity.badRequest().body("Username not found!");
+			return ResponseEntity.badRequest().body("No account with this email was found!");
 		}
 		if(loginRequest.getPassword().equals(user.get().getPassword()))
 		{
@@ -55,22 +62,15 @@ public class UserController {
 
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-			return ResponseEntity
-					.badRequest()
-					.body(new MessageResponse("Error: Username is already taken!"));
-		}
-
 		if (userRepository.existsByEmail(signUpRequest.getEmail())) {
 			return ResponseEntity
 					.badRequest()
-					.body(new MessageResponse("Error: Email is already in use!"));
+					.body(new MessageResponse("Error: Email is already taken!"));
 		}
 
 		// Create new user's account
-		User user = new User(signUpRequest.getUsername(), 
-							 signUpRequest.getEmail(),
-							 signUpRequest.getPassword());
+		User user = new User(signUpRequest.getName(), signUpRequest.getLastname(), signUpRequest.getEmail(),
+								signUpRequest.getPassword());
 
 		userRepository.save(user);
 
