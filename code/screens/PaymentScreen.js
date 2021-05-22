@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
-import { Alert, ImageBackground, Pressable, StyleSheet, Text, TextInput, View, Image } from 'react-native';
-import { Keyboard } from 'react-native'
+import { Alert, Pressable, StyleSheet, Text, TextInput, View, Image } from 'react-native';
 import { Dimensions } from "react-native";
 import Colors from '../styles/Colors';
 import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
 import { mainStyles } from "../styles/MainStyles";
 import { TouchableOpacity } from 'react-native';
-import BikeNest_TextInput from '../components/BikeNest_TextInput';
-import BikeNest_Button, { ButtonStyle } from '../components/BikeNest_Button';
 import { BookingService } from "../services/Booking";
 import { ScrollView } from 'react-native';
 import BikeNest_Modal from '../components/BikeNest_Modal';
@@ -41,7 +38,6 @@ export default function PaymentScreen({ navigation }) {
       })
           .then((response) => response.json())
           .then((json) => {
-              console.log('is this working?');
               console.log(JSON.stringify(data));
 
               //Testing
@@ -50,7 +46,7 @@ export default function PaymentScreen({ navigation }) {
               let mockData = {mockAccountCreated, mockErrorMsg};
 
               //Pageforwarding
-              navigation.navigate("History");
+              navigation.navigate("ReservationSuccess");
 
               // console.log(mockData);
               // setModalInfo(mockData);
@@ -87,7 +83,6 @@ export default function PaymentScreen({ navigation }) {
     alert('this is an info.');
   };
   const onPressOrder = () => {
-
     var dateStart = moment()
     .utcOffset('+05:30')
     .format('yyyy-MM-DD');
@@ -142,7 +137,7 @@ export default function PaymentScreen({ navigation }) {
       <View style={myStyles.paymentContainer}>
         <View style={{alignSelf:'center'}}>
             <Text style={myStyles.h2}>
-                Meine Bestellung <Image onPress={() => onPressInfo(this)} source={require('../assets/payment/info.png')}/>
+                Meine Reservierung <Image onPress={() => onPressInfo(this)} source={require('../assets/payment/info.png')}/>
             </Text>
         </View>
         <View style={myStyles.headline}>
@@ -211,16 +206,6 @@ export default function PaymentScreen({ navigation }) {
             <Image style={{margin: 10}} source={require('../assets/payment/mail-send.png')} />
         </Pressable>
       </View>
-      <View style={myStyles.paymentClosedContainer}>
-        <View style={{alignSelf:'center'}}>
-            <Text style={myStyles.h2}>
-                Meine Bestellung <Image onPress={() => onPressInfo(this)} source={require('../assets/payment/info.png')}/>
-            </Text>
-        </View>
-            <Text style={myStyles.h3}> Vielen Dank für Ihre Bestellung. </Text>
-            <Text style={myStyles.h3}> Bitte begeben Sie sich zu folgendem BIKE NEST: </Text>
-            <Text style={myStyles.h3}> {getLocation()} </Text>
-      </View>
       </ScrollView>
       <BikeNest_NavigationFooter/>
     </View>
@@ -236,12 +221,6 @@ const myStyles = StyleSheet.create({
     flex: 1,
     padding: 15,
     marginTop: 30,
-  },
-  paymentClosedContainer:{
-    flex: 1,
-    padding: 15,
-    marginTop: 30,
-    display: 'none',
   },
   h2: {
       fontSize: 27,
