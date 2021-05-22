@@ -41,7 +41,7 @@ public class UserController {
 
 	@PostMapping("/signin")
 	public ResponseEntity<SigninResponse> authenticateUser(@Valid @RequestBody SigninRequest signinRequest) {
-		if (accountService.existsAccountWithEmail(signinRequest.getEmail()))
+		if (!accountService.existsAccountWithEmail(signinRequest.getEmail()))
 			return ResponseEntity.badRequest().body(new SigninResponse(false, "Email not found!", null));
 
 		Optional<User> loggedInUser = accountService.loginUser(signinRequest.getEmail(), signinRequest.getPassword());
@@ -63,8 +63,8 @@ public class UserController {
 		}
 
 		// Create new user's account
-		Optional<User> user = accountService.createAccount(signUpRequest.getName(), signUpRequest.getLastname(), signUpRequest.getEmail(),
-								signUpRequest.getPassword());
+		Optional<User> user = accountService.createAccount(signUpRequest.getEmail(), signUpRequest.getPassword(),
+				signUpRequest.getName(), signUpRequest.getLastname());
 
 		String jwt = jwtService.buildJwtFromUser(user.get());
 
