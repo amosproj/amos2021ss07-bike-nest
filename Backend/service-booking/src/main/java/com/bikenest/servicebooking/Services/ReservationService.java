@@ -16,8 +16,12 @@ public class ReservationService {
     @Autowired
     ReservationRepository reservationRepository;
 
-    public Iterable<Reservation> GetAllReservations(){
+    public Iterable<Reservation> getAllReservations(){
         return reservationRepository.findAll();
+    }
+
+    public Iterable<Reservation> getAllReservationByUserId(Integer userId){
+        return reservationRepository.findAllByUserId(userId);
     }
 
     public Optional<Reservation> createReservation(Integer userId, CreateReservationRequest newReservation) throws Exception {

@@ -13,21 +13,21 @@ import java.util.Date;
 public class Reservation {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private Integer Id;
-    private Integer UserId;
-    private Integer BikenestId;
+    private Integer id;
+    private Integer userId;
+    private Integer bikenestId;
     @Basic
     @Temporal(TemporalType.TIMESTAMP)
-    private Date StartDateTime;   //For what time was the Reservation planned
+    private Date startDateTime;   //For what time was the Reservation planned
     @Basic
     @Temporal(TemporalType.TIMESTAMP)
-    private Date ActualStartDateTime;   //When was the Bike actually stored inside the Bikenest?
+    private Date actualStartDateTime;   //When was the Bike actually stored inside the Bikenest?
     @Basic
     @Temporal(TemporalType.TIMESTAMP)
-    private Date EndDateTime;     //For what time was it planned that the Reservation ends
+    private Date endDateTime;     //For what time was it planned that the Reservation ends
     @Basic
     @Temporal(TemporalType.TIMESTAMP)
-    private Date ActualEndDateTime;   //When was the Bike actually taken from the Bikenest?
+    private Date actualEndDateTime;   //When was the Bike actually taken from the Bikenest?
 
     public static Reservation FromNewReservation(Integer userId, CreateReservationRequest newReservationPOJO){
         Reservation result = new Reservation();
@@ -41,59 +41,59 @@ public class Reservation {
     }
 
     public Integer getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Integer id) {
-        Id = id;
+        this.id = id;
     }
 
     public Integer getUserId() {
-        return UserId;
+        return userId;
     }
 
     public void setUserId(Integer userId) {
-        UserId = userId;
+        this.userId = userId;
     }
 
     public Integer getBikenestId() {
-        return BikenestId;
+        return bikenestId;
     }
 
     public void setBikenestId(Integer bikenestId) {
-        BikenestId = bikenestId;
+        this.bikenestId = bikenestId;
     }
 
     public LocalDateTime getStartDateTime() {
-        return DateToLocalDateTime(StartDateTime);
+        return DateToLocalDateTime(startDateTime);
     }
 
     public void setStartDateTime(LocalDateTime startDateTime) {
-        StartDateTime = LocalDateTimeToDate(startDateTime);
+        this.startDateTime = LocalDateTimeToDate(startDateTime);
     }
 
     public LocalDateTime getActualStartDateTime() {
-        return DateToLocalDateTime(ActualStartDateTime);
+        return DateToLocalDateTime(actualStartDateTime);
     }
 
     public void setActualStartDateTime(LocalDateTime actualStartDateTime) {
-        ActualStartDateTime = LocalDateTimeToDate(actualStartDateTime);
+        this.actualStartDateTime = LocalDateTimeToDate(actualStartDateTime);
     }
 
     public LocalDateTime getEndDateTime() {
-        return DateToLocalDateTime(EndDateTime);
+        return DateToLocalDateTime(endDateTime);
     }
 
     public void setEndDateTime(LocalDateTime endDateTime) {
-        EndDateTime = LocalDateTimeToDate(endDateTime);
+        this.endDateTime = LocalDateTimeToDate(endDateTime);
     }
 
     public LocalDateTime getActualEndDateTime() {
-        return DateToLocalDateTime(ActualEndDateTime);
+        return DateToLocalDateTime(actualEndDateTime);
     }
 
     public void setActualEndDateTime(LocalDateTime actualEndDateTime) {
-        ActualEndDateTime = LocalDateTimeToDate(actualEndDateTime);
+        this.actualEndDateTime = LocalDateTimeToDate(actualEndDateTime);
     }
 
     private LocalDateTime DateToLocalDateTime(Date date){

@@ -70,5 +70,10 @@ public class UserController {
 
 		return ResponseEntity.ok(new SignupResponse(true, null, jwt));
 	}
+
+	@PostMapping("/admintoken")
+	public ResponseEntity<String> getAdminToken(){
+    	return ResponseEntity.ok(jwtService.buildAdminJwt());
+	}
 }
 
