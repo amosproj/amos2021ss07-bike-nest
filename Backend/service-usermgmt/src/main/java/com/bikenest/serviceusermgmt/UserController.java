@@ -1,5 +1,7 @@
 package com.bikenest.serviceusermgmt;
 
+import com.bikenest.common.interfaces.usermgmt.SigninResponse;
+import com.bikenest.serviceusermgmt.helper.JWTHelper;
 import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -13,6 +15,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,54 +37,43 @@ public class UserController {
 
     //jwtauth Endpoint
     @PostMapping(path="/validatejwt")
+	@PreAuthorize("hasRole('SERVICE')")
     public ResponseEntity<Boolean> ValidateJWT(@RequestBody String JWT){
-    	try {
-			Jwt parsed = Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parse(JWT);
-		}catch(Exception ex){
-			return ResponseEntity.ok(false);
-		}
-        return ResponseEntity.ok(true);
+    	return ResponseEntity.ok(JWTHelper.GetSingleton().ValidateJWT(JWT));
     }
 
+    //THIS IS JUST FOR TESTING
+	//TODO: Remove this
+    @PostMapping("/signinadmin")
+	public ResponseEntity<String> authenticateAdmin(){
+    	return ResponseEntity.ok(JWTHelper.GetSingleton().BuildAdminJwt());
+	}
+
 	@PostMapping("/signin")
-	public ResponseEntity<String> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-		Optional<User> user = userRepository.findByUsername(loginRequest.getUsername());
+	public ResponseEntity<SigninResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+		Optional<User> user = userRepository.findByEmail(loginRequest.getEmail());
 		if(!user.isPresent()){
-			return ResponseEntity.badRequest().body("Username not found!");
+			return ResponseEntity.badRequest().body(new SigninResponse(false, "Email not found!", null));
 		}
 		if(loginRequest.getPassword().equals(user.get().getPassword()))
 		{
-			//BUILD JWT
-			String jwt = Jwts.builder()
-							.signWith(SECRET_KEY)
-							.setSubject(user.get().getUsername())
-							.setIssuedAt(new Date())
-							.claim("Role", "User")
-							.setExpiration(new Date((new Date()).getTime() + 1000000))
-							.compact();
-			return ResponseEntity.ok(jwt);
+			String jwt = JWTHelper.GetSingleton().BuildJwtFromUser(user.get());
+			return ResponseEntity.ok(new SigninResponse(true, null, jwt));
 		}
-		return ResponseEntity.badRequest().body("Invalid password provided!");
+		return ResponseEntity.badRequest().body(new SigninResponse(false, "Invalid password!", null));
 	}
 
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-			return ResponseEntity
-					.badRequest()
-					.body(new MessageResponse("Error: Username is already taken!"));
-		}
-
 		if (userRepository.existsByEmail(signUpRequest.getEmail())) {
 			return ResponseEntity
 					.badRequest()
-					.body(new MessageResponse("Error: Email is already in use!"));
+					.body(new MessageResponse("Error: Email is already taken!"));
 		}
 
 		// Create new user's account
-		User user = new User(signUpRequest.getUsername(), 
-							 signUpRequest.getEmail(),
-							 signUpRequest.getPassword());
+		User user = new User(signUpRequest.getName(), signUpRequest.getLastname(), signUpRequest.getEmail(),
+								signUpRequest.getPassword());
 
 		userRepository.save(user);
 
