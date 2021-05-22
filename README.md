@@ -15,6 +15,8 @@ The project is created as a work as part of a student project, carried out by [P
     1. **Backend**: [Docker](https://www.docker.com), [JDK 11](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
     2. **Frontend**: [(React) Expo](http://expo.io/)
 
+Further Backend documentation can be found [here](https://github.com/amosproj/amos-ss2021-bike-nest/blob/main/Backend/README.md).
+
 ## How to run the project after initial setup.
 1. **Backend**: Navigate into the `Backend` directory. Run the `run-release.bat` (or rename it to run-release.sh to run it on Unix-based OS) via the command `run-release.bat` or `sh run-release.sh` for UNIX systems.
 2. **Frontend**: Navigate into the `code` directory and start the Expo CLI via `yarn start`.
