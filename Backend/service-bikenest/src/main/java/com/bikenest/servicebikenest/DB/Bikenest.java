@@ -5,7 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-//Auto generate a table from this class
 @Entity
 public class Bikenest {
     @Id

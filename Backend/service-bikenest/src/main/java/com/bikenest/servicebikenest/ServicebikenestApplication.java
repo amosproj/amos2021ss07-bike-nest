@@ -9,9 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
-@ComponentScan(basePackageClasses = BikenestRepository.class)
-@ComponentScan(basePackageClasses = Bikenest.class)
-@ComponentScan(basePackageClasses = BikenestController.class)
 public class ServicebikenestApplication {
 
     public static void main(String[] args) {

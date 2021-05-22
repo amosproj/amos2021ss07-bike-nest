@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)  // This Enables the @PreAuthorize @PostAuthorize Annotations
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
 	private JWTAuthenticationEntrypoint jwtAuthenticationEntryPoint = new JWTAuthenticationEntrypoint();
@@ -27,7 +28,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.formLogin().disable();
         http.httpBasic().disable();
 
-
+        // Configure what requests should be authorized. In thise case none.
+        // Also we set a filter, that will check the Authorization Header and set the SecurityContext, if a JWT is provided.
         http.cors().and().authorizeRequests()
                 .anyRequest().permitAll()
 				.and()
