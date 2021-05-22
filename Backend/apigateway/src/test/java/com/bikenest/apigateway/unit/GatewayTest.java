@@ -1,7 +1,7 @@
 package com.bikenest.apigateway.unit;
 
 import com.bikenest.apigateway.AuthenticationFilter;
-import com.bikenest.apigateway.UsermgmtClient;
+import com.bikenest.common.feignclients.UsermgmtClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
