@@ -29,6 +29,8 @@ export const mainStyles = StyleSheet.create({
     justifyContent: 'center',
   },
   checkBoxContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
     flexDirection: 'row',
     marginBottom: 20,
   },

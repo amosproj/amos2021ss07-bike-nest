@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { mainStyles } from "../styles/MainStyles";
 import { Text, View } from 'react-native';
-import CheckBox from '@react-native-community/checkbox';
+import { CheckBox } from 'react-native-elements';
 
 export default function BikeNest_CheckBox(props) {
     const [toggleCheckBox, setToggleCheckBox] = useState(props.initialValue);
@@ -16,9 +16,10 @@ export default function BikeNest_CheckBox(props) {
         <View style={mainStyles.checkBoxContainer}>
             <Text style={mainStyles.checkboxText}
                 onPress={() => onPressTxt()}>{props.toggleText}</Text>
-            <CheckBox style={mainStyles.checkbox}
-                onValueChange={(newValue) => setToggleCheckBox(newValue)}
-                value={toggleCheckBox}
+            <CheckBox
+                style={mainStyles.checkbox}
+                onPress={() => setToggleCheckBox(!toggleCheckBox)}
+                checked={toggleCheckBox}
             />
         </View>
     );
