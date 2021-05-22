@@ -1,5 +1,6 @@
 package com.bikenest.servicebikenest;
 
+import com.bikenest.common.interfaces.bikenest.BikeNestInfoResponse;
 import com.bikenest.common.security.UserInformation;
 import com.bikenest.common.security.UserRole;
 import com.bikenest.servicebikenest.DB.Bikenest;
@@ -53,4 +54,21 @@ public class BikenestController {
         }
         return "No permission to do this!";
     }
+
+    @PostMapping("/get")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	public ResponseEntity<BikeNestInfoResponse> GetBikenest(@Valid @RequestBody BikeNestInfoRequest bikenestInfoRequest) {
+		Optional<Bikenest> bikenest = bikenestRepository.(bikenestInfoRequest.getID());
+
+
+		// if(!bikenest.isPresent()){
+		// 	return ResponseEntity.badRequest().body(new SigninResponse(false, "Email not found!", null));
+		// }
+		// if(loginRequest.getPassword().equals(user.get().getPassword()))
+		// {
+		// 	String jwt = JWTHelper.GetSingleton().BuildJwtFromUser(user.get());
+		// 	return ResponseEntity.ok(new SigninResponse(true, null, jwt));
+		// }
+		return ResponseEntity.badRequest().body(new BikeNestInfoResponse(null, null, 0, false));
+	}
 }
