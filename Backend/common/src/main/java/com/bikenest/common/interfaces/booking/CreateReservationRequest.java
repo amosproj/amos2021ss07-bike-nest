@@ -1,11 +1,17 @@
 package com.bikenest.common.interfaces.booking;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 //see /booking/add Endpoint
-public class AddReservationInterface {
+public class CreateReservationRequest {
+    @NotBlank
     private Integer bikenestId;
+    @NotBlank
     private LocalDateTime startDateTime; // String in JSON, Format: yyyy-MM-dd'T'HH:mm:ss example: 2021-10-23T09:45:00
+    @NotBlank
     private LocalDateTime endDateTime; // see startDateTime
 
     public Integer getBikenestId() {

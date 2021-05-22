@@ -1,6 +1,6 @@
 package com.bikenest.servicebooking.DB;
 
-import com.bikenest.common.interfaces.booking.AddReservationInterface;
+import com.bikenest.common.interfaces.booking.CreateReservationRequest;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -29,7 +29,7 @@ public class Reservation {
     @Temporal(TemporalType.TIMESTAMP)
     private Date ActualEndDateTime;   //When was the Bike actually taken from the Bikenest?
 
-    public static Reservation FromNewReservation(Integer userId, AddReservationInterface newReservationPOJO){
+    public static Reservation FromNewReservation(Integer userId, CreateReservationRequest newReservationPOJO){
         Reservation result = new Reservation();
         result.setActualEndDateTime(null);
         result.setActualStartDateTime(null);

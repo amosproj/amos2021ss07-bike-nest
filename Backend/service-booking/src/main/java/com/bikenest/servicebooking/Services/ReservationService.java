@@ -1,6 +1,6 @@
 package com.bikenest.servicebooking.Services;
 
-import com.bikenest.common.interfaces.booking.AddReservationInterface;
+import com.bikenest.common.interfaces.booking.CreateReservationRequest;
 import com.bikenest.servicebooking.DB.Reservation;
 import com.bikenest.servicebooking.DB.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
-    public Optional<Reservation> CreateReservation(Integer userId, AddReservationInterface newReservation) throws Exception {
+    public Optional<Reservation> createReservation(Integer userId, CreateReservationRequest newReservation) throws Exception {
         if(newReservation.getBikenestId() == null || newReservation.getStartDateTime() == null ||
                 newReservation.getEndDateTime() == null)
             throw new Exception("Invalid request.");
@@ -31,7 +31,7 @@ public class ReservationService {
         return Optional.of(reservationRepository.save(reservation));
     }
 
-    public Optional<Reservation> StartReservation(Integer id){
+    public Optional<Reservation> startReservation(Integer id){
         Optional<Reservation> reservation = reservationRepository.findById(id);
         //Error if the Reservation with given id does not exist
         if(!reservation.isPresent()){
@@ -49,7 +49,7 @@ public class ReservationService {
         return Optional.of(reservation.get());
     }
 
-    public Optional<Reservation> EndReservation(Integer id){
+    public Optional<Reservation> endReservation(Integer id){
         Optional<Reservation> reservation = reservationRepository.findById(id);
         //Error if the Reservation with given id does not exist
         if(!reservation.isPresent()){
@@ -65,5 +65,11 @@ public class ReservationService {
         reservation.get().setActualEndDateTime(LocalDateTime.now(ZoneId.of("Europe/Berlin")));
         reservationRepository.save(reservation.get());
         return Optional.of(reservation.get());
+    }
+
+    public boolean isReservationOwner(Integer reservationId, Integer userId){
+        Optional<Reservation> reservation = reservationRepository.findById(reservationId);
+
+        return reservation.isPresent() && reservation.get().getUserId() == userId;
     }
 }
