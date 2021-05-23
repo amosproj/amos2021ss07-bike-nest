@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -38,15 +39,14 @@ public class ReservationController {
     @PostMapping(value = "/add", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<GeneralResponse> createReservation(@AuthenticationPrincipal UserInformation user,
-                                                             @RequestBody CreateReservationRequest request) {
-
-        try {
-            Optional<Reservation> reservation = reservationService.createReservation(user.getUserId(), request);
-            return ResponseEntity.ok(new GeneralResponse(true, null, reservation.get()));
-        } catch (Exception exception) {
-            return ResponseEntity.badRequest().body(
-                    new GeneralResponse(false, exception.getMessage(), null));
+                                                             @Valid @RequestBody CreateReservationRequest request) {
+        Optional<Reservation> reservation = reservationService.createReservation(user.getUserId(), request);
+        if (!reservation.isPresent()){
+            return ResponseEntity.badRequest().body(new GeneralResponse(false,
+                    "Couldn't create Reservation.", null));
         }
+
+        return ResponseEntity.ok(new GeneralResponse(true, null, reservation.get()));
     }
 
     @PostMapping(value="/start/{reservationId}")

@@ -13,6 +13,8 @@ import java.util.Optional;
 @Service
 public class ReservationService {
 
+    private Integer RESERVATION_MINUTES = 30;
+
     @Autowired
     ReservationRepository reservationRepository;
 
@@ -24,20 +26,18 @@ public class ReservationService {
         return reservationRepository.findAllByUserId(userId);
     }
 
-    public Optional<Reservation> createReservation(Integer userId, CreateReservationRequest newReservation) throws Exception {
-        if(newReservation.getBikenestId() == null || newReservation.getStartDateTime() == null ||
-                newReservation.getEndDateTime() == null)
-            throw new Exception("Invalid request.");
-
-
-        Reservation reservation = Reservation.FromNewReservation(userId, newReservation);
+    public Optional<Reservation> createReservation(Integer userId, CreateReservationRequest newReservation) {
+        //TODO: Connect with bikenest service. Check if bikenest exists and if there are free spots
+        Reservation reservation = new Reservation(userId, newReservation.getBikenestId(),
+                newReservation.getBikenestId(), false, LocalDateTime.now(ZoneId.of("Europe/Berlin")),
+                LocalDateTime.now(ZoneId.of("Europe/Berlin")).plusMinutes(RESERVATION_MINUTES));
 
         return Optional.of(reservationRepository.save(reservation));
     }
 
     public Optional<Reservation> startReservation(Integer id){
         Optional<Reservation> reservation = reservationRepository.findById(id);
-        //Error if the Reservation with given id does not exist
+        // Error if the Reservation with given id does not exist
         if(!reservation.isPresent()){
             return Optional.empty();
         }
@@ -45,17 +45,17 @@ public class ReservationService {
         Reservation actualReservation = reservation.get();
 
         //Error if the ActualStartDateTime has already been set
-        if(actualReservation.getActualStartDateTime() != null){
+        if(actualReservation.getActualStart() != null){
             return Optional.empty();
         }
-        reservation.get().setActualStartDateTime(LocalDateTime.now(ZoneId.of("Europe/Berlin")));
+        reservation.get().setActualStart(LocalDateTime.now(ZoneId.of("Europe/Berlin")));
         reservationRepository.save(reservation.get());
         return Optional.of(reservation.get());
     }
 
     public Optional<Reservation> endReservation(Integer id){
         Optional<Reservation> reservation = reservationRepository.findById(id);
-        //Error if the Reservation with given id does not exist
+        // Error if the Reservation with given id does not exist
         if(!reservation.isPresent()){
             return Optional.empty();
         }
@@ -63,10 +63,10 @@ public class ReservationService {
         Reservation actualReservation = reservation.get();
 
         //Error if the ActualStartDateTime has already been set
-        if(actualReservation.getActualEndDateTime() != null){
+        if(actualReservation.getActualEnd() != null){
             return Optional.empty();
         }
-        reservation.get().setActualEndDateTime(LocalDateTime.now(ZoneId.of("Europe/Berlin")));
+        reservation.get().setActualEnd(LocalDateTime.now(ZoneId.of("Europe/Berlin")));
         reservationRepository.save(reservation.get());
         return Optional.of(reservation.get());
     }
