@@ -58,43 +58,25 @@ export function CreateAccountManually() {
     // }
 
     let setModalInfo = (json) => {
-        //setAccountCreated(json.accountCreated);
-        //setAccountCreated(json.mockAccountCreated);
+        setAccountCreated(json.success);
 
-        //TODO: Refactor when backend is ready
-        if (json.error != null) {
-            setModalHeadline("Oops!");
-            setModalText(json.error);
-            setAccountCreated(false);
-        }
-        else if (json.message === "Error: Username is already taken!") {
-            setModalHeadline("Oops!");
-            setModalText("Der Benutzername existiert bereits!");
-            setAccountCreated(false);
-        }
-        else if (json.message === "User registered successfully!") {
+        if (json.success) {
             setModalHeadline("Hurra!");
-            setModalText("Dein Account wurde erfolgreich eingerichtet");
-            setAccountCreated(true);
-        }
-        else if (json.message === "Error: Email is already in use!") {
-            setModalHeadline("Oops!!");
-            setModalText("Die Email wird schon verwendet, versuche es mit einer anderen Email.");
-            setAccountCreated(true);
-        }
-        else {
-            setModalHeadline("Oops!!");
-            setModalText("Etwas ist schief gelaufen versuche es nochmale");
-            setAccountCreated(false);
+            setModalText("Dein Account wurde erfolgreich erstellt.")
+        } else {
+            setModalHeadline("Oops!");
+            if (json.error != null)
+                setModalText(json.error);
         }
 
         setModalVisible(true);
     }
 
     let tryCreateAccount = () => {
-        let username = firstName;
-        let data = { username, email, password };
-      
+        let name = firstName;
+        let lastname = lastName;
+        let data = { name, lastname, email, password };
+
         return fetch(global.globalIPAddress + "/usermanagement/signup", {
 
             method: 'POST',
@@ -102,9 +84,9 @@ export function CreateAccountManually() {
             headers: { Accept: 'application/json', 'Content-Type': 'application/json' }
         })
             .then((response) => response.json())
-            .then((json) => {
-                console.log(json);
-                setModalInfo(json);
+            .then((responseJson) => {
+                console.log(responseJson);
+                setModalInfo(responseJson);
             })
             .catch((error) => {
                 setModalHeadline("Sorry!");

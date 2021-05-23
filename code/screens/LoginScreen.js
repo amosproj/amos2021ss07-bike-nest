@@ -9,10 +9,6 @@ import BikeNest_TextInput from '../components/BikeNest_TextInput';
 import BikeNest_Modal from '../components/BikeNest_Modal';
 import global from '../components/GlobalVars';
 
-var width = Dimensions.get('window').width; //full width
-var height = Dimensions.get('window').height; //full height
-
-
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,33 +17,15 @@ export default function LoginScreen({ navigation }) {
   const [modalHeadline, setModalHeadline] = useState("");
 
   let setModalInfo = (jwt) => {
-    //setAccountCreated(json.accountCreated);
-    //setAccountCreated(jwt.mockAccountCreated);
-
-    //TODO: Refactor when backend is ready, don't hint which option(username or password) is wrong
-    if (jwt === "Username not found!") {
+    if (jwt.error != null) {
       setModalHeadline("Oops!");
-      setModalText("Der Benutzername existiert nicht!");
+      setModalText(jwt.error);
       setModalVisible(true);
     }
-    else if (jwt === "Invalid password provided!") {
-      setModalHeadline("Oops!");
-      setModalText("Passwort ist falsch!");
-      setModalVisible(true);
-    }
-    else {
-      navigation.navigate("FindBikeNest");
-    }
-  }
-
-  let log = (response) => {
-    let response_ = response.json();
-    console.log(response_);
   }
 
   let tryLogIn = () => {
-    let username = email;
-    let data = { username, password };
+    let data = { email, password };
 
     return fetch(global.globalIPAddress + "/usermanagement/signin", {
 
@@ -55,10 +33,15 @@ export default function LoginScreen({ navigation }) {
       body: JSON.stringify(data),
       headers: { 'Content-Type': 'application/json' }
     })
-      .then((response) => response.text())
-      .then((jwt) => {
-        //console.log(jwt);
-        setModalInfo(jwt);
+      .then((response) => response.json())
+      .then((response) => {
+        if ((response.success != null) && (response.success === true)) {
+          global.saveAuthenticationToken(response)
+            .then(navigation.navigate("FindBikeNest"));
+        }
+        else {
+          setModalInfo(response);
+        }
       })
       .catch((error) => {
         setModalHeadline("Sorry!");
