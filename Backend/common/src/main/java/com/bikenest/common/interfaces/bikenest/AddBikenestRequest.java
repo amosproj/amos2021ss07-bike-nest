@@ -12,6 +12,7 @@ public class AddBikenestRequest {
     @DecimalMin("1.0")
     @Digits(integer=8,fraction = 0)
     private Integer maximumSpots;
+    private boolean chargingAvailable;
 
     public String getName() {
         return name;
@@ -35,5 +36,13 @@ public class AddBikenestRequest {
 
     public void setMaximumSpots(Integer maximumSpots) {
         this.maximumSpots = maximumSpots;
+    }
+
+    public boolean isChargingAvailable() {
+        return chargingAvailable;
+    }
+
+    public void setChargingAvailable(boolean chargingAvailable) {
+        this.chargingAvailable = chargingAvailable;
     }
 }

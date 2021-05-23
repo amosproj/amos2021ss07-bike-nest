@@ -14,12 +14,14 @@ public class Bikenest {
     private String gpsCoordinates;
     private Integer maximumSpots;
     private Integer currentSpots;
+    private boolean chargingAvailable;
 
-    public Bikenest(String name, String gpsCoordinates, Integer maximumSpots){
+    public Bikenest(String name, String gpsCoordinates, Integer maximumSpots, boolean chargingAvailable){
         this.name = name;
         this.gpsCoordinates = gpsCoordinates;
         this.maximumSpots = maximumSpots;
         this.currentSpots = maximumSpots;
+        this.chargingAvailable = chargingAvailable;
     }
 
     public Bikenest(){}
@@ -62,5 +64,13 @@ public class Bikenest {
 
     public void setCurrentSpots(Integer currentSpots) {
         this.currentSpots = currentSpots;
+    }
+
+    public boolean isChargingAvailable() {
+        return chargingAvailable;
+    }
+
+    public void setChargingAvailable(boolean chargingAvailable) {
+        this.chargingAvailable = chargingAvailable;
     }
 }

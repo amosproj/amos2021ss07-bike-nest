@@ -41,7 +41,6 @@ public class BikenestController {
     }
 
     @GetMapping(path = "/all")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public @ResponseBody
     Iterable<Bikenest> getAllBikenests() {
         return bikenestService.getAllBikenests();

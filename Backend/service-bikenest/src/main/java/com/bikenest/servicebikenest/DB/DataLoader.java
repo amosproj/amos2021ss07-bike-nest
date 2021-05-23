@@ -19,15 +19,15 @@ public class DataLoader {
     public void LoadData() {
         if(bikenestRepository.count() == 0){
             Bikenest bikenest_hbf_1 = new Bikenest("Nürnberg Hbf Süd 1",
-                    "49.444081807031665, 11.082422685617997", 13);
+                    "49.444081807031665, 11.082422685617997", 13, true);
             bikenestRepository.save(bikenest_hbf_1);
 
             Bikenest bikenest_hbf_2 = new Bikenest("Nürnberg Hbf Süd 2",
-                    "49.44408428763211, 11.0826287061008", 8);
+                    "49.44408428763211, 11.0826287061008", 8, true);
             bikenestRepository.save(bikenest_hbf_2);
 
             Bikenest bikenest_hbf_3 = new Bikenest("Nürnberg Hbf Nord 1",
-                    "49.446344470022375, 11.0810884309534938", 13);
+                    "49.446344470022375, 11.0810884309534938", 13, false);
             bikenestRepository.save(bikenest_hbf_3);
 
             /* TODO: Readd this (i changed the code for the bikenest and all of these would have had to be changed)
