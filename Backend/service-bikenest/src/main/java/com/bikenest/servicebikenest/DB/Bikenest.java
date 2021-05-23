@@ -15,6 +15,13 @@ public class Bikenest {
     private Integer maximumSpots;
     private Integer currentSpots;
 
+    public Bikenest(String name, String gpsCoordinates, Integer maximumSpots){
+        this.name = name;
+        this.gpsCoordinates = gpsCoordinates;
+        this.maximumSpots = maximumSpots;
+        this.currentSpots = maximumSpots;
+    }
+
     public Integer getId() {
         return id;
     }

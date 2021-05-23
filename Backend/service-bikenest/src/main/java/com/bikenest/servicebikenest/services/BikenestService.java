@@ -65,12 +65,7 @@ public class BikenestService {
         if(bikenestRepository.findByName(request.getName()).isPresent())
             return Optional.empty();
 
-        Bikenest bikenest = new Bikenest();
-        bikenest.setName(request.getName());
-        bikenest.setMaximumSpots(request.getMaximumSpots());
-        bikenest.setCurrentSpots(request.getMaximumSpots());
-        bikenest.setGpsCoordinates(request.getGpsCoordinates());
-
+        Bikenest bikenest = new Bikenest(request.getName(), request.getGpsCoordinates(), request.getMaximumSpots());
         return Optional.of(bikenestRepository.save(bikenest));
     }
 
