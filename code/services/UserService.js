@@ -10,13 +10,13 @@ export class UserService{
      * @param {string} password Password as string
      * @returns Dictionary with the fields success and error.
      */
-    LoginUser(email, password) {
+    async LoginUser(email, password) {
         let request = {
             "email": email,
             "password": password
         }
 
-        fetch(global.globalIPAddress + "/usermanagement/signin", {
+        return fetch(global.globalIPAddress + "/usermanagement/signin", {
             method: 'POST',
             body: JSON.stringify(request),
             headers: { Accept: 'application/json', 'Content-Type': 'application/json' }
