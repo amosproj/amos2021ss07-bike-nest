@@ -1,5 +1,6 @@
 package com.bikenest.common.interfaces.bikenest;
 
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 
@@ -8,6 +9,7 @@ public class AddBikenestRequest {
     private String name;
     @NotBlank
     private String gpsCoordinates;
+    @DecimalMin("1.0")
     @Digits(integer=8,fraction = 0)
     private Integer maximumSpots;
 

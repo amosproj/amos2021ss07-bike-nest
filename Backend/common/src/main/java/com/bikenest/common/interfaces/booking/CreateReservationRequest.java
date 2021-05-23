@@ -1,5 +1,7 @@
 package com.bikenest.common.interfaces.booking;
 
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 
@@ -9,6 +11,7 @@ public class CreateReservationRequest {
     private Integer bikenestId;
 
     @Digits(integer=8,fraction = 0)
+    @DecimalMin("1.0")
     private Integer reservationMinutes;
 
     public Integer getBikenestId() {

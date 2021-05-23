@@ -40,7 +40,7 @@ public class BikenestService {
             return false;
 
         Bikenest actualBikenest = bikenest.get();
-        if (actualBikenest.getCurrentSpots() >= actualBikenest.getMaximumSpots()){
+        if (actualBikenest.getCurrentSpots() < actualBikenest.getMaximumSpots()){
             actualBikenest.setCurrentSpots(actualBikenest.getCurrentSpots() + 1);
             bikenestRepository.save(actualBikenest);
             return true;
