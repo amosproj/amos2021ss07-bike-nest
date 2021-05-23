@@ -73,4 +73,14 @@ public class BikenestService {
 
         return Optional.of(bikenestRepository.save(bikenest));
     }
+
+    public Optional<Integer> getFreeSpots(Integer bikenestId){
+        Optional<Bikenest> bikenest = bikenestRepository.findById(bikenestId);
+
+        if(!bikenest.isPresent()){
+            return Optional.empty();
+        }
+
+        return Optional.of(bikenest.get().getCurrentSpots());
+    }
 }

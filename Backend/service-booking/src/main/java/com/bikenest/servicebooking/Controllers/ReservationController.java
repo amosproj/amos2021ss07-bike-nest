@@ -51,8 +51,8 @@ public class ReservationController {
 
     @PostMapping(value="/start/{reservationId}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<GeneralResponse> StartReservation(@AuthenticationPrincipal UserInformation user,
-                                                        @PathVariable("reservationId") Integer reservationId){
+    public ResponseEntity<GeneralResponse> startReservation(@AuthenticationPrincipal UserInformation user,
+                                                            @PathVariable("reservationId") Integer reservationId){
         if(!reservationService.isReservationOwner(reservationId, user.getUserId())){
             return ResponseEntity.badRequest().body(
                     new GeneralResponse(false, "You can only start your own reservations.", null));
@@ -62,7 +62,7 @@ public class ReservationController {
 
         if(!reservation.isPresent()){
             return ResponseEntity.badRequest().body(
-                    new GeneralResponse(false, "Couldn't find reservation", null));
+                    new GeneralResponse(false, "Couldn't start reservation", null));
         }
 
         return ResponseEntity.ok(new GeneralResponse(true, null, reservation.get()));
@@ -70,8 +70,8 @@ public class ReservationController {
 
     @PostMapping(value="/end/{reservationId}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<GeneralResponse> EndReservation(@AuthenticationPrincipal UserInformation user,
-                                                      @PathVariable("reservationId") Integer reservationId){
+    public ResponseEntity<GeneralResponse> endReservation(@AuthenticationPrincipal UserInformation user,
+                                                          @PathVariable("reservationId") Integer reservationId){
         if(!reservationService.isReservationOwner(reservationId, user.getUserId())){
             return ResponseEntity.badRequest().body(
                     new GeneralResponse(false, "You can only end your own reservations.", null));
@@ -81,7 +81,7 @@ public class ReservationController {
 
         if(!reservation.isPresent()){
             return ResponseEntity.badRequest().body(
-                    new GeneralResponse(false, "Couldn't find reservation", null));
+                    new GeneralResponse(false, "Couldn't end reservation", null));
         }
 
         return ResponseEntity.ok(new GeneralResponse(true, null, reservation.get()));

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping(path = "/bikenest/service")
 public class BookingInfoController {
@@ -17,20 +19,30 @@ public class BookingInfoController {
 
     @PostMapping(path="/bikenestexists")
     @PreAuthorize("hasRole('SERVICE')")
-    public boolean ExistsBikenest(@RequestBody Integer bikenestId){
+    public boolean existsBikenest(@RequestBody Integer bikenestId){
         return bikenestService.existsBikenest(bikenestId);
     }
 
     @PostMapping(path="/reservespot")
     @PreAuthorize("hasRole('SERVICE')")
-    public boolean ReserveSpot(@RequestBody Integer bikenestId){
+    public boolean reserveSpot(@RequestBody Integer bikenestId){
         return bikenestService.reserveSpot(bikenestId);
     }
 
     @PostMapping(path="/freespot")
     @PreAuthorize("hasRole('SERVICE')")
-    public boolean FreeSpot(@RequestBody Integer bikenestId){
+    public boolean freeSpot(@RequestBody Integer bikenestId){
         return bikenestService.freeSpot(bikenestId);
+    }
+
+    @PostMapping(path="/hasfreespots")
+    @PreAuthorize("hasRole('SERVICE')")
+    public boolean hasFreeSpots(@RequestBody Integer bikenestId){
+        Optional<Integer> freeSpots = bikenestService.getFreeSpots(bikenestId);
+        if (freeSpots.isPresent() && freeSpots.get() > 0){
+            return true;
+        }
+        return false;
     }
 
 }
