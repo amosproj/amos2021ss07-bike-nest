@@ -9,39 +9,49 @@ import javax.persistence.Id;
 public class Bikenest {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private Integer Id;
+    private Integer id;
+    private String name;
+    private String gpsCoordinates;
+    private Integer maximumSpots;
+    private Integer currentSpots;
 
-    private String Name;
-
-    private String GPSCoordinates;
-
-    private Integer SpotsLeft;
-
-    public Integer getId(){
-        return Id;
+    public Integer getId() {
+        return id;
     }
 
-    public void setId(Integer Id){
-        this.Id = Id;
-    }
-
-    public Integer getSpotsLeft() {
-        return SpotsLeft;
-    }
-
-    public void setSpotsLeft(Integer SpotsLeft) {
-        this.SpotsLeft = SpotsLeft;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
-    public void setName(String Name) {
-        this.Name = Name;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getGPSCoordinates(){ return GPSCoordinates; }
+    public String getGpsCoordinates() {
+        return gpsCoordinates;
+    }
 
-    public void setGPSCoordinates(String GPSCoordinates){ this.GPSCoordinates = GPSCoordinates; }
+    public void setGpsCoordinates(String gpsCoordinates) {
+        this.gpsCoordinates = gpsCoordinates;
+    }
+
+    public Integer getMaximumSpots() {
+        return maximumSpots;
+    }
+
+    public void setMaximumSpots(Integer maximumSpots) {
+        this.maximumSpots = maximumSpots;
+    }
+
+    public Integer getCurrentSpots() {
+        return currentSpots;
+    }
+
+    public void setCurrentSpots(Integer currentSpots) {
+        this.currentSpots = currentSpots;
+    }
 }
