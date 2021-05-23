@@ -2,8 +2,10 @@ package com.bikenest.servicebikenest.DB;
 
 import org.springframework.data.repository.CrudRepository;
 
-public interface BikenestRepository extends CrudRepository<Bikenest, Integer> {
-    Optional<Bikenest> findByID(Long id);
+import java.util.Optional;
 
-	Boolean existsByID(Long id);
+public interface BikenestRepository extends CrudRepository<Bikenest, Integer> {
+    Optional<Bikenest> findByID(Integer id);
+
+	Boolean existsByID(Integer id);
 }

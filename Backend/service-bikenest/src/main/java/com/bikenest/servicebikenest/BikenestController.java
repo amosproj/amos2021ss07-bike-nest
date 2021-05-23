@@ -1,6 +1,7 @@
 package com.bikenest.servicebikenest;
 
 import com.bikenest.common.interfaces.bikenest.BikeNestInfoResponse;
+import com.bikenest.servicebikenest.payload.BikenestInfoRequest;
 import com.bikenest.common.security.UserInformation;
 import com.bikenest.common.security.UserRole;
 import com.bikenest.servicebikenest.DB.Bikenest;
@@ -9,11 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import com.payload.BikeNestInfoRequest;
 
 import org.springframework.http.ResponseEntity;
+
+import javax.validation.Valid;
 import java.util.Optional;
-import javax.validation.constraints.*;
 
 
 @RestController
@@ -63,10 +64,12 @@ public class BikenestController {
 
     @PostMapping("/get")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public ResponseEntity<BikeNestInfoResponse> GetBikenest(@Valid @RequestBody BikeNestInfoRequest bikenestInfoRequest) {
-		//Optional<Bikenest> bikenest = bikenestRepository.(bikenestInfoRequest.getID());
+	public ResponseEntity<BikeNestInfoResponse> GetBikenest(@Valid @RequestBody BikenestInfoRequest request) {
+		Optional<Bikenest> bikenest = bikenestRepository.findByID(request.getID());
 
+		if(!bikenest.isPresent()){
 
+        }
 		// if(!bikenest.isPresent()){
 		// 	return ResponseEntity.badRequest().body(new SigninResponse(false, "Email not found!", null));
 		// }
