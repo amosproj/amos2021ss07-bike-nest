@@ -1,12 +1,11 @@
 package com.bikenest.servicebikenest.payload;
 
-import javax.validation.constraints.NotBlank;
 
 public class BikeNestInfoRequest {
 	@NotBlank
 	private Long bikenestID;
 	
-	public String getID() {
+	public Long getID() {
 		return bikenestID;
 	}
 

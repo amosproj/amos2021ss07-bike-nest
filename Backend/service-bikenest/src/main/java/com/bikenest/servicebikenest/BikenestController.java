@@ -9,6 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import com.payload.BikeNestInfoRequest;
+
+import org.springframework.http.ResponseEntity;
+import java.util.Optional;
+import javax.validation.constraints.*;
+
 
 @RestController
 @RequestMapping(path = "/bikenest")
@@ -58,7 +64,7 @@ public class BikenestController {
     @PostMapping("/get")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public ResponseEntity<BikeNestInfoResponse> GetBikenest(@Valid @RequestBody BikeNestInfoRequest bikenestInfoRequest) {
-		Optional<Bikenest> bikenest = bikenestRepository.(bikenestInfoRequest.getID());
+		//Optional<Bikenest> bikenest = bikenestRepository.(bikenestInfoRequest.getID());
 
 
 		// if(!bikenest.isPresent()){
