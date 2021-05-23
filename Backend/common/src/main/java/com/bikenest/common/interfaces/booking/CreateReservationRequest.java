@@ -1,13 +1,14 @@
 package com.bikenest.common.interfaces.booking;
 
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 
 //see /booking/add Endpoint
 public class CreateReservationRequest {
-    @NotBlank
+    @Digits(integer=8,fraction = 0)
     private Integer bikenestId;
 
-    @NotBlank
+    @Digits(integer=8,fraction = 0)
     private Integer reservationMinutes;
 
     public Integer getBikenestId() {
