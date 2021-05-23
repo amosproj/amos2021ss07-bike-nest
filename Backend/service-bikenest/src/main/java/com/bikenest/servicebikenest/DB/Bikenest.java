@@ -22,6 +22,8 @@ public class Bikenest {
         this.currentSpots = maximumSpots;
     }
 
+    public Bikenest(){}
+
     public Integer getId() {
         return id;
     }

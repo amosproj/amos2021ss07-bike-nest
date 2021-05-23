@@ -44,6 +44,8 @@ public class Reservation {
         this.actualEnd = null;
     }
 
+    public Reservation(){}
+
 
     public Integer getId() {
         return id;
