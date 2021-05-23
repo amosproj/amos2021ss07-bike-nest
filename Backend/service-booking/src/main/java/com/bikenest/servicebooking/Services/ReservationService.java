@@ -41,7 +41,7 @@ public class ReservationService {
         }
 
         Reservation reservation = new Reservation(userId, newReservation.getBikenestId(),
-                newReservation.getBikenestId(), false, LocalDateTime.now(ZoneId.of("Europe/Berlin")),
+                newReservation.getReservationMinutes(), false, LocalDateTime.now(ZoneId.of("Europe/Berlin")),
                 LocalDateTime.now(ZoneId.of("Europe/Berlin")).plusMinutes(RESERVATION_MINUTES));
 
 

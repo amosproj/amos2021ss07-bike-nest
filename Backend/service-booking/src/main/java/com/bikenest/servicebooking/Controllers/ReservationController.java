@@ -39,7 +39,7 @@ public class ReservationController {
     @PostMapping(value = "/add", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<GeneralResponse> createReservation(@AuthenticationPrincipal UserInformation user,
-                                                             @Valid @RequestBody CreateReservationRequest request) {
+                                                             @RequestBody CreateReservationRequest request) {
         Optional<Reservation> reservation = reservationService.createReservation(user.getUserId(), request);
         if (!reservation.isPresent()){
             return ResponseEntity.badRequest().body(new GeneralResponse(false,
