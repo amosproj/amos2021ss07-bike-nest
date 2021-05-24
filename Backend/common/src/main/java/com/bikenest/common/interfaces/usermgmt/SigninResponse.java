@@ -1,5 +1,8 @@
 package com.bikenest.common.interfaces.usermgmt;
 
+/**
+ * This class is also used as Response for Signup, because it's exactly the same.
+ */
 public class SigninResponse {
     private boolean success;
     private String error;

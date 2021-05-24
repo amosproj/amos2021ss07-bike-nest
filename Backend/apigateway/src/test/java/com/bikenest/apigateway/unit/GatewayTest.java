@@ -17,12 +17,13 @@ import reactor.core.publisher.Mono;
 
 import static org.mockito.Mockito.when;
 
-// Tests if the JWT Stripping works correclty
-// For this we need to mock the UsermgmtClient, because it is used to actually validate a JWT (by accessing the Usermgmt Service)
-
-//Currently there is a Mock Bean created for the UsermgmtClient, that will be autoinjected to the AuthenticationFilter.
-//This Mock Bean returns true for a valid JWT and false for an invalid JWT
-
+/**
+ * Tests if the JWT Stripping works correctly.
+ * For this we need to mock the UsermgmtClient, because it is used to actually validate a JWT
+ * (by accessing the Usermgmt Service). Currently there is a Mock Bean created for the UsermgmtClient,
+ * that will be autoinjected to the AuthenticationFilter. This Mock Bean returns true for a valid JWT
+ * and false for an invalid JWT
+  */
 @SpringBootTest()
 public class GatewayTest {
 

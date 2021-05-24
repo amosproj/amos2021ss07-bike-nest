@@ -55,11 +55,11 @@ public class UserController {
 	}
 
 	@PostMapping("/signup")
-	public ResponseEntity<SignupResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+	public ResponseEntity<SigninResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 		if (accountService.existsAccountWithEmail(signUpRequest.getEmail())) {
 			return ResponseEntity
 					.badRequest()
-					.body(new SignupResponse(false,"Email is already taken!", null));
+					.body(new SigninResponse(false,"Email is already taken!", null));
 		}
 
 		// Create new user's account
@@ -68,7 +68,7 @@ public class UserController {
 
 		String jwt = jwtService.buildJwtFromUser(user.get());
 
-		return ResponseEntity.ok(new SignupResponse(true, null, jwt));
+		return ResponseEntity.ok(new SigninResponse(true, null, jwt));
 	}
 
 	@PostMapping("/admintoken")
