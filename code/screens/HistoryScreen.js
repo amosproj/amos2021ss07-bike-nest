@@ -1,131 +1,138 @@
-import React from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, SafeAreaView  } from 'react-native';
+import React, { useState } from 'react';
+import { ImageBackground, Pressable, StyleSheet, Text, View, Image, TouchableOpacity  } from 'react-native';
 import { Dimensions } from "react-native";
 import Avatar from '../assets/Avatar.png'; 
 import bike from '../assets/bike.png'; 
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import global from '../components/GlobalVars';
+import { mainStyles } from "../styles/MainStyles";
 import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
-import colors from "../styles/Colors";
-import { mainStyles } from '../styles/MainStyles';
+import {BookingService} from "../services/BookingService";
 
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
 export default function HistoryScreen({ navigation }) {
-   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: colors.UI_Light_4}}>
+  // const [myListData, setData] = useState("");
+  let bookingService = new BookingService();
 
-      <View style={HSstyles.header}>
-        <View>
-        <View style={{flexDirection: 'row'}}>
-            <Text style={{fontSize: 15}}>Hello,</Text>
-            <Text style={{fontSize: 18, fontWeight: 'bold', marginLeft: 13}}>
-              Max Muster
-            </Text>
-          </View>
-          <Image source={Avatar} style={HSstyles.avatar} />
-        </View>
-      </View>
+  let tryGETBooking = () => {
+    console.log('start pulling reservation info');
 
-      <View style={mainStyles.container}>
-
-        <View style= {HSstyles.cardBikeContainer1}>
-          <TouchableOpacity onPresss={()=> navigation.navigate("FindBikeNest")}>
-            <View style={HSstyles.innerContainer}>
-              <Image source={bike} style={HSstyles.bike}></Image>
-              <View style={HSstyles.cardTextContainer}>
-                <Text style={HSstyles.place} > Du hast einen Platz in: </Text>
-                 <Text style={HSstyles.nest} >Fetch data of where bike is parked </Text>
-              </View>
-             </View>
-          </TouchableOpacity>
-        </View>
-
-        <TouchableOpacity onPress={() => navigation.navigate("EditPersonalInformation")} style={mainStyles.button}>
-          <Text style={HSstyles.buttonLockOwner}> Max Muster's bike </Text>
-          <Text style={HSstyles.buttonLockText}> locked </Text>
-        </TouchableOpacity>
-
-        <View style={[
-            HSstyles.cardContainer2,
-            {
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'space-evenly',
-              alignItems: 'flex-start',
-              alignContent: 'space-around',
-            },
-          ]}>
-          <TouchableOpacity style={HSstyles.time}>
-            <Text style={HSstyles.timeText}> Zeit verging </Text>
-            <SimpleLineIcons name="clock" size={24} color="black" />
-            <Text style={HSstyles.timeRecord}> 1 Tag </Text> 
-          </TouchableOpacity>
-
-          <TouchableOpacity style={HSstyles.cost}>
-            <Text style={HSstyles.costText}> Parkkosten </Text>
-            <AntDesign name="creditcard" size={24} color="black" />
-            <Text style={HSstyles.costRecord}> 50 $ </Text> 
-          </TouchableOpacity>
-
-        </View>
-
-        <TouchableOpacity onPress={() => navigation.navigate("EditPersonalInformation")} style={mainStyles.button}>
-           <Text style={HSstyles.buttonHistoryText}> Frühere Reservierungen und Zahlungen </Text>
-        </TouchableOpacity>
-
-      
-      </View>
-      <BikeNest_NavigationFooter/>
-
-
-    </SafeAreaView>
-
-
-    )
+    bookingService.getAllReservations().then(response => {
+      if(response.success){
+        alert(JSON.stringify(response.reservations));
+        console.log(response.reservations);
+      }else{
+        console.log(response.error);
+      }
+    });
 }
 
-const HSstyles = StyleSheet.create({
- 
+  return (
+    <View style={mainStyles.container}>
+      <View style={styles.historyContainer}>
+        <View style={styles.containerRow}>
+        <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+          <Image source={Avatar} style={styles.avatar} />
+          </TouchableOpacity>
+          <Text style={styles.name} >
+            Max Muster </Text>
+        </View>
+        <TouchableOpacity onPress={() => navigation.navigate("Lock") }
+          style={[styles.heightBike, {
+            backgroundColor: '#FFF',
+            height: 230,
+            width: 370,
+            margin: 10,
+            position: 'relative'
+          }]}>
+          <ImageBackground
+            source={bike}
+            style={{
+              height: 230,
+              width: 370,
+              position: 'absolute',
+            }}
+          />
+          <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start', padding: 30}}>
+            <Text style={{fontSize: 16}}>Vielen Dank für die Reservierung! </Text>
+            <Text style={{fontSize: 16}}>Begib dich zu folgendem BIKE NEST: {"\n"}</Text>
+            <Text style={{fontWeight: 'bold', fontSize: 16}}>BIKE NEST {"\n"}Nürnberg HBF </Text>
+          </View>
+        </TouchableOpacity>
 
-  header: {
-    
-    marginTop: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingHorizontal: 20,
-    alignSelf: 'flex-start',
-  },
+      <TouchableOpacity onPress={() => navigation.navigate("EditPersonalInformation")} style={styles.buttonLock}>
+        <Text style={styles.buttonLockOwner}> Max Muster's bike </Text>
+        <Text style={styles.buttonLockText}> locked </Text>
+      </TouchableOpacity>
 
-  avatar: {
+      <View style={styles.containerRow}>
+      <TouchableOpacity style={styles.time}>
+        <Text style={styles.timeText}> Zeit verging </Text>
+        <SimpleLineIcons name="clock" size={24} color="black" />
+        <Text style={styles.timeRecord}> 1 Tag </Text> 
+      </TouchableOpacity>
 
-    width:60,
-    height: 66,
-  },
-  cardBikeContainer1: {
+      <TouchableOpacity style={styles.cost}>
+        <Text style={styles.costText}> Parkkosten </Text>
+        <AntDesign name="creditcard" size={24} color="black" />
+        <Text style={styles.costRecord}> 50 $ </Text> 
+      </TouchableOpacity>
+      </View>
+
+      <TouchableOpacity onPress={() => tryGETBooking(this)} style={styles.buttonHistory}>
+        <Text style={styles.buttonHistoryText}> Frühere Reservierungen und Zahlungen </Text>
+      </TouchableOpacity>
+      </View>
+      <BikeNest_NavigationFooter></BikeNest_NavigationFooter>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
     flex: 1,
-    marginTop: Dimensions.get('window').height * 0.02,
-    marginLeft: Dimensions.get('window').width * 0.01,
-    resizeMode: 'contain',
-    backgroundColor: '#fff',
-    alignItems: 'flex-start',
-    justifyContent: 'space-evenly',
-    alignContent: 'space-around',
+    // backgroundColor: 'red',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-
-  innerContainer: {
-    width: Dimensions.get('window').width * 0.5,
-    height: Dimensions.get('window').width * 0.5,
-    backgroundColor: '#fff',
+  historyContainer: {
+    flex: 1,
+    padding: 15,
+    marginTop: 10,
+    margin: 10,
+    justifyContent: 'space-around',
+    position: 'relative',
   },
-
-  bike: {
-
-    width: Dimensions.get('window').width * 0.5,
-    height: Dimensions.get('window').height * 0.2,
+  containerRow:{
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    margin: 10,
+  },
+  avatar: {
+    flex: 1,
+    maxWidth: 60, 
     resizeMode: 'contain',
+    marginLeft: 10,
+    marginRight: 10,
+  },
+  name: {
+    flex: 1,
+    color: '#000000',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 10,
+  },
+  welcome: {
+    flex: 1,
+    color: '#000000',
+    fontSize: 15,
+    fontWeight: 'normal',
   },
 
   cardTextContainer: {
@@ -136,58 +143,7 @@ const HSstyles = StyleSheet.create({
 
   place: {
     flex: 1,
-    alignItems: 'center',
-    //justifyContent: 'flex-start',
-    //position: 'absolute',
-    color: '#000000',
-    fontSize:16,
-    fontWeight:'bold',
-    //left: 60,
-    //top: 169,
-  },
-  nest: {
-    /*position: 'absolute',
-    color: '#FFFFFF',
-    fontSize:14,
-    fontWeight:'normal',
-    left: 60,
-    top: 197,
-    width:150,
-    height:109,
-    padding:0,*/
-    flex: 1,
-    alignItems: 'center',
-    //justifyContent: 'flex-start',
-    //position: 'absolute',
-    color: '#000000',
-    fontSize:16,
-    fontWeight:'bold',
-    //left: 60,
-    //top: 169,
-  },
-  buttonLock: {
-    position:'absolute',
-    top: 355,
-    left:25,
-    backgroundColor: '#FFA500',
-    padding: 20,
-    borderRadius: 30,
-    width: 325,
-    height:104,
-    marginTop: 20,
-
-  },
-  buttonLockOwner: {
-    fontSize: 20,
-    color: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }, 
-  buttonLockText: {
-    fontSize: 18,
-    color: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    margin: 10,
   }, 
   cardBikeContainer2: {
     flex: 1,
@@ -196,94 +152,72 @@ const HSstyles = StyleSheet.create({
     resizeMode: 'contain',
     backgroundColor: '#fff',
     alignItems: 'flex-start',
-    justifyContent: 'space-evenly',
     alignContent: 'space-around',
   },
   time:{
-
     flex: 1,
-    marginTop: 0,
-    marginLeft: Dimensions.get('window').width * 0.01,
     borderColor: '#E6E5F2',
     borderWidth:1,
     borderRadius: 30,
-    /*
-    position:'absolute',
-    width:152,
-    height:127,
-    left:25,
-    top:500,
-   
-    padding: 20,*/
+    padding: 10,
+    maxWidth: 160,
   }, 
   timeText: {
+    flex: 1,
     fontSize: 16,
     color: '#55418E',
     alignItems: 'center',
     justifyContent: 'center',
     fontWeight: 'bold',
-    marginBottom:10,
   }, 
   timeRecord:{
+    flex: 1,
     fontSize: 16,
     color: '#FFA500',
     alignItems: 'center',
     justifyContent: 'center',
     fontWeight: 'normal',
-    marginTop:10,
   }, 
 
   cost:{
-    /*position:'absolute',
-    width:152,
-    height:127,
-    right:30,
-    top:500,
-    borderColor: '#E6E5F2',
-    borderWidth:1,
-    borderRadius: 30,
-    padding: 20,*/
     flex: 1,
-    marginTop: 0,
-    marginLeft: Dimensions.get('window').width * 0.01,
     borderColor: '#E6E5F2',
     borderWidth:1,
     borderRadius: 30,
+    padding: 10,
+    maxWidth: 160,
   }, 
   costText: {
+    flex: 1,
     fontSize: 16,
     color: '#55418E',
     alignItems: 'center',
     justifyContent: 'center',
     fontWeight: 'bold',
-    marginBottom:10,
   }, 
   costRecord:{
+    flex: 1,
     fontSize: 16,
     color: '#FFA500',
     alignItems: 'center',
     justifyContent: 'center',
     fontWeight: 'normal',
-    marginTop:10,
   }, 
   buttonHistory: {
-    position:'absolute',
-    top: 627,
-    left:25,
-    padding: 20,
+    flex: 1,
     borderRadius: 30,
-    width: 322,
-    height:63,
-    marginTop: 20,
     borderColor: '#E6E5F2',
     borderWidth:1,
-
+    maxHeight: 50,
+    margin: 10,
   },
   buttonHistoryText: {
+    flex: 1,
     fontSize: 15,
     color: '#55418E',
     alignItems: 'center',
     justifyContent: 'center',
-  }
+    margin: 10,
+  }, 
 
 })

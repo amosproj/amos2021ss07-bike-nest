@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput } from 'react-native';
+import { View } from 'react-native';
 import { UserDataService } from "../services/UserData";
 import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
@@ -8,9 +8,11 @@ import BikeNest_CheckBox from './BikeNest_CheckBox';
 import BikeNest_Modal from './BikeNest_Modal';
 import BikeNest_Button, { ButtonStyle } from './BikeNest_Button';
 import BikeNest_TextInput from './BikeNest_TextInput';
+import global from '../components/GlobalVars';
+import {UserService} from "../services/UserService";
 
 export function CreateAccountManually() {
-    let userdata = new UserDataService();
+    let userSerivce = new UserService();
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -19,52 +21,72 @@ export function CreateAccountManually() {
     const [modalText, setModalText] = useState("");
     const [modalHeadline, setModalHeadline] = useState("");
     const [isValidInput, setIsValidInput] = useState(false);
+    const [accountCreated, setAccountCreated] = useState(false);
     const navigation = useNavigation();
 
     //TODO: real Validation + Checkbox
     let validateInput = () => {
-        let isValid = newEmail() && (firstName.length > 0) && (lastName.length > 0) && (email.length > 0) && (password.length > 0);
+        let isValid = (firstName.length > 0) && (lastName.length > 0) && (email.length > 0) && (password.length > 0);
         setIsValidInput(isValid);
 
-        if (!newEmail()) {
-            setModalHeadline("Sorry!");
-            setModalText("Ein Account mit der Email " + email + " existiert bereits.");
-        } else {
-            if (isValid) {
-                setModalHeadline("Hurra!");
-                setModalText("Dein Account wurde erfolgreich eingerichtet");
-            }
-            else {
-                setModalHeadline("Sorry!");
-                setModalText("Oops da ist etwas schief gelaufen. Fülle bitte alle Felder aus.")
-            }
+        if (isValid) {
+            tryCreateAccount();
         }
-        setModalVisible(true);
+        else {
+            setModalHeadline("Sorry!");
+            setModalText("Oops da ist etwas schief gelaufen. Fülle bitte alle Felder mit den passenden Infos aus.");
+            setModalVisible(true);
+        }
     }
 
     let onModalPress = () => {
-        if (isValidInput) {
+        if (accountCreated) {
             setModalVisible(false);
-            navigation.navigate("FindBikeNest");
+            navigation.navigate("Login");
         }
         else
             setModalVisible(false);
     }
 
     //TODO: real check
-    let newEmail = () => {
-        let isNewEmail = true;
+    // let newEmail = () => {
+    //     let isNewEmail = true;
 
-        if (email === '1')
-            isNewEmail = false;
+    //     if (email === '1')
+    //         isNewEmail = false;
 
-        return isNewEmail;
+    //     return isNewEmail;
+    // }
+
+    let setModalInfo = (json) => {
+        setAccountCreated(json.success);
+
+        if (json.success) {
+            setModalHeadline("Hurra!");
+            setModalText("Dein Account wurde erfolgreich erstellt.")
+        } else {
+            setModalHeadline("Oops!");
+            if (json.error != null)
+                setModalText(json.error);
+        }
+
+        setModalVisible(true);
+    }
+
+    let tryCreateAccount = () => {
+        let name = firstName;
+        let lastname = lastName;
+        let data = { name, lastname, email, password };
+        userSerivce.registerUser(email, password, name, lastName).then(response =>{
+            setModalInfo(response);
+            console.log(JSON.stringify(response));
+        })
     }
 
 
     //TODO: Replace Modal (not working in web)
     return (
-        <View style={mainStyles.container}>
+        <View style={[mainStyles.container, { backgroundColor: 'transparent' }]}>
             <BikeNest_Modal
                 modalHeadLine={modalHeadline}
                 modalText={modalText}

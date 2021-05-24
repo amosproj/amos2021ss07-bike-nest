@@ -8,20 +8,26 @@ import PaymentScreen from './screens/PaymentScreen';
 import FindBikeNestScreen from './screens/FindBikeNestScreen';
 import HistoryScreen from './screens/HistoryScreen';
 import ProfileScreen from './screens/ProfileScreen';
-import LockManagement from './screens/Lock_management';
+import BookingScreen from './screens/BookingScreen';
+import LockScreen from './screens/LockScreen';
+import PaymentConfirmationScreen from './screens/PaymentConfirmationScreen';
+import ReservationSuccessScreen from './screens/ReservationSuccessScreen';
 
 export default function App() {
   return (
     <NavigationContainer>
       <AppNavigator.Navigator screenOptions={{ headerShown: false }}>
         <AppNavigator.Screen name='Login' component={LoginScreen} />
+        <AppNavigator.Screen name='FindBikeNest' component={FindBikeNestScreen} />
         <AppNavigator.Screen name='Profile' component={ProfileScreen} />
         <AppNavigator.Screen name='Payment' component={PaymentScreen} />
         <AppNavigator.Screen name='CreateAccount' component={CreateAccountScreen} />
         <AppNavigator.Screen name='EditPersonalInformation' component={PersonalInformationScreen} />
-        <AppNavigator.Screen name='FindBikeNest' component={FindBikeNestScreen} />
         <AppNavigator.Screen name='History' component={HistoryScreen} />
-        <AppNavigator.Screen name='LockManagement' component={LockManagement} />
+        <AppNavigator.Screen name='Booking' component={BookingScreen} />
+        <AppNavigator.Screen name='Lock' component={LockScreen} />
+        <AppNavigator.Screen name='ReservationSuccess' component={ReservationSuccessScreen} />
+        <AppNavigator.Screen name='PaymentConfirmation' component={PaymentConfirmationScreen} />
       </AppNavigator.Navigator>
     </NavigationContainer>
   );

@@ -1,0 +1,136 @@
+package com.bikenest.servicebooking.DB;
+
+import com.bikenest.common.interfaces.booking.CreateReservationRequest;
+import org.apache.tomcat.jni.Local;
+
+import javax.persistence.*;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
+
+@Entity
+public class Reservation {
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    private Integer id;
+    private Integer userId;
+    private Integer bikenestId;
+    private Integer reservationMinutes; // For how long is this reservation?
+    private boolean payed; // Is this booking payed?
+    @Basic
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date reservationStart;   // Begin of reservation time frame (set to the time the server got the request)
+    @Basic
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date reservationEnd;   // End of reservation time frame
+    @Basic
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date actualStart;     // When did the user deliver his bike?
+    @Basic
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date actualEnd;   // When did the user take his bike?
+
+    public Reservation(Integer userId, Integer bikenestId, Integer reservationMinutes, boolean payed,
+                       LocalDateTime reservationStart, LocalDateTime reservationEnd) {
+        this.userId = userId;
+        this.bikenestId = bikenestId;
+        this.reservationMinutes = reservationMinutes;
+        this.payed = payed;
+        setReservationStart(reservationStart);
+        setReservationEnd(reservationEnd);
+        this.actualStart = null;
+        this.actualEnd = null;
+    }
+
+    public Reservation(){}
+
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Integer getBikenestId() {
+        return bikenestId;
+    }
+
+    public void setBikenestId(Integer bikenestId) {
+        this.bikenestId = bikenestId;
+    }
+
+
+    private LocalDateTime DateToLocalDateTime(Date date){
+        if(date == null)
+            return null;
+        return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+    }
+
+    private Date LocalDateTimeToDate(LocalDateTime ldt){
+        if(ldt == null)
+            return null;
+        ZonedDateTime zdt = ldt.atZone(ZoneId.systemDefault());
+        Instant in = zdt.toInstant();
+        return Date.from(zdt.toInstant());
+    }
+
+    public Integer getReservationMinutes() {
+        return reservationMinutes;
+    }
+
+    public void setReservationMinutes(Integer reservationMinutes) {
+        this.reservationMinutes = reservationMinutes;
+    }
+
+    public boolean isPayed() {
+        return payed;
+    }
+
+    public void setPayed(boolean payed) {
+        this.payed = payed;
+    }
+
+    public LocalDateTime getReservationStart() {
+        return DateToLocalDateTime(reservationStart);
+    }
+
+    public void setReservationStart(LocalDateTime reservationStart) {
+        this.reservationStart = LocalDateTimeToDate(reservationStart);
+    }
+
+    public LocalDateTime getReservationEnd() {
+        return DateToLocalDateTime(reservationEnd);
+    }
+
+    public void setReservationEnd(LocalDateTime reservationEnd) {
+        this.reservationEnd = LocalDateTimeToDate(reservationEnd);
+    }
+
+    public LocalDateTime getActualStart() {
+        return DateToLocalDateTime(actualStart);
+    }
+
+    public void setActualStart(LocalDateTime actualStart) {
+        this.actualStart = LocalDateTimeToDate(actualStart);
+    }
+
+    public LocalDateTime getActualEnd() {
+        return DateToLocalDateTime(actualEnd);
+    }
+
+    public void setActualEnd(LocalDateTime actualEnd) {
+        this.actualEnd = LocalDateTimeToDate(actualEnd);
+    }
+}

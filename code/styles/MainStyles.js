@@ -29,6 +29,8 @@ export const mainStyles = StyleSheet.create({
     justifyContent: 'center',
   },
   checkBoxContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
     flexDirection: 'row',
     marginBottom: 20,
   },
@@ -160,4 +162,17 @@ export const mainStyles = StyleSheet.create({
     backgroundColor: colors.UI_Light_2,
     padding: 5,
   },
+
+  //For ImageBackground needed
+  fixed: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0
+  },
+  scrollview: {
+    backgroundColor: 'transparent'
+  },
+
 });
