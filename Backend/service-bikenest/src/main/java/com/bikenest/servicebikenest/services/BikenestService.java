@@ -79,4 +79,14 @@ public class BikenestService {
 
         return Optional.of(bikenest.get().getCurrentSpots());
     }
+
+    public Optional<Bikenest> getBikenestInfo(Integer bikenestId){
+        Optional<Bikenest> bikenest = bikenestRepository.findById(bikenestId);
+
+        if(!bikenest.isPresent()){
+            return Optional.empty();
+        }
+
+        return Optional.of(bikenest.get());
+    }
 }

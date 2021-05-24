@@ -6,6 +6,7 @@ import com.bikenest.common.security.UserInformation;
 import com.bikenest.common.security.UserRole;
 import com.bikenest.servicebikenest.DB.Bikenest;
 import com.bikenest.servicebikenest.DB.BikenestRepository;
+import com.bikenest.servicebikenest.payload.BikenestInfoRequest;
 import com.bikenest.servicebikenest.services.BikenestService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import com.bikenest.common.interfaces.bikenest.BikenestInfoResponse;
+import com.bikenest.common.interfaces.bikenest.BikenestInfoRequest;
 
 @RestController
 @RequestMapping(path = "/bikenest")
@@ -56,5 +59,20 @@ public class BikenestController {
         }
         return ResponseEntity.badRequest().body(
                 new GeneralResponse(false, "Admin role for this operation required.", null));
+    }
+
+    @GetMapping(path = "/bikenestInfo")
+    public @ResponseBody
+    ResponseEntity<BikenestInfoResponse> getBikenestInfo(@RequestBody BikenestInfoRequest request) {
+        int id = request.getID();
+
+        if(bikenestService.existsBikenest(id)){
+            Bikenest bikenestInfo = bikenestService.getBikenestInfo(id);
+            return ResponseEntity.ok(
+                new BikeNestInfoResponse(bikenestInfo.getName(), "", bikenestInfo.getCurrentSpots(), bikenestInfo.isChargingAvailable()));
+        }
+       
+        return ResponseEntity.badRequest().body(
+            new BikeNestInfoResponse("NaN", "NaN", 0, false));
     }
 }

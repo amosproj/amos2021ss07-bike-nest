@@ -1,13 +1,13 @@
 package com.bikenest.common.interfaces.bikenest;
 
-public class BikeNestInfoResponse {
+public class BikenestInfoResponse {
     private String bikenestName;
     private String address;
     private int spotsLeft;
     private boolean chargingOptionAvailable;
   
 
-    public BikeNestInfoResponse(String bikenestName, String address, int spotsLeft, boolean chargingOptionAvailable){
+    public BikenestInfoResponse(String bikenestName, String address, int spotsLeft, boolean chargingOptionAvailable){
         this.bikenestName = bikenestName;
         this.address = address;
         this.spotsLeft = spotsLeft;
