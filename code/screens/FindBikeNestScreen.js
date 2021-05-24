@@ -30,11 +30,6 @@ const spacing_for_card_inset = width * 0.1 - 10;
 export default function FindBikeNestScreen({ navigation }) {
   let bikenestService = new BikenestService();
 
-  const modalInitData = {
-    CurrentMarkerIndex: 0,
-    modalState: false
-  };
-
   const initMarker = [{
     coordinate: {
       latitude: 49.46,
@@ -43,7 +38,9 @@ export default function FindBikeNestScreen({ navigation }) {
     description: "This is Bikenest 1",
     capacity: 12,
     image: require("../assets/bike_nest.png"),
-    color: "#FFD700"
+    color: "#FFD700",
+    id: 1,
+    chargingOptionAvailable: true,
   }];
 
   // states, each state change re-renders scene
@@ -52,7 +49,7 @@ export default function FindBikeNestScreen({ navigation }) {
   const [stateMarkers, setMarkers] = useState(initMarker);
   const [currentMarkerIndex, setCurrentMarkerIndex] = useState(0);
   // const [cardMarkers, setCardMarkers] = useState(initMarker);
-  const [distances, setDistances] = useState([0]);
+  const [distances, setDistances] = useState([-1]);
 
   // const [isLoggedIn, setLogin] = useState(false);
   const [modalState, setModalState] = useState(false);
@@ -96,10 +93,11 @@ export default function FindBikeNestScreen({ navigation }) {
         image: require("../assets/bike_nest.png"),
         color: getColor(marker.currentSpots),
         id: marker.id,
-        chargingOptionAvailable: marker.chargingOptionAvailable
+        chargingOptionAvailable: marker.chargingAvailable,
       });
     }
     // setCardMarkers(tempMarkers);
+    console.log(tempMarkers);
     setMarkers(tempMarkers);
   };
 
@@ -124,7 +122,7 @@ export default function FindBikeNestScreen({ navigation }) {
           localdistances.push(getDistanceToUser(marker, location));
         });
         setDistances(localdistances);
-        //  setLocation(location);
+        console.log("statechange");
       }
     })();
   }, []);
@@ -179,6 +177,7 @@ export default function FindBikeNestScreen({ navigation }) {
         const regionTimeout = setTimeout(() => {
           if (currentMarkerIndex !== index) {
             const { coordinate } = stateMarkers[index];
+            //console.log("Markerindex: " + index);
             setCurrentMarkerIndex(index);
             _map.current.animateToRegion(
               {
@@ -209,16 +208,17 @@ export default function FindBikeNestScreen({ navigation }) {
 
   const onCardPress = (index, currentMarkerId) => {
     if (!modalState) {
+      console.log("CurrentMarkerID: " + currentMarkerId + "    index: " + index);
       bikenestService.getBikenestInfo(currentMarkerId).then((response) => {
         stateMarkers[index].capacity = response.spotsLeft;
         stateMarkers[index].chargingOptionAvailable = response.chargingOptionAvailable;
         stateMarkers[index].address = response.bikenestName;
-      })
+      }).then(() => setModalState(!modalState));
     }
     else {
-      getMarkers();
+      getMarkers().then(setModalState(!modalState));
     }
-    setModalState(!modalState);
+
   };
 
   const proceedBooking = () => {
@@ -260,6 +260,7 @@ export default function FindBikeNestScreen({ navigation }) {
         transparent={true}
         visible={modalState}
         onRequestClose={() => {
+          console.log("id: " + stateMarkers[currentMarkerIndex].id);
           onCardPress(currentMarkerIndex, stateMarkers[currentMarkerIndex].id);
         }}
       >
@@ -325,6 +326,7 @@ export default function FindBikeNestScreen({ navigation }) {
           { useNativeDriver: true }
         )}
       >
+        {console.log("Distances vor map " + distances)}
         { /*isLoggedIn &&*/ stateMarkers.map((marker, index) => (
           <View style={[styles.card, { backgroundColor: marker.color, display: displayState }]} key={index}>
             <Image
@@ -333,7 +335,8 @@ export default function FindBikeNestScreen({ navigation }) {
               resizeMode='cover'
             />
             <View style={styles.textContent}>
-              <Text numberOfLines={1} style={styles.cardtitle}>{marker.address},  {distances[index] / 1000} Km</Text>
+              {console.log("Test render" + distances[index])}
+              {distances[0] !== -1 ? <Text numberOfLines={1} style={styles.cardtitle}>{marker.address},  {distances[index] / 1000} Km</Text> : <Text></Text>}
               <Text numberOfLines={1} style={styles.cardDescription}>In diesem Bikenest sind <B>{marker.capacity}</B> Plätze frei</Text>
               <View style={styles.button}>
                 <TouchableOpacity
