@@ -1,4 +1,4 @@
-package com.bikenest.common.feignclients;
+package com.bikenest.apigateway;
 
 import feign.codec.Decoder;
 import feign.codec.Encoder;

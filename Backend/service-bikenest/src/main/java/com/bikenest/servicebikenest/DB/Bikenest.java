@@ -5,72 +5,44 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+//Auto generate a table from this class
 @Entity
 public class Bikenest {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private Integer id;
-    private String name;
-    private String gpsCoordinates;
-    private Integer maximumSpots;
-    private Integer currentSpots;
-    private boolean chargingAvailable;
+    private Integer Id;
 
-    public Bikenest(String name, String gpsCoordinates, Integer maximumSpots, boolean chargingAvailable){
-        this.name = name;
-        this.gpsCoordinates = gpsCoordinates;
-        this.maximumSpots = maximumSpots;
-        this.currentSpots = maximumSpots;
-        this.chargingAvailable = chargingAvailable;
+    private String Name;
+
+    private String GPSCoordinates;
+
+    private Integer SpotsLeft;
+
+    public Integer getId(){
+        return Id;
     }
 
-    public Bikenest(){}
-
-    public Integer getId() {
-        return id;
+    public void setId(Integer Id){
+        this.Id = Id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public Integer getSpotsLeft() {
+        return SpotsLeft;
+    }
+
+    public void setSpotsLeft(Integer SpotsLeft) {
+        this.SpotsLeft = SpotsLeft;
     }
 
     public String getName() {
-        return name;
+        return Name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String Name) {
+        this.Name = Name;
     }
 
-    public String getGpsCoordinates() {
-        return gpsCoordinates;
-    }
+    public String getGPSCoordinates(){ return GPSCoordinates; }
 
-    public void setGpsCoordinates(String gpsCoordinates) {
-        this.gpsCoordinates = gpsCoordinates;
-    }
-
-    public Integer getMaximumSpots() {
-        return maximumSpots;
-    }
-
-    public void setMaximumSpots(Integer maximumSpots) {
-        this.maximumSpots = maximumSpots;
-    }
-
-    public Integer getCurrentSpots() {
-        return currentSpots;
-    }
-
-    public void setCurrentSpots(Integer currentSpots) {
-        this.currentSpots = currentSpots;
-    }
-
-    public boolean isChargingAvailable() {
-        return chargingAvailable;
-    }
-
-    public void setChargingAvailable(boolean chargingAvailable) {
-        this.chargingAvailable = chargingAvailable;
-    }
+    public void setGPSCoordinates(String GPSCoordinates){ this.GPSCoordinates = GPSCoordinates; }
 }
