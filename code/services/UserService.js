@@ -33,7 +33,7 @@ export class UserService{
         })
             .then((response) => response.json())
             .then((json) => {
-                console.log("loginUser Response:" + json);
+                console.log("loginUser Response:" + JSON.stringify(json));
                 if(json.success){
                     global.saveAuthenticationToken(json.jwt);
                     return {"success": true, "error":null};
@@ -80,7 +80,7 @@ export class UserService{
         })
             .then((response) => response.json())
             .then((json) => {
-                console.log("registerUser Response:" + json);
+                console.log("registerUser Response:" + JSON.stringify(json));
                 if(json.success){
                     global.saveAuthenticationToken(json.jwt);
                     return {"success": true, "error": null};

@@ -3,6 +3,25 @@ import JwtDecoder from "../components/JwtDecoder";
 
 export class BookingService{
 
+    async getAllReservations(){
+        let jwt = await global.getAuthenticationToken();
+
+        return fetch(global.globalIPAddress + "/booking/all", {
+            method: 'GET',
+            headers: { Accept: 'application/json', 'Content-Type': 'application/json',
+                Authorization: jwt}
+        })
+            .then((response) => response.json())
+            .then((json) => {
+                console.log("getAllReservations Response:" + JSON.stringify(json));
+                return {"success": true, "reservations": json};
+            })
+            .catch((error) => {
+                console.error("getAllReservations Error:" + error);
+                return {"success": false, "error": error};
+            });
+    }
+
     /**
      * Tries to create a reservation. If it's successful, the returned dictionary will contain success=true and reservation=created reservation object, that could look like this:
      *  "reservation": {
@@ -40,7 +59,7 @@ export class BookingService{
         })
             .then((response) => response.json())
             .then((json) => {
-                console.log("createReservation Response:" + json);
+                console.log("createReservation Response:" + JSON.stringify(json));
                 if(json.success){
                     return {"success": true, "reservation": json.payload};
                 }else{
@@ -49,6 +68,63 @@ export class BookingService{
             })
             .catch((error) => {
                 console.error("createReservation Error:" + error);
+                return {"success": false, "error": error}
+            });
+    }
+
+    /**
+     * Call this when the user unlocks his Bikespot.
+     * @param reservationId {number}
+     * @returns {Promise<any | {success: boolean, error: any}>}
+     */
+    async startReservation(reservationId){
+        let jwt = await global.getAuthenticationToken();
+
+        return fetch(global.globalIPAddress + "/booking/start/" + reservationId, {
+            method: 'POST',
+            headers: { Accept: 'application/json', 'Content-Type': 'application/json',
+                Authorization: jwt}
+        })
+            .then((response) => response.json())
+            .then((json) => {
+                console.log("startReservation Response:" + JSON.stringify(json));
+                if(json.success){
+                    return {"success": true, "reservation": json.payload};
+                }else{
+                    return {"success": false, "error": json.error};
+                }
+            })
+            .catch((error) => {
+                console.error("startReservation Error:" + error);
+                return {"success": false, "error": error}
+            });
+    }
+
+    /**
+     * Call this when the user take his bike from the Bikenest.
+     * //TODO: Maybe this should trigger the payment on the Backend side?
+     * @param reservationId
+     * @returns {Promise<{success: boolean, reservation: any} | {success: boolean, error: any}>}
+     */
+    async endReservation(reservationId){
+        let jwt = await global.getAuthenticationToken();
+
+        return fetch(global.globalIPAddress + "/booking/end/" + reservationId, {
+            method: 'POST',
+            headers: { Accept: 'application/json', 'Content-Type': 'application/json',
+                Authorization: jwt}
+        })
+            .then((response) => response.json())
+            .then((json) => {
+                console.log("endReservation Response:" + JSON.stringify(json));
+                if(json.success){
+                    return {"success": true, "reservation": json.payload};
+                }else{
+                    return {"success": false, "error": json.error};
+                }
+            })
+            .catch((error) => {
+                console.error("endReservation Error:" + error);
                 return {"success": false, "error": error}
             });
     }
