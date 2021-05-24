@@ -3,6 +3,10 @@ import JwtDecoder from "../components/JwtDecoder";
 
 export class BookingService{
 
+    /**
+     * Gets all reservations that belong to the logged in user.
+     * @returns {Promise<{success: boolean, reservations: any[]} | {success: boolean, error: string}>}
+     */
     async getAllReservations(){
         let jwt = await global.getAuthenticationToken();
 
@@ -42,7 +46,7 @@ export class BookingService{
      *  })
      * @param bikenestId {number}
      * @param reservationMinutes {number}
-     * @returns {Promise<any | {success: boolean, error: any}>}
+     * @returns {Promise<{success: boolean, reservation: any} | {success: boolean, error: string}>}
      */
     async createReservation(bikenestId, reservationMinutes) {
         let request = {
@@ -75,7 +79,7 @@ export class BookingService{
     /**
      * Call this when the user unlocks his Bikespot.
      * @param reservationId {number}
-     * @returns {Promise<any | {success: boolean, error: any}>}
+     * @returns {Promise<{success: boolean, reservation: any} | {success: boolean, error: string}>}
      */
     async startReservation(reservationId){
         let jwt = await global.getAuthenticationToken();
@@ -104,7 +108,7 @@ export class BookingService{
      * Call this when the user take his bike from the Bikenest.
      * //TODO: Maybe this should trigger the payment on the Backend side?
      * @param reservationId
-     * @returns {Promise<{success: boolean, reservation: any} | {success: boolean, error: any}>}
+     * @returns {Promise<{success: boolean, reservation: any} | {success: boolean, error: string}>}
      */
     async endReservation(reservationId){
         let jwt = await global.getAuthenticationToken();
