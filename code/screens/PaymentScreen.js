@@ -159,7 +159,7 @@ export default function PaymentScreen({ navigation }) {
         </View>
         <View style={myStyles.reserved}>
             <Image source={require('../assets/payment/clock.png')} style={{margin: 10}} />
-            <Text style={myStyles.stdText, {color: Colors.UI_Light_2}}>
+            <Text style={[myStyles.stdText, {color: Colors.UI_Light_2}]}>
                 Reserviert für 30min
             </Text>
         </View>

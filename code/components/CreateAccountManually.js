@@ -9,9 +9,10 @@ import BikeNest_Modal from './BikeNest_Modal';
 import BikeNest_Button, { ButtonStyle } from './BikeNest_Button';
 import BikeNest_TextInput from './BikeNest_TextInput';
 import global from '../components/GlobalVars';
+import {UserService} from "../services/UserService";
 
 export function CreateAccountManually() {
-    let userdata = new UserDataService();
+    let userSerivce = new UserService();
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -76,24 +77,10 @@ export function CreateAccountManually() {
         let name = firstName;
         let lastname = lastName;
         let data = { name, lastname, email, password };
-
-        return fetch(global.globalIPAddress + "/usermanagement/signup", {
-
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: { Accept: 'application/json', 'Content-Type': 'application/json' }
+        userSerivce.registerUser(email, password, name, lastName).then(response =>{
+            setModalInfo(response);
+            console.log(JSON.stringify(response));
         })
-            .then((response) => response.json())
-            .then((responseJson) => {
-                console.log(responseJson);
-                setModalInfo(responseJson);
-            })
-            .catch((error) => {
-                setModalHeadline("Sorry!");
-                setModalText("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
-                setModalVisible(true);
-                console.error(error);
-            });
     }
 
 

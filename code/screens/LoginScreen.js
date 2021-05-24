@@ -36,7 +36,7 @@ export default function LoginScreen({ navigation }) {
       .then((response) => response.json())
       .then((response) => {
         if ((response.success != null) && (response.success === true)) {
-          global.saveAuthenticationToken(response)
+          global.saveAuthenticationToken(response.jwt)
             .then(navigation.navigate("FindBikeNest"));
         }
         else {

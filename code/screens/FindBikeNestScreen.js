@@ -90,9 +90,9 @@ export default function FindBikeNestScreen({ navigation }) {
           longitude: parseFloat(marker.gpsCoordinates.split(",")[1])
         },
         address: marker.name,
-        capacity: marker.spotsLeft,
+        capacity: marker.currentSpots,
         image: require("../assets/bike_nest.png"),
-        color: getColor(marker.spotsLeft)
+        color: getColor(marker.currentSpots)
       });
     }
     // setCardMarkers(tempMarkers);
