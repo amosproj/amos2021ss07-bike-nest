@@ -19,6 +19,7 @@ import {
 } from "react-native";
 import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
 import global from '../components/GlobalVars';
+import { BikenestService } from "../services/BikenestService";
 
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = height / 3.5;
@@ -27,6 +28,8 @@ const CARD_WIDTH = width * 0.8;
 const spacing_for_card_inset = width * 0.1 - 10;
 
 export default function FindBikeNestScreen({ navigation }) {
+  let bikenestService = new BikenestService();
+
   const modalInitData = {
     CurrentMarkerIndex: 0,
     modalState: false
@@ -64,12 +67,12 @@ export default function FindBikeNestScreen({ navigation }) {
     longitudeDelta: 0.08
   };
 
-  useEffect(() => {
-    const getMarkers = async () => {
-      const MarkersFromServer = await fetchMarkers();
-      populateMarkers(MarkersFromServer);
-    };
+  const getMarkers = async () => {
+    const MarkersFromServer = await fetchMarkers();
+    populateMarkers(MarkersFromServer);
+  };
 
+  useEffect(() => {
     getMarkers();
   }, []);
 
@@ -77,7 +80,6 @@ export default function FindBikeNestScreen({ navigation }) {
     const res = await fetch(global.globalIPAddress + "/bikenest/all");
     // console.log(res);
     const data = await res.json();
-    console.log(data);
     return data;
   };
 
@@ -92,7 +94,9 @@ export default function FindBikeNestScreen({ navigation }) {
         address: marker.name,
         capacity: marker.currentSpots,
         image: require("../assets/bike_nest.png"),
-        color: getColor(marker.currentSpots)
+        color: getColor(marker.currentSpots),
+        id: marker.id,
+        chargingOptionAvailable: marker.chargingOptionAvailable
       });
     }
     // setCardMarkers(tempMarkers);
@@ -203,7 +207,17 @@ export default function FindBikeNestScreen({ navigation }) {
 
   }
 
-  const onCardPress = (index) => {
+  const onCardPress = (index, currentMarkerId) => {
+    if (!modalState) {
+      bikenestService.getBikenestInfo(currentMarkerId).then((response) => {
+        stateMarkers[index].capacity = response.spotsLeft;
+        stateMarkers[index].chargingOptionAvailable = response.chargingOptionAvailable;
+        stateMarkers[index].address = response.bikenestName;
+      })
+    }
+    else {
+      getMarkers();
+    }
     setModalState(!modalState);
   };
 
@@ -246,14 +260,14 @@ export default function FindBikeNestScreen({ navigation }) {
         transparent={true}
         visible={modalState}
         onRequestClose={() => {
-          onCardPress(0);
+          onCardPress(currentMarkerIndex, stateMarkers[currentMarkerIndex].id);
         }}
       >
         <View style={styles.centeredView}>
           <View style={[styles.modalView, { backgroundColor: stateMarkers[currentMarkerIndex].color }, { alignItems: 'center' }]}>
             <Text numberOfLines={1} style={styles.cardtitle}>Ich befinde mich in der Straße:</Text>
             <Text>{stateMarkers[currentMarkerIndex].address} </Text>
-            <Text style={styles.cardDescription}>Lade Optionen: <B>Ja</B></Text>
+            <Text style={styles.cardDescription}>Lade Optionen: <B>{stateMarkers[currentMarkerIndex].chargingOptionAvailable ? "Ja" : "Nein"}</B></Text>
             <Text numberOfLines={1} style={styles.cardtitle}>Entfernung: {distances[currentMarkerIndex] / 1000} Km</Text>
             <Text numberOfLines={1} style={styles.cardDescription}>In diesem Bikenest sind <B>{stateMarkers[currentMarkerIndex].capacity}</B> Plätze frei</Text>
             <Text>{ }</Text>
@@ -263,7 +277,7 @@ export default function FindBikeNestScreen({ navigation }) {
                   borderColor: '#FFF',
                   borderWidth: 1
                 }]}
-                onPress={() => onCardPress(currentMarkerIndex)}
+                onPress={() => onCardPress(currentMarkerIndex, stateMarkers[currentMarkerIndex].id)}
               >
                 <Text style={styles.textStyle}>Zurück</Text>
               </TouchableOpacity>
