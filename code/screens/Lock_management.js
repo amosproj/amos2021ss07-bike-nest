@@ -11,7 +11,7 @@ const DATA = [
     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
     title: 'Main Door',
   },
-  {
+  {  
     id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
     title: 'Bike Spot',
   },
@@ -37,7 +37,7 @@ export default function App() {
         <View style={styles.header}>
             <Text style={mainStyles.h1}> Lock Management</Text>
         </View>
-        <View style={mainStyles.container}>
+        <View style={styles.container}>
              <FlatList
              data={DATA}
              renderItem={renderItem}
@@ -65,16 +65,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: StatusBar.currentHeight || 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+   
   },
   item: {
     flex: 1,
-    marginTop: Dimensions.get('window').height * 0.02,
-    marginLeft: Dimensions.get('window').width * 0.01,
-    resizeMode: 'contain',
-    backgroundColor: '#fff',
-    alignItems: 'flex-start',
-    justifyContent: 'space-evenly',
-    alignContent: 'space-around',
+    //marginTop: Dimensions.get('window').height * 0.02,
+    //marginLeft: Dimensions.get('window').width * 0.01,
+    //resizeMode: 'contain',
+    //backgroundColor: '#fff',
+    //alignItems: 'flex-start',
+    //justifyContent: 'space-evenly',
+    //alignContent: 'space-around',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding:10,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    width: 328,
+    height: 55,
+    borderRadius: 38,
+    backgroundColor: colors.UI_Light_2
   },
   title: {
     fontSize: 32,
