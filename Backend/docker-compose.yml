@@ -55,7 +55,6 @@ services:
      - MYSQL_PASSWORD=test
     networks:
      - bikenest-db
-     - services
      
   booking:
     container_name: booking
@@ -69,7 +68,6 @@ services:
      - MYSQL_PASSWORD=test
     networks:
      - booking-db
-     - services
    
   gateway:
     container_name: gateway
@@ -78,7 +76,9 @@ services:
     ports:
      - "9000:9000"
     networks:
-     - services
+     - booking-db
+     - bikenest-db
+     - user-db
      
   usermgmt:
     container_name: usermgmt
@@ -92,10 +92,8 @@ services:
       - MYSQL_PASSWORD=test
     networks:
       - user-db
-      - services
 
 networks:
   booking-db:
   bikenest-db:
   user-db:
-  services:

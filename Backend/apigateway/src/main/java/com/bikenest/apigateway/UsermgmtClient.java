@@ -1,4 +1,4 @@
-package com.bikenest.common.feignclients;
+package com.bikenest.apigateway;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
@@ -13,7 +13,7 @@ public interface UsermgmtClient {
     @RequestMapping(method = RequestMethod.POST, value = "/usermanagement/validatejwt",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE},
-            headers = {"Authorization=SERVICE"})
+            headers = {"Authorization: 12345"})
     @ResponseBody
     boolean ValidateJwt(@RequestBody String JWT);
 }
