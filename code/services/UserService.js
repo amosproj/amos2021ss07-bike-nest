@@ -24,7 +24,7 @@ export class UserService{
         let request = {
             "email": email,
             "password": password
-        }
+        };
 
         return fetch(global.globalIPAddress + "/usermanagement/signin", {
             method: 'POST',
@@ -33,7 +33,7 @@ export class UserService{
         })
             .then((response) => response.json())
             .then((json) => {
-                console.log(json);
+                console.log("loginUser Response:" + json);
                 if(json.success){
                     global.saveAuthenticationToken(json.jwt);
                     return {"success": true, "error":null};
@@ -42,7 +42,7 @@ export class UserService{
                 }
             })
             .catch((error) => {
-                console.error(error);
+                console.error("loginUser Error:" + error);
                 return {"success": false, "error": error}
             });
     }
@@ -80,7 +80,7 @@ export class UserService{
         })
             .then((response) => response.json())
             .then((json) => {
-                console.log(json);
+                console.log("registerUser Response:" + json);
                 if(json.success){
                     global.saveAuthenticationToken(json.jwt);
                     return {"success": true, "error": null};
@@ -89,7 +89,7 @@ export class UserService{
                 }
             })
             .catch((error) => {
-                console.error(error);
+                console.error("registerUser Error:" + error);
                 return {"success": false, "error": error}
             });
     }
