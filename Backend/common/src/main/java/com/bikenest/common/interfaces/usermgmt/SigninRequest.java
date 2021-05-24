@@ -1,8 +1,8 @@
-package com.bikenest.serviceusermgmt.payload;
+package com.bikenest.common.interfaces.usermgmt;
 
 import javax.validation.constraints.NotBlank;
 
-public class LoginRequest {
+public class SigninRequest {
 	@NotBlank
 	private String email;
 

@@ -1,4 +1,4 @@
-package com.bikenest.serviceusermgmt.payload;
+package com.bikenest.common.interfaces.usermgmt;
 
 import java.util.Set;
 
