@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
-import { Alert, ImageBackground, Pressable, StyleSheet, Text, TextInput, View, Image } from 'react-native';
-import { Keyboard } from 'react-native'
+import { Alert, Pressable, StyleSheet, Text, TextInput, View, Image } from 'react-native';
 import { Dimensions } from "react-native";
 import Colors from '../styles/Colors';
 import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
 import { mainStyles } from "../styles/MainStyles";
 import { TouchableOpacity } from 'react-native';
-import BikeNest_TextInput from '../components/BikeNest_TextInput';
-import BikeNest_Button, { ButtonStyle } from '../components/BikeNest_Button';
-import { BookingService } from "../services/Booking";
+import { BookingService } from "../services/BookingService";
 import { ScrollView } from 'react-native';
 import BikeNest_Modal from '../components/BikeNest_Modal';
 import global from '../components/GlobalVars';
@@ -18,7 +15,7 @@ var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
 export default function PaymentScreen({ navigation }) {
-    let bookingData = new BookingService();
+    let bookingService = new BookingService();
     const [slots, setSlots] = useState("");
     const [hours, setHours] = useState("");
     const [ebike, setEbike] = useState("");
@@ -27,42 +24,21 @@ export default function PaymentScreen({ navigation }) {
     const [modalText, setModalText] = useState("");
     const [modalHeadline, setModalHeadline] = useState("");
 
-    let tryCreateBooking = (bikenestId, startTime, endTime) => {
+    let tryCreateBooking = (bikenestId) => {
 
-      let data = {"bikenestId": bikenestId, "startDateTime": startTime, "endDateTime": endTime};
-
-      return fetch(global.globalIPAddress + "/booking/add", {
-          method: 'POST',
-          body: JSON.stringify(data),
-          headers: {
-            'Content-Type': 'application/json',
-            // 'Authorization': 'jwt-token'
-          },
-      })
-          .then((response) => response.json())
-          .then((json) => {
-              console.log('is this working?');
-              console.log(JSON.stringify(data));
-
-              //Testing
-              let mockAccountCreated = true;
-              let mockErrorMsg = "Error Msg test";
-              let mockData = {mockAccountCreated, mockErrorMsg};
-
-              //Pageforwarding
-              navigation.navigate("History");
-
-              // console.log(mockData);
-              // setModalInfo(mockData);
-
-              //setModalInfo(json);
-          })
-          .catch((error) => {
-              setModalHeadline("Sorry!");
-              setModalText("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
-              setModalVisible(true);
-              console.error(error);
-          });
+        bookingService.createReservation(bikenestId, 30)
+            .then(response => {
+                if(response.success){
+                    console.log("Success with create reservation.");
+                    //Pageforwarding
+                    navigation.navigate("ReservationSuccess");
+                }else{
+                    setModalHeadline("Sorry!");
+                    setModalText("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
+                    setModalVisible(true);
+                    console.log("Error with creating reservation.");
+                }
+            });
   }
 
   const onPressPaypal = () => {
@@ -87,7 +63,6 @@ export default function PaymentScreen({ navigation }) {
     alert('this is an info.');
   };
   const onPressOrder = () => {
-
     var dateStart = moment()
     .utcOffset('+05:30')
     .format('yyyy-MM-DD');
@@ -102,11 +77,7 @@ export default function PaymentScreen({ navigation }) {
     .format('HH:mm:ss');
 
     var bikenestId = '1';
-    var startTime = dateStart + 'T' + timeStart; 
-    var endTime = dateEnd + 'T' + timeEnd;
-    console.log(' start: ' + startTime + ' end: ' + endTime);
-
-    tryCreateBooking(bikenestId, startTime, endTime);
+    tryCreateBooking(bikenestId);
   }
   const getSlots = () => {
     return "1 Slot";
@@ -142,7 +113,7 @@ export default function PaymentScreen({ navigation }) {
       <View style={myStyles.paymentContainer}>
         <View style={{alignSelf:'center'}}>
             <Text style={myStyles.h2}>
-                Meine Bestellung <Image onPress={() => onPressInfo(this)} source={require('../assets/payment/info.png')}/>
+                Meine Reservierung <Image onPress={() => onPressInfo(this)} source={require('../assets/payment/info.png')}/>
             </Text>
         </View>
         <View style={myStyles.headline}>
@@ -211,16 +182,6 @@ export default function PaymentScreen({ navigation }) {
             <Image style={{margin: 10}} source={require('../assets/payment/mail-send.png')} />
         </Pressable>
       </View>
-      <View style={myStyles.paymentClosedContainer}>
-        <View style={{alignSelf:'center'}}>
-            <Text style={myStyles.h2}>
-                Meine Bestellung <Image onPress={() => onPressInfo(this)} source={require('../assets/payment/info.png')}/>
-            </Text>
-        </View>
-            <Text style={myStyles.h3}> Vielen Dank für Ihre Bestellung. </Text>
-            <Text style={myStyles.h3}> Bitte begeben Sie sich zu folgendem BIKE NEST: </Text>
-            <Text style={myStyles.h3}> {getLocation()} </Text>
-      </View>
       </ScrollView>
       <BikeNest_NavigationFooter/>
     </View>
@@ -236,12 +197,6 @@ const myStyles = StyleSheet.create({
     flex: 1,
     padding: 15,
     marginTop: 30,
-  },
-  paymentClosedContainer:{
-    flex: 1,
-    padding: 15,
-    marginTop: 30,
-    display: 'none',
   },
   h2: {
       fontSize: 27,
