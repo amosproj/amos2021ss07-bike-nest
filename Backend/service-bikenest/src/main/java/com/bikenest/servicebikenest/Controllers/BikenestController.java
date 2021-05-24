@@ -5,10 +5,7 @@ import com.bikenest.common.interfaces.bikenest.AddBikenestRequest;
 import com.bikenest.common.security.UserInformation;
 import com.bikenest.common.security.UserRole;
 import com.bikenest.servicebikenest.DB.Bikenest;
-import com.bikenest.servicebikenest.DB.BikenestRepository;
-import com.bikenest.servicebikenest.payload.BikenestInfoRequest;
 import com.bikenest.servicebikenest.services.BikenestService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -67,12 +64,12 @@ public class BikenestController {
         int id = request.getID();
 
         if(bikenestService.existsBikenest(id)){
-            Bikenest bikenestInfo = bikenestService.getBikenestInfo(id);
+            Bikenest bikenestInfo = bikenestService.getBikenestInfo(id).get();
             return ResponseEntity.ok(
-                new BikeNestInfoResponse(bikenestInfo.getName(), "", bikenestInfo.getCurrentSpots(), bikenestInfo.isChargingAvailable()));
+                new BikenestInfoResponse(bikenestInfo.getName(), "", bikenestInfo.getCurrentSpots(), bikenestInfo.isChargingAvailable()));
         }
        
         return ResponseEntity.badRequest().body(
-            new BikeNestInfoResponse("NaN", "NaN", 0, false));
+            new BikenestInfoResponse("NaN", "NaN", 0, false));
     }
 }

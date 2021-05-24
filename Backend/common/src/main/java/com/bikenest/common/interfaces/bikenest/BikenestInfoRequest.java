@@ -1,4 +1,4 @@
-package com.bikenest.servicebikenest.payload;
+package com.bikenest.common.interfaces.bikenest;
 
 
 public class BikenestInfoRequest {
