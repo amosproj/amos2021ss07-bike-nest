@@ -26,7 +26,7 @@ const MODAL_HEIGHT = height * 0.85;
 const CARD_WIDTH = width * 0.8;
 const spacing_for_card_inset = width * 0.1 - 10;
 
-export default function FindBikeNestScreen ({ navigation }) {
+export default function FindBikeNestScreen({ navigation }) {
   const modalInitData = {
     CurrentMarkerIndex: 0,
     modalState: false
@@ -74,9 +74,10 @@ export default function FindBikeNestScreen ({ navigation }) {
   }, []);
 
   const fetchMarkers = async (id) => {
-    const res = await fetch(`http://192.168.178.52:9000/bikenest/all`);
+    const res = await fetch(global.globalIPAddress + "/bikenest/all");
     // console.log(res);
     const data = await res.json();
+    console.log(data);
     return data;
   };
 
@@ -85,8 +86,8 @@ export default function FindBikeNestScreen ({ navigation }) {
     for (const marker of fetchedMarkers) {
       tempMarkers.push({
         coordinate: {
-          latitude: parseFloat(marker.gpscoordinates.split(",")[0]),
-          longitude: parseFloat(marker.gpscoordinates.split(",")[1])
+          latitude: parseFloat(marker.gpsCoordinates.split(",")[0]),
+          longitude: parseFloat(marker.gpsCoordinates.split(",")[1])
         },
         address: marker.name,
         capacity: marker.spotsLeft,
@@ -102,8 +103,7 @@ export default function FindBikeNestScreen ({ navigation }) {
     let color = "";
     if (capacity < 1) { color = "#CD5C5C" } else
       if (capacity < 4) { color = "#EA8B60" } else
-        if (capacity < 7) { color = "#FFD700" } else
-        { color = "#8FBC8F"; }
+        if (capacity < 7) { color = "#FFD700" } else { color = "#8FBC8F"; }
     return color;
   }
 
