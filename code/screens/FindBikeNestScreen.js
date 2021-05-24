@@ -47,13 +47,14 @@ export default function FindBikeNestScreen ({ navigation }) {
   const [displayState, setDisplayState] = useState('flex');
   // const [location, setLocation] = useState(null);
   const [stateMarkers, setMarkers] = useState(initMarker);
-  const [cardMarkers, setCardMarkers] = useState(initMarker);
+  const [currentMarkerIndex, setCurrentMarkerIndex] = useState(0);
+  // const [cardMarkers, setCardMarkers] = useState(initMarker);
   const [distances, setDistances] = useState([0]);
+
   // const [isLoggedIn, setLogin] = useState(false);
-  const [modalData, setModalVisible] = useState(modalInitData);
+  const [modalState, setModalState] = useState(false);
   const _map = useRef(null);
   const _scrollView = useRef(null);
-  let mapIndex = 0;
   let mapAnimation = new Animated.Value(0);
 
   const region = {
@@ -93,7 +94,7 @@ export default function FindBikeNestScreen ({ navigation }) {
         color: getColor(marker.spotsLeft)
       });
     }
-    setCardMarkers(tempMarkers);
+    // setCardMarkers(tempMarkers);
     setMarkers(tempMarkers);
   };
 
@@ -112,7 +113,7 @@ export default function FindBikeNestScreen ({ navigation }) {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         Alert.alert('Permission to access location was denied');
-      } else if (distances.length < 2) {
+      } else {
         let location = await Location.getCurrentPositionAsync({});
         let localdistances = [];
         stateMarkers.map((marker, index) => {
@@ -125,32 +126,30 @@ export default function FindBikeNestScreen ({ navigation }) {
   }, []);
 
   // compute scaling of markers
-  // let orderedArray = [...stateMarkers];
-  // orderedArray = orderedArray.concat(orderedArray.splice(0, modalData.CurrentMarkerIndex));
-  var interpolations = stateMarkers.map((marker, index) => {
-    const inputRange = [
-      (index - 1) * (CARD_WIDTH * 1.06),
-      (index) * (CARD_WIDTH * 1.06),
-      ((index + 1) * (CARD_WIDTH * 1.06))
-    ];
+  // var interpolations = stateMarkers.map((marker, index) => {
+  //   const inputRange = [
+  //     (index - 1) * (CARD_WIDTH * 1.06),
+  //     (index) * (CARD_WIDTH * 1.06),
+  //     ((index + 1) * (CARD_WIDTH * 1.06))
+  //   ];
 
-    const scale = mapAnimation.interpolate({
-      inputRange,
-      outputRange: [0.9, 1.4, 0.9],
-      extrapolate: 'clamp'
-    });
+  //   const scale = mapAnimation.interpolate({
+  //     inputRange,
+  //     outputRange: [0.9, 1.4, 0.9],
+  //     extrapolate: 'clamp'
+  //   });
 
-    return { scale };
-  });
-  let tempInterp = [...interpolations];
+  //   return { scale };
+  // });
 
-  var swapArrayElements = function (arr, indexA, indexB) {
-    var tempArr = [...arr];
-    var temp = tempArr[indexA];
-    tempArr[indexA] = tempArr[indexB];
-    tempArr[indexB] = temp;
-    return tempArr;
-  };
+  // let tempInterp = [...interpolations];
+  // var swapArrayElements = function (arr, indexA, indexB) {
+  //   var tempArr = [...arr];
+  //   var temp = tempArr[indexA];
+  //   tempArr[indexA] = tempArr[indexB];
+  //   tempArr[indexB] = temp;
+  //   return tempArr;
+  // };
   // tempInterp = swapArrayElements(tempInterp, 0, modalData.CurrentMarkerIndex);
 
   const getDistanceToUser = (userMarker, location_) => {
@@ -164,42 +163,36 @@ export default function FindBikeNestScreen ({ navigation }) {
 
   useEffect(() => {
     mapAnimation.addListener(({ value }) => {
-      let index = Math.floor(value / (CARD_WIDTH * 1.06)); // 
-      if (index >= stateMarkers.length) {
-        index = stateMarkers.length - 1;
-      }
-      if (index <= 0) {
-        index = 0;
-      }
-
-      clearTimeout(regionTimeout);
-      const regionTimeout = setTimeout(() => {
-       
-        if (mapIndex !== index) {
-          mapIndex = index;
-          const { coordinate } = stateMarkers[index];
-          _map.current.animateToRegion(
-            {
-              ...coordinate,
-              latitudeDelta: region.latitudeDelta,
-              longitudeDelta: region.longitudeDelta
-            },
-            300
-          );
+      if (/*value % 1 !== 0 && */value !== 0) {
+        let index = Math.floor(value / (CARD_WIDTH * 1.06)); // 
+        if (index >= stateMarkers.length) {
+          index = stateMarkers.length - 1;
         }
-      }, 10);
+        if (index <= 0) {
+          index = 0;
+        }
+        clearTimeout(regionTimeout);
+        const regionTimeout = setTimeout(() => {
+          if (currentMarkerIndex !== index) {
+            const { coordinate } = stateMarkers[index];
+            setCurrentMarkerIndex(index);
+            _map.current.animateToRegion(
+              {
+                ...coordinate,
+                latitudeDelta: region.latitudeDelta,
+                longitudeDelta: region.longitudeDelta
+              },
+              200
+            );
+          }
+        }, 10);
+      }
     });
   });
 
   // moves cards at the bottom of screen
   const onMarkerPress = (mapEventData) => {
     const markerID = mapEventData._targetInst.return.key;
-
-    //  if(!isLoggedIn){setLogin(true);}
-
-    // stateArr = [...stateMarkers];
-    // console.log('setting markers')
-    // setState(stateArr.concat(stateArr.splice(0, markerID)))
 
     let x = (markerID * CARD_WIDTH) + (markerID * 20);
     if (Platform.OS === 'ios') {
@@ -211,17 +204,11 @@ export default function FindBikeNestScreen ({ navigation }) {
   }
 
   const onCardPress = (index) => {
-    let markerID = index;
-    let tempModalData = { ...modalData };
-    tempModalData.CurrentMarkerIndex = markerID;
-    tempModalData.modalState = !tempModalData.modalState;
-    setModalVisible(tempModalData);
+    setModalState(!modalState);
   };
 
   const proceedBooking = () => {
-    let tempModalData = { ...modalData };
-    tempModalData.modalState = false;
-    setModalVisible(tempModalData);
+    setModalState(!modalState);
     navigation.navigate('Booking');
   };
 
@@ -240,19 +227,13 @@ export default function FindBikeNestScreen ({ navigation }) {
       // onPress={(e) => onMapPress(e)}
       >
         {stateMarkers.map((marker, index) => {
-          const scaleStyle = {
-            transform: [
-              {
-                scale: tempInterp[index].scale
-              }
-            ]
-          };
           return (
             <MapView.Marker key={index} coordinate={marker.coordinate} onPress={(e) => onMarkerPress(e)}>
               <Animated.View style={[styles.markerWrap]}>
                 <Animated.Image
                   source={require('../assets/bike_location_small.png')}
-                  style={[styles.marker, scaleStyle]}
+                  // style={[styles.marker, scaleStyle]}
+                  style={[styles.marker, { width: currentMarkerIndex === index ? 60 : 20 }]}
                   resizeMode='center'
                 />
               </Animated.View>
@@ -263,18 +244,18 @@ export default function FindBikeNestScreen ({ navigation }) {
       <Modal
         animationType="none"
         transparent={true}
-        visible={modalData.modalState}
+        visible={modalState}
         onRequestClose={() => {
           onCardPress(0);
         }}
       >
         <View style={styles.centeredView}>
-          <View style={[styles.modalView, { backgroundColor: stateMarkers[modalData.CurrentMarkerIndex].color }, { alignItems: 'center' }]}>
+          <View style={[styles.modalView, { backgroundColor: stateMarkers[currentMarkerIndex].color }, { alignItems: 'center' }]}>
             <Text numberOfLines={1} style={styles.cardtitle}>Ich befinde mich in der Straße:</Text>
-            <Text>{stateMarkers[modalData.CurrentMarkerIndex].address} </Text>
+            <Text>{stateMarkers[currentMarkerIndex].address} </Text>
             <Text style={styles.cardDescription}>Lade Optionen: <B>Ja</B></Text>
-            <Text numberOfLines={1} style={styles.cardtitle}>Entfernung: {distances[modalData.CurrentMarkerIndex] / 1000} Km</Text>
-            <Text numberOfLines={1} style={styles.cardDescription}>In diesem Bikenest sind <B>{stateMarkers[modalData.CurrentMarkerIndex].capacity}</B> Plätze frei</Text>
+            <Text numberOfLines={1} style={styles.cardtitle}>Entfernung: {distances[currentMarkerIndex] / 1000} Km</Text>
+            <Text numberOfLines={1} style={styles.cardDescription}>In diesem Bikenest sind <B>{stateMarkers[currentMarkerIndex].capacity}</B> Plätze frei</Text>
             <Text>{ }</Text>
             <View style={styles.button}>
               <TouchableOpacity
@@ -282,7 +263,7 @@ export default function FindBikeNestScreen ({ navigation }) {
                   borderColor: '#FFF',
                   borderWidth: 1
                 }]}
-                onPress={() => onCardPress(modalData.CurrentMarkerIndex)}
+                onPress={() => onCardPress(currentMarkerIndex)}
               >
                 <Text style={styles.textStyle}>Zurück</Text>
               </TouchableOpacity>
