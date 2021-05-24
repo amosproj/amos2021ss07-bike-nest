@@ -10,9 +10,10 @@ import HistoryScreen from './screens/HistoryScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import BookingScreen from './screens/BookingScreen';
 import LockScreen from './screens/LockScreen';
+import PaymentConfirmationScreen from './screens/PaymentConfirmationScreen';
+import ReservationSuccessScreen from './screens/ReservationSuccessScreen';
 
 export default function App() {
-  //TODO set global IP variable for API Calls 
   return (
     <NavigationContainer>
       <AppNavigator.Navigator screenOptions={{ headerShown: false }}>
@@ -25,6 +26,8 @@ export default function App() {
         <AppNavigator.Screen name='History' component={HistoryScreen} />
         <AppNavigator.Screen name='Booking' component={BookingScreen} />
         <AppNavigator.Screen name='Lock' component={LockScreen} />
+        <AppNavigator.Screen name='ReservationSuccess' component={ReservationSuccessScreen} />
+        <AppNavigator.Screen name='PaymentConfirmation' component={PaymentConfirmationScreen} />
       </AppNavigator.Navigator>
     </NavigationContainer>
   );
