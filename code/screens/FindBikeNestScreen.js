@@ -341,7 +341,7 @@ export default function FindBikeNestScreen({ navigation }) {
               <View style={styles.button}>
                 <TouchableOpacity
                   // onPress={() => navigation.navigate('Booking')}
-                  onPress={() => onCardPress(index)}
+                  onPress={() => onCardPress(currentMarkerIndex, stateMarkers[currentMarkerIndex].id)}
                   style={[styles.signIn, {
                     borderColor: '#FFF',
                     borderWidth: 1
