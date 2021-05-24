@@ -1,17 +1,14 @@
-package com.bikenest.common.interfaces.usermgmt;
+package com.bikenest.common.interfaces;
 
-/**
- * This class is also used as Response for Signup, because it's exactly the same.
- */
-public class SigninResponse {
+public class GeneralResponse {
     private boolean success;
     private String error;
-    private String jwt;
+    private Object payload;
 
-    public SigninResponse(boolean success, String error, String jwt){
+    public GeneralResponse(boolean success, String error, Object payload){
         this.success = success;
         this.error = error;
-        this.jwt = jwt;
+        this.payload = payload;
     }
 
     public boolean isSuccess() {
@@ -30,11 +27,11 @@ public class SigninResponse {
         this.error = error;
     }
 
-    public String getJwt() {
-        return jwt;
+    public Object getPayload() {
+        return payload;
     }
 
-    public void setJwt(String jwt) {
-        this.jwt = jwt;
+    public void setPayload(Object payload) {
+        this.payload = payload;
     }
 }

@@ -1,17 +1,14 @@
-package com.bikenest.common.interfaces.usermgmt;
+package com.bikenest.common.interfaces.booking;
 
-/**
- * This class is also used as Response for Signup, because it's exactly the same.
- */
-public class SigninResponse {
+public class CreateReservationResponse {
     private boolean success;
     private String error;
-    private String jwt;
+    private Object reservation;
 
-    public SigninResponse(boolean success, String error, String jwt){
+    public CreateReservationResponse(boolean success, String error, Object reservation){
         this.success = success;
         this.error = error;
-        this.jwt = jwt;
+        this.reservation = reservation;
     }
 
     public boolean isSuccess() {
@@ -30,11 +27,11 @@ public class SigninResponse {
         this.error = error;
     }
 
-    public String getJwt() {
-        return jwt;
+    public Object getReservation() {
+        return reservation;
     }
 
-    public void setJwt(String jwt) {
-        this.jwt = jwt;
+    public void setReservation(Object reservation) {
+        this.reservation = reservation;
     }
 }
