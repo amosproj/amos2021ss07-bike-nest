@@ -8,6 +8,7 @@ import { AntDesign } from '@expo/vector-icons';
 import global from '../components/GlobalVars';
 import { mainStyles } from "../styles/MainStyles";
 import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
+import {BookingService} from "../services/BookingService";
 
 
 var width = Dimensions.get('window').width; //full width
@@ -16,24 +17,19 @@ var height = Dimensions.get('window').height; //full height
 
 export default function HistoryScreen({ navigation }) {
   // const [myListData, setData] = useState("");
+  let bookingService = new BookingService();
 
   let tryGETBooking = () => {
     console.log('start pulling reservation info');
 
-    return fetch(global.globalIPAddress + "/booking/all", {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-    })
-        .then((response) => response.json())
-        .then((json) => {
-          alert(JSON.stringify(json));
-          console.log(json);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
+    bookingService.getAllReservations().then(response => {
+      if(response.success){
+        alert(JSON.stringify(response.reservations));
+        console.log(response.reservations);
+      }else{
+        console.log(response.error);
+      }
+    });
 }
 
   return (
@@ -47,13 +43,13 @@ export default function HistoryScreen({ navigation }) {
             Max Muster </Text>
         </View>
         <TouchableOpacity onPress={() => navigation.navigate("Lock") }
-          style={styles.heightBike, {
+          style={[styles.heightBike, {
             backgroundColor: '#FFF',
             height: 230,
             width: 370,
             margin: 10,
             position: 'relative'
-          }}>
+          }]}>
           <ImageBackground
             source={bike}
             style={{

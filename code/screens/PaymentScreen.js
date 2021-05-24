@@ -5,7 +5,7 @@ import Colors from '../styles/Colors';
 import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
 import { mainStyles } from "../styles/MainStyles";
 import { TouchableOpacity } from 'react-native';
-import { BookingService } from "../services/Booking";
+import { BookingService } from "../services/BookingService";
 import { ScrollView } from 'react-native';
 import BikeNest_Modal from '../components/BikeNest_Modal';
 import global from '../components/GlobalVars';
@@ -15,7 +15,7 @@ var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
 export default function PaymentScreen({ navigation }) {
-    let bookingData = new BookingService();
+    let bookingService = new BookingService();
     const [slots, setSlots] = useState("");
     const [hours, setHours] = useState("");
     const [ebike, setEbike] = useState("");
@@ -24,41 +24,21 @@ export default function PaymentScreen({ navigation }) {
     const [modalText, setModalText] = useState("");
     const [modalHeadline, setModalHeadline] = useState("");
 
-    let tryCreateBooking = (bikenestId, startTime, endTime) => {
+    let tryCreateBooking = (bikenestId) => {
 
-      let data = {"bikenestId": bikenestId, "startDateTime": startTime, "endDateTime": endTime};
-
-      return fetch(global.globalIPAddress + "/booking/add", {
-          method: 'POST',
-          body: JSON.stringify(data),
-          headers: {
-            'Content-Type': 'application/json',
-            // 'Authorization': 'jwt-token'
-          },
-      })
-          .then((response) => response.json())
-          .then((json) => {
-              console.log(JSON.stringify(data));
-
-              //Testing
-              let mockAccountCreated = true;
-              let mockErrorMsg = "Error Msg test";
-              let mockData = {mockAccountCreated, mockErrorMsg};
-
-              //Pageforwarding
-              navigation.navigate("ReservationSuccess");
-
-              // console.log(mockData);
-              // setModalInfo(mockData);
-
-              //setModalInfo(json);
-          })
-          .catch((error) => {
-              setModalHeadline("Sorry!");
-              setModalText("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
-              setModalVisible(true);
-              console.error(error);
-          });
+        bookingService.createReservation(bikenestId, 30)
+            .then(response => {
+                if(response.success){
+                    console.log("Success with create reservation.");
+                    //Pageforwarding
+                    navigation.navigate("ReservationSuccess");
+                }else{
+                    setModalHeadline("Sorry!");
+                    setModalText("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
+                    setModalVisible(true);
+                    console.log("Error with creating reservation.");
+                }
+            });
   }
 
   const onPressPaypal = () => {
@@ -97,11 +77,7 @@ export default function PaymentScreen({ navigation }) {
     .format('HH:mm:ss');
 
     var bikenestId = '1';
-    var startTime = dateStart + 'T' + timeStart; 
-    var endTime = dateEnd + 'T' + timeEnd;
-    console.log(' start: ' + startTime + ' end: ' + endTime);
-
-    tryCreateBooking(bikenestId, startTime, endTime);
+    tryCreateBooking(bikenestId);
   }
   const getSlots = () => {
     return "1 Slot";

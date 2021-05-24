@@ -40,6 +40,7 @@ public class ReservationController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<GeneralResponse> createReservation(@AuthenticationPrincipal UserInformation user,
                                                              @RequestBody CreateReservationRequest request) {
+        //TODO: Check if payment details are provided and don't create reservation else
         Optional<Reservation> reservation = reservationService.createReservation(user.getUserId(), request);
         if (!reservation.isPresent()){
             return ResponseEntity.badRequest().body(new GeneralResponse(false,
@@ -72,6 +73,7 @@ public class ReservationController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<GeneralResponse> endReservation(@AuthenticationPrincipal UserInformation user,
                                                           @PathVariable("reservationId") Integer reservationId){
+        //TODO: Check if the reservation is actually started and don't end it elsewise
         if(!reservationService.isReservationOwner(reservationId, user.getUserId())){
             return ResponseEntity.badRequest().body(
                     new GeneralResponse(false, "You can only end your own reservations.", null));
