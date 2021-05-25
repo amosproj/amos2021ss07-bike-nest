@@ -26,5 +26,13 @@ export default class colors {
   static get Opacity_5() { return 0.1; }
   static get Opacity_6() { return 0.05; }
 
+  static get Opacity_0_hex() { return "FF"; }
+  static get Opacity_1_hex() { return "E6"; }
+  static get Opacity_2_hex() { return "C0"; }
+  static get Opacity_3_hex() { return "80"; }
+  static get Opacity_4_hex() { return "40"; }
+  static get Opacity_5_hex() { return "19"; }
+  static get Opacity_6_hex() { return "0C"; }
+
 }
 
