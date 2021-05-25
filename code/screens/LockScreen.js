@@ -2,12 +2,12 @@ import React from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, SafeAreaView, ImageBackground} from 'react-native';
 import { Dimensions } from "react-native";
 import { SimpleLineIcons } from '@expo/vector-icons';
-// import {styles} from "./styles";
 import { mainStyles } from "../styles/MainStyles";
 import Colors from '../styles/Colors';
 import lockBackground from '../assets/background/lockBackground.png'; 
 
 import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
+import { colors } from 'react-native-elements';
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
@@ -50,7 +50,8 @@ export default function LockScreen({ navigation }) {
             
 
             <TouchableOpacity onPress={() => alert('go to next screen')} style={styles.Icon}>
-                <Text style={mainStyles.h3}> Lock </Text>
+                <SimpleLineIcons name="lock-open" size={24} color="black" />
+                <Text style={mainStyles.h3}> Unlock </Text>
             </TouchableOpacity> 
 
            
@@ -69,8 +70,12 @@ const styles = StyleSheet.create({
         height:128,
         width: 128,
         alignItems: 'center',
+        justifyContent: 'center',
         borderRadius: 64,
-        backgroundColor: '#dddddd',
+        borderWidth: 6,
+        borderColor: 'white',
+        backgroundColor: '#D6F2C9',
+        elevation: 3,
     },
     lockContainer: {
         flex: 1,
