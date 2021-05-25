@@ -32,7 +32,17 @@ services:
       - MYSQL_DATABASE=user
     networks:
       - user-db
-    
+
+  payment-db:
+    container_name: payment-db
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=test
+      - MYSQL_USER=paymentservice
+      - MYSQL_PASSWORD=test
+      - MYSQL_DATABASE=payment
+    networks:
+      - payment-db
   #php:
   #  container_name: phpadmin
   #  image: phpmyadmin/phpmyadmin
@@ -94,7 +104,22 @@ services:
       - user-db
       - services
 
+  payment:
+    container_name: payment
+    build: service-payment
+    restart: always
+    environment:
+      - MYSQL_HOST=payment-db
+      - MYSQL_PORT=3306
+      - MYSQL_DBNAME=payment
+      - MYSQL_USER=paymentservice
+      - MYSQL_PASSWORD=test
+    networks:
+      - services
+      - payment-db
+
 networks:
+  payment-db:
   booking-db:
   bikenest-db:
   user-db:
