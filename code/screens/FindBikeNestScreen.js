@@ -240,7 +240,6 @@ export default function FindBikeNestScreen({ navigation }) {
       console.log("else state")
       getMarkers().then(setModalState(!modalState));
     }
-
   };
 
   const proceedBooking = () => {
