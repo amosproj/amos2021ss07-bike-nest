@@ -30,15 +30,17 @@ export default function BikeNest_Modal(props) {
             onRequestClose={() => onRequestClose()}
         >
             <View style={mainStyles.modalContainer}>
-                <View style={mainStyles.modalContentContainer}>
-                    <Text style={mainStyles.h3}>{props.modalHeadLine}</Text>
-                    <Text style={mainStyles.stdText}>{props.modalText}</Text>
-                    <BikeNest_Button
-                        type={ButtonStyle.small}
-                        text="Ok"
-                        onPress={() => onPress()}>
-                    </BikeNest_Button>
-                </View>
-            </View>
+                {props.content === undefined ?
+                    <View style={mainStyles.modalContentContainer}>
+                        <Text style={mainStyles.h3}>{props.modalHeadLine}</Text>
+                        <Text style={mainStyles.stdText}>{props.modalText}</Text>
+                        <BikeNest_Button
+                            type={ButtonStyle.small}
+                            text="Ok"
+                            onPress={() => onPress()}>
+                        </BikeNest_Button>
+                    </View>
+                    : props.content}
+            </View>           
         </Modal >);
 }
