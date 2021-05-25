@@ -62,7 +62,7 @@ public class ReservationService {
             return Optional.empty();
         }
 
-        reservation.get().setActualStart(LocalDateTime.now(ZoneId.of("Europe/Berlin")));
+        actualReservation.setActualStart(LocalDateTime.now(ZoneId.of("Europe/Berlin")));
         reservationRepository.save(reservation.get());
         return Optional.of(reservation.get());
     }
@@ -84,9 +84,25 @@ public class ReservationService {
         if(!bikenestClient.freeSpot(actualReservation.getBikenestId())){
             return Optional.empty();
         }
-        reservation.get().setActualEnd(LocalDateTime.now(ZoneId.of("Europe/Berlin")));
+        actualReservation.setActualEnd(LocalDateTime.now(ZoneId.of("Europe/Berlin")));
         reservationRepository.save(reservation.get());
         return Optional.of(reservation.get());
+    }
+
+    public Optional<Reservation> cancelReservation(Integer id){
+        Optional<Reservation> reservation = reservationRepository.findById(id);
+        // Error if the Reservation with given id does not exist
+        if(!reservation.isPresent()){
+            return Optional.empty();
+        }
+
+        Reservation actualReservation = reservation.get();
+        if(actualReservation.isCancelled()){
+            return Optional.empty();
+        }
+        actualReservation.setCancelled(true);
+        reservationRepository.save(actualReservation);
+        return Optional.of(actualReservation);
     }
 
     public boolean isReservationOwner(Integer reservationId, Integer userId){

@@ -18,7 +18,8 @@ public class Reservation {
     private Integer userId;
     private Integer bikenestId;
     private Integer reservationMinutes; // For how long is this reservation?
-    private boolean payed; // Is this booking payed?
+    private boolean paid; // Is this booking payed?
+    private boolean cancelled;
     @Basic
     @Temporal(TemporalType.TIMESTAMP)
     private Date reservationStart;   // Begin of reservation time frame (set to the time the server got the request)
@@ -32,16 +33,17 @@ public class Reservation {
     @Temporal(TemporalType.TIMESTAMP)
     private Date actualEnd;   // When did the user take his bike?
 
-    public Reservation(Integer userId, Integer bikenestId, Integer reservationMinutes, boolean payed,
+    public Reservation(Integer userId, Integer bikenestId, Integer reservationMinutes, boolean paid,
                        LocalDateTime reservationStart, LocalDateTime reservationEnd) {
         this.userId = userId;
         this.bikenestId = bikenestId;
         this.reservationMinutes = reservationMinutes;
-        this.payed = payed;
+        this.paid = paid;
         setReservationStart(reservationStart);
         setReservationEnd(reservationEnd);
         this.actualStart = null;
         this.actualEnd = null;
+        this.cancelled = false;
     }
 
     public Reservation(){}
@@ -94,14 +96,6 @@ public class Reservation {
         this.reservationMinutes = reservationMinutes;
     }
 
-    public boolean isPayed() {
-        return payed;
-    }
-
-    public void setPayed(boolean payed) {
-        this.payed = payed;
-    }
-
     public LocalDateTime getReservationStart() {
         return DateToLocalDateTime(reservationStart);
     }
@@ -132,5 +126,21 @@ public class Reservation {
 
     public void setActualEnd(LocalDateTime actualEnd) {
         this.actualEnd = LocalDateTimeToDate(actualEnd);
+    }
+
+    public boolean isPaid() {
+        return paid;
+    }
+
+    public void setPaid(boolean paid) {
+        this.paid = paid;
+    }
+
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 }

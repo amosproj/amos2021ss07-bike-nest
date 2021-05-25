@@ -88,4 +88,23 @@ public class ReservationController {
 
         return ResponseEntity.ok(new GeneralResponse(true, null, reservation.get()));
     }
+
+    @PostMapping(value="/cancel/{reservationId}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<GeneralResponse> cancelReservation(@AuthenticationPrincipal UserInformation user,
+                                                             @PathVariable("reservationId") Integer reservationId){
+        if(!reservationService.isReservationOwner(reservationId, user.getUserId())){
+            return ResponseEntity.badRequest().body(
+                    new GeneralResponse(false, "You can only cancel your own reservations.", null));
+        }
+
+        Optional<Reservation> reservation = reservationService.cancelReservation(reservationId);
+
+        if(!reservation.isPresent()){
+            return ResponseEntity.badRequest().body(
+                    new GeneralResponse(false, "Couldn't cancel reservation", null));
+        }
+
+        return ResponseEntity.ok(new GeneralResponse(true, null, reservation.get()));
+    }
 }
