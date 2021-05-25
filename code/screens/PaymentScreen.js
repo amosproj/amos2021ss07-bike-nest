@@ -86,19 +86,19 @@ export default function PaymentScreen({ navigation }) {
     return "Nürnberg HBF";
   };
   const getHours = () => {
-    return "3 Stunden";
+    return "1 Tag";
   };
   const getPrice = () => {
-    return "50€";
+    return "6€";
   };
   const getMwst = () => {
     return "9,50€";
   };
   const getDiscount = () => {
-    return "-5€";
+    return "-0,50€";
   };
   const getSum = () => {
-    return "54,50€";
+    return "5,50€";
   };
   return (
     <View style={myStyles.container}>
@@ -160,7 +160,19 @@ export default function PaymentScreen({ navigation }) {
               value={promocode} /> 
         </View>
         <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider}/>
-        <View style={myStyles.headline}>
+        <View style={[myStyles.headline,{marginTop: 10, marginBottom: 10}]}>
+            <Text style={myStyles.h3}>Geschätzter Preis</Text>
+            <Text style={[myStyles.h3, { fontWeight: 'bold', color: Colors.UI_Light_2}]}> {getPrice()} </Text>
+        </View>
+        <View style={[myStyles.headline,{marginTop: 10, marginBottom: 10}]}>
+            <Text style={myStyles.h3}>Rabatt</Text>
+            <Text style={[myStyles.h3, { fontWeight: 'bold', color: Colors.UI_Light_2}]}> {getDiscount()} </Text>
+        </View>
+        <View style={[myStyles.headline,{marginTop: 10, marginBottom: 10}]}>
+            <Text style={myStyles.h3}>Gesamt (für {getHours()})</Text>
+            <Text style={[myStyles.h3, { fontWeight: 'bold', color: Colors.UI_Light_2}]}> {getSum()} </Text>
+        </View>
+        {/* <View style={myStyles.headline}>
             <Text style={myStyles.stdText}>Gesamt exkl. Mwst.</Text>
             <Text style={[myStyles.stdText, { fontWeight: 'bold', color: Colors.UI_Light_2}]}> {getPrice()} </Text>
         </View>
@@ -176,7 +188,7 @@ export default function PaymentScreen({ navigation }) {
         <View style={myStyles.headline}>
             <Text style={myStyles.h3}>Gesamt (für {getHours()})</Text>
             <Text style={[myStyles.h3, { fontWeight: 'bold', color: Colors.UI_Light_2}]}> {getSum()} </Text>
-        </View>
+        </View> */}
         <Pressable style={[myStyles.reserved, {justifyContent: 'flex-end'}]} onPress={() => onPressOrder(this)}>
             <Text style={myStyles.h3}>Jetzt Reservieren</Text> 
             <Image style={{margin: 10}} source={require('../assets/payment/mail-send.png')} />
