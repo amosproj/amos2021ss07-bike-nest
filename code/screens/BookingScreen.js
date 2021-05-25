@@ -76,11 +76,10 @@ export default function BookingScreen({ navigation }) {
       setTextEbike('kein E-bike ausgewählt.');
       setcostEbike(0);
     }
-    let price = (costHours*costSlots) + costEbike;
-    setEstimatedPrice(price);
   }
   const getPrice = () => {
-    return "50€";
+    let price = (costHours*costSlots) + costEbike;
+    setEstimatedPrice(price + " €");
   };
   const getMwst = () => {
     return "9,50€";
@@ -142,6 +141,9 @@ export default function BookingScreen({ navigation }) {
                 {estimatedPrice}
               </Text>
         </View>
+          <Pressable style={[myStyles.reserved, {justifyContent: 'flex-end'}]}  onPress={() => getPrice(this)}>
+            <Text style={myStyles.h3}>Preis Kalkulieren</Text> 
+          </Pressable>
           <Pressable style={[myStyles.reserved, {justifyContent: 'flex-end'}]}  onPress={() => onPressOrder(this)}>
             <Text style={myStyles.h3}>Weiter</Text> 
             <Image style={{margin: 10}} source={require('../assets/payment/mail-send.png')} />
