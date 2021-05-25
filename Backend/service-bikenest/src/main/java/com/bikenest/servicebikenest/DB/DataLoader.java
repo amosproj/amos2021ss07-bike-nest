@@ -30,36 +30,33 @@ public class DataLoader {
                     "49.446344470022375, 11.0810884309534938", 13, false);
             bikenestRepository.save(bikenest_hbf_3);
 
-            /* TODO: Readd this (i changed the code for the bikenest and all of these would have had to be changed)
-            Bikenest bikenest_hbf_4 = new Bikenest();
-            bikenest_hbf_4.setName("Nürnberg Hbf Nord 1");
-            bikenest_hbf_4.setGpsCoordinates("49.44640223259086, 11.081398793547217");
-            bikenest_hbf_4.setSpotsLeft(5);
+            Bikenest bikenest_hbf_4 = new Bikenest("Nürnberg Hbf Nord 2", "49.44640223259086, 11.081398793547217", 5,
+                    true);
             bikenestRepository.save(bikenest_hbf_4);
 
-            Bikenest bikenest_wiese_1 = new Bikenest();
-            bikenest_wiese_1.setName("Nürnberg Wöhrder Wiese 1");
-            bikenest_wiese_1.setGPSCoordinates("49.45050866440126, 11.087981724233893");
-            bikenest_wiese_1.setSpotsLeft(5);
+            Bikenest bikenest_wiese_1 = new Bikenest("Nürnberg Wöhrder Wiese 1", "49.45050866440126, 11.087981724233893", 6,
+                    true);
             bikenestRepository.save(bikenest_wiese_1);
 
-            Bikenest bikenest_wiese_2 = new Bikenest();
-            bikenest_wiese_2.setName("Nürnberg Wöhrder Wiese 1");
-            bikenest_wiese_2.setGpsCoordinates("49.45050880304194, 11.096809867248464");
-            bikenest_wiese_2.setSpotsLeft(13);
+            Bikenest bikenest_wiese_2 = new Bikenest("Nürnberg Wöhrder Wiese 2", "49.45050880304194, 11.096809867248464", 11,
+                    false);
             bikenestRepository.save(bikenest_wiese_2);
 
-            Bikenest bikenest_city_ost_1 = new Bikenest();
-            bikenest_city_ost_1.setName("Nürnberg City Ost 1");
-            bikenest_city_ost_1.setGpsCoordinates("49.451450404306044, 11.084239724558445");
-            bikenest_city_ost_1.setSpotsLeft(5);
+            Bikenest bikenest_city_ost_1 = new Bikenest("Nürnberg City Ost 1", "49.451450404306044, 11.084239724558445", 4,
+                    true);
             bikenestRepository.save(bikenest_city_ost_1);
 
-            Bikenest bikenest_city_nord_ost_1 = new Bikenest();
-            bikenest_city_nord_ost_1.setName("Nürnberg City Nord-Ost 1");
-            bikenest_city_nord_ost_1.setGpsCoordinates("49.4574806375321, 11.088425465956352");
-            bikenest_city_nord_ost_1.setSpotsLeft(18);
+            Bikenest bikenest_city_nord_ost_1 = new Bikenest("Nürnberg City Nord-Ost 1", "49.4574806375321, 11.088425465956352", 18,
+                    true);
             bikenestRepository.save(bikenest_city_nord_ost_1);
+
+            Bikenest bikenest_gostenhof_1 = new Bikenest("Nürnberg Gostenhof", "49.45079358635928, 11.055413715917615", 1,
+                    false);
+            bikenestRepository.save(bikenest_gostenhof_1);
+
+            /* TODO: Readd this (i changed the code for the bikenest and all of these would have had to be changed)
+
+
 
             Bikenest bikenest_city_maxtorgraben_1 = new Bikenest();
             bikenest_city_maxtorgraben_1.setName("Nürnberg Maxtorgraben 1");
@@ -138,12 +135,6 @@ public class DataLoader {
             bikenest_dutzendteich_1.setGpsCoordinates("49.42785888604916, 11.10626744663648");
             bikenest_dutzendteich_1.setSpotsLeft(15);
             bikenestRepository.save(bikenest_dutzendteich_1);
-
-            Bikenest bikenest_gostenhof_1 = new Bikenest();
-            bikenest_gostenhof_1.setName("Nürnberg Gostenhof 1");
-            bikenest_gostenhof_1.setGpsCoordinates("49.45079358635928, 11.055413715917615");
-            bikenest_gostenhof_1.setSpotsLeft(9);
-            bikenestRepository.save(bikenest_gostenhof_1);
 
             Bikenest bikenest_maxfeld_1 = new Bikenest();
             bikenest_maxfeld_1.setName("Nürnberg Maxfeld 1");
