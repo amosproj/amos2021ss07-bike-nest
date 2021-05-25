@@ -41,7 +41,7 @@ export default function HistoryScreen({ navigation }) {
           <Text style={styles.name} >
             Max Muster </Text>
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate("Lock") }
+        <TouchableOpacity onPress={() => navigation.navigate("FindBikeNest") }
           style={[styles.heightBike, {
             backgroundColor: '#FFF',
             height: 230,
@@ -58,16 +58,13 @@ export default function HistoryScreen({ navigation }) {
             }}
           />
           <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start', padding: 30}}>
-            <Text style={{fontSize: 16}}>Vielen Dank für die Reservierung! </Text>
-            <Text style={{fontSize: 16}}>Begib dich zu folgendem BIKE NEST: {"\n"}</Text>
-            <Text style={{fontWeight: 'bold', fontSize: 16}}>BIKE NEST {"\n"}Nürnberg HBF </Text>
+            <Text style={{fontSize: 16}}>Danke für dein Vertrauen! </Text>
+            <Text style={{fontSize: 16}}>Dein Fahrrad befindet sich hier: {"\n"}</Text>
+            <Text style={{textDecorationLine: 'underline', fontSize: 16, fontStyle:'italic' }}> Zeig es auf der Karte </Text>
           </View>
         </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate("EditPersonalInformation")} style={styles.buttonLock}>
-        <Text style={styles.buttonLockOwner}> Max Muster's bike </Text>
-        <Text style={styles.buttonLockText}> locked </Text>
-      </TouchableOpacity>
+      
 
       <View style={styles.containerRow}>
       <TouchableOpacity style={styles.time}>
@@ -82,6 +79,12 @@ export default function HistoryScreen({ navigation }) {
         <Text style={styles.costRecord}> 50 $ </Text> 
       </TouchableOpacity>
       </View>
+
+      <TouchableOpacity onPress={() => navigation.navigate("Lock")} style={mainStyles.buttonBig}>
+        {/* <SimpleLineIcons name="lock-open" size={10} color="black" style={styles.icon} /> */}
+        <Text style={mainStyles.buttonText}> Max Muster's bike </Text>
+        <Text style={mainStyles.buttonText}> locked on spot X </Text>
+      </TouchableOpacity>
 
       <TouchableOpacity onPress={() => tryGETBooking(this)} style={styles.buttonHistory}>
         <Text style={styles.buttonHistoryText}> Frühere Reservierungen und Zahlungen </Text>
@@ -219,5 +222,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     margin: 10,
   }, 
+  icon:{
+      padding: 10,
+      margin: 5,
+      height: 25,
+      width: 25,
+    },
 
 })
