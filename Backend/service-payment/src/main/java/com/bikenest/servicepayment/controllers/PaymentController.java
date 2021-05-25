@@ -15,7 +15,7 @@ public class PaymentController {
         return "Payment Service works!";
     }
 
-    @GetMapping("/registerPayment")
+    @GetMapping("/registerpayment")
     public String registerPayment(){
         return "Works";
     }
