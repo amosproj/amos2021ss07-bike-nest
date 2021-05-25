@@ -66,6 +66,8 @@ jobs:
       uses: actions/setup-node@v2.1.5
     - name: Install wait-on script
       run: npm install wait-on
+    - name: Install npx
+      run: npm install npx
      
     # Give execute rights to all gradlew files
     - name: Execute rights for gradlew in Bikenest Service.
@@ -89,25 +91,25 @@ jobs:
     - name: API Gateway Unit Tests
       working-directory: ${{env.apigateway}}
       run: ./gradlew test --tests com.bikenest.apigateway.unit.*
-    - run: npm wait-on http://localhost:3309
+    - run: npx wait-on http://localhost:3309
     - name: Bikenest Service Unit Tests
       working-directory: ${{env.bikenest-service}}
       run: ./gradlew test --tests com.bikenest.servicebikenest.unit.*
       env:
         MYSQL_PORT: 3309
-    - run: npm wait-on http://localhost:3307
+    - run: npx wait-on http://localhost:3307
     - name: Booking Service Unit Tests
       working-directory: ${{env.booking-service}}
       run: ./gradlew test --tests com.bikenest.servicebooking.unit.*
       env:
         MYSQL_PORT: 3307
-    - run: npm wait-on http://localhost:3306
+    - run: npx wait-on http://localhost:3306
     - name: UserMGMT Service Unit Tests
       working-directory: ${{env.usermanagement-service}}
       run: ./gradlew test --tests com.bikenest.serviceusermgmt.unit.*
       env:
         MYSQL_PORT: 3306
-    - run: npm wait-on http://localhost:3308
+    - run: npx wait-on http://localhost:3308
     - name: Payment Service Unit Tests
       working-directory: ${{env.payment-service}}
       run: ./gradlew test --tests com.bikenest.servicepayment.unit.*
