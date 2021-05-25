@@ -4,12 +4,12 @@ package com.bikenest.common.interfaces.bikenest;
 public class BikenestInfoRequest {
     private Integer bikenestID;
 
-    public Integer getID() {
+    public Integer getBikenestID() {
         return bikenestID;
     }
 
-    public void setID(Integer id) {
-        this.bikenestID = id;
+    public void setBikenestID(Integer biknestID) {
+        this.bikenestID = biknestID;
     }
 }
 
