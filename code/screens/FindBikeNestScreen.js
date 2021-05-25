@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { getDistance } from 'geolib';
-// import { markers } from '../tools/mapData'
+import { markers } from '../tools/mapData'
 import * as Location from 'expo-location';
 import {
   StyleSheet,
@@ -16,9 +16,15 @@ import {
   TouchableOpacity,
   Dimensions,
   Platform,
+  Linking ,
 } from "react-native";
 import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
 import global from '../components/GlobalVars';
+import { BikenestService } from "../services/BikenestService";
+import BikeNest_Modal from '../components/BikeNest_Modal';
+import BikeNest_Button, { ButtonStyle } from '../components/BikeNest_Button';
+import { mainStyles } from '../styles/MainStyles';
+import colors from '../styles/Colors';
 
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = height / 3.5;
@@ -27,10 +33,7 @@ const CARD_WIDTH = width * 0.8;
 const spacing_for_card_inset = width * 0.1 - 10;
 
 export default function FindBikeNestScreen({ navigation }) {
-  const modalInitData = {
-    CurrentMarkerIndex: 0,
-    modalState: false
-  };
+  let bikenestService = new BikenestService();
 
   const initMarker = [{
     coordinate: {
@@ -40,18 +43,17 @@ export default function FindBikeNestScreen({ navigation }) {
     description: "This is Bikenest 1",
     capacity: 12,
     image: require("../assets/bike_nest.png"),
-    color: "#FFD700"
+    color: "#FFD700",
+    id: 1,
+    chargingOptionAvailable: true,
   }];
 
   // states, each state change re-renders scene
-  const [displayState, setDisplayState] = useState('flex');
   // const [location, setLocation] = useState(null);
+  const [reload, setReload] = useState(false);
   const [stateMarkers, setMarkers] = useState(initMarker);
   const [currentMarkerIndex, setCurrentMarkerIndex] = useState(0);
-  // const [cardMarkers, setCardMarkers] = useState(initMarker);
-  const [distances, setDistances] = useState([0]);
-
-  // const [isLoggedIn, setLogin] = useState(false);
+  const [distances, setDistances] = useState([-1]);
   const [modalState, setModalState] = useState(false);
   const _map = useRef(null);
   const _scrollView = useRef(null);
@@ -64,12 +66,23 @@ export default function FindBikeNestScreen({ navigation }) {
     longitudeDelta: 0.08
   };
 
-  useEffect(() => {
-    const getMarkers = async () => {
-      const MarkersFromServer = await fetchMarkers();
-      populateMarkers(MarkersFromServer);
-    };
+  const getMarkers = async () => {
+    const MarkersFromServer = await fetchMarkers();
+    populateMarkers(MarkersFromServer);
+  };
 
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission to access location was denied');
+      } else {
+        console.log("got location");
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
     getMarkers();
   }, []);
 
@@ -77,7 +90,6 @@ export default function FindBikeNestScreen({ navigation }) {
     const res = await fetch(global.globalIPAddress + "/bikenest/all");
     // console.log(res);
     const data = await res.json();
-    console.log(data);
     return data;
   };
 
@@ -92,10 +104,22 @@ export default function FindBikeNestScreen({ navigation }) {
         address: marker.name,
         capacity: marker.currentSpots,
         image: require("../assets/bike_nest.png"),
-        color: getColor(marker.currentSpots)
+        color: getColor(marker.currentSpots),
+        id: marker.id,
+        chargingOptionAvailable: marker.chargingAvailable
       });
     }
-    // setCardMarkers(tempMarkers);
+    getLocationAsync(tempMarkers);
+  };
+
+  const getLocationAsync = async (tempMarkers) => {
+    let location = await Location.getCurrentPositionAsync({});
+    console.log("location: "+ location);
+    let localdistances = [];
+    tempMarkers.map((marker, index) => {
+      localdistances.push(getDistanceToUser(marker, location));
+    });
+    setDistances(localdistances);
     setMarkers(tempMarkers);
   };
 
@@ -107,24 +131,27 @@ export default function FindBikeNestScreen({ navigation }) {
     return color;
   }
 
-  //  asks for user location permission
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Permission to access location was denied');
-      } else {
-        let location = await Location.getCurrentPositionAsync({});
-        let localdistances = [];
-        stateMarkers.map((marker, index) => {
-          localdistances.push(getDistanceToUser(marker, location));
-        });
-        setDistances(localdistances);
-        //  setLocation(location);
-      }
-    })();
-  }, []);
 
+
+
+  //  asks for user location permission
+  // useEffect(() => {
+  //   (async () => {
+  //     let { status } = await Location.requestForegroundPermissionsAsync();
+  //     if (status !== 'granted') {
+  //       Alert.alert('Permission to access location was denied');
+  //     } else {
+  //       let location = await Location.getCurrentPositionAsync({});
+  //       let localdistances = [];
+  //       stateMarkers.map((marker, index) => {
+  //         localdistances.push(getDistanceToUser(marker, location));
+  //       });
+  //       setDistances(localdistances);
+  //       console.log(localdistances);
+  //     }
+  //   })();
+  // }, [stateMarkers]);
+  
   // compute scaling of markers
   // var interpolations = stateMarkers.map((marker, index) => {
   //   const inputRange = [
@@ -203,8 +230,20 @@ export default function FindBikeNestScreen({ navigation }) {
 
   }
 
-  const onCardPress = (index) => {
-    setModalState(!modalState);
+  const onCardPress = (index, currentMarkerId) => {
+    if (!modalState) {
+      console.log("ungleich modal state")
+      bikenestService.getBikenestInfo(currentMarkerId).then((response) => {
+        stateMarkers[index].capacity = response.spotsLeft;
+        stateMarkers[index].chargingOptionAvailable = response.chargingOptionAvailable;
+        stateMarkers[index].address = response.bikenestName;
+      }).then(() => setModalState(!modalState));
+    }
+    else {
+      console.log("else state")
+      getMarkers().then(setModalState(!modalState));
+    }
+
   };
 
   const proceedBooking = () => {
@@ -232,7 +271,6 @@ export default function FindBikeNestScreen({ navigation }) {
               <Animated.View style={[styles.markerWrap]}>
                 <Animated.Image
                   source={require('../assets/bike_location_small.png')}
-                  // style={[styles.marker, scaleStyle]}
                   style={[styles.marker, { width: currentMarkerIndex === index ? 60 : 20 }]}
                   resizeMode='center'
                 />
@@ -241,45 +279,33 @@ export default function FindBikeNestScreen({ navigation }) {
           );
         })}
       </MapView>
-      <Modal
-        animationType="none"
-        transparent={true}
-        visible={modalState}
+      <BikeNest_Modal
+        isVisible={modalState}
         onRequestClose={() => {
-          onCardPress(0);
+          onCardPress(currentMarkerIndex, stateMarkers[currentMarkerIndex].id);
         }}
-      >
-        <View style={styles.centeredView}>
-          <View style={[styles.modalView, { backgroundColor: stateMarkers[currentMarkerIndex].color }, { alignItems: 'center' }]}>
-            <Text numberOfLines={1} style={styles.cardtitle}>Ich befinde mich in der Straße:</Text>
-            <Text>{stateMarkers[currentMarkerIndex].address} </Text>
-            <Text style={styles.cardDescription}>Lade Optionen: <B>Ja</B></Text>
-            <Text numberOfLines={1} style={styles.cardtitle}>Entfernung: {distances[currentMarkerIndex] / 1000} Km</Text>
-            <Text numberOfLines={1} style={styles.cardDescription}>In diesem Bikenest sind <B>{stateMarkers[currentMarkerIndex].capacity}</B> Plätze frei</Text>
+        content={
+          <View style={[mainStyles.modalContentContainer, { backgroundColor: stateMarkers[currentMarkerIndex].color, width: 360, height: 280 }]}>
+            <Text style={mainStyles.h3}>{stateMarkers[currentMarkerIndex].address} </Text>
+            <Text style={mainStyles.stdText}>Lade Optionen: <B>{stateMarkers[currentMarkerIndex].chargingOptionAvailable ? "Ja" : "Nein"}</B></Text>
+            <Text numberOfLines={1} style={mainStyles.stdText}>Entfernung:<B> {distances[currentMarkerIndex] / 1000} Km</B></Text>
+            <Text numberOfLines={1} style={mainStyles.stdText}>In diesem Bikenest sind <B>{stateMarkers[currentMarkerIndex].capacity}</B> Plätze frei</Text>
             <Text>{ }</Text>
             <View style={styles.button}>
-              <TouchableOpacity
-                style={[styles.signIn, {
-                  borderColor: '#FFF',
-                  borderWidth: 1
-                }]}
-                onPress={() => onCardPress(currentMarkerIndex)}
-              >
-                <Text style={styles.textStyle}>Zurück</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
+              <BikeNest_Button
+                type={ButtonStyle.small}
+                text="Zurück"
+                onPress={() => onCardPress(currentMarkerIndex, stateMarkers[currentMarkerIndex].id)}
+              />
+              <BikeNest_Button
+                type={ButtonStyle.medium}
+                text="Ich möchte Buchen"
                 onPress={() => proceedBooking()}
-                style={[styles.signIn, {
-                  borderColor: '#FFF',
-                  borderWidth: 1
-                }]}
-              >
-                <Text style={styles.textSign}>Ich möchte Buchen</Text>
-              </TouchableOpacity>
+              />
             </View>
-          </View>
-        </View>
-      </Modal>
+          </View>}
+      >
+      </BikeNest_Modal>
       <Animated.ScrollView
         ref={_scrollView}
         horizontal
@@ -311,20 +337,21 @@ export default function FindBikeNestScreen({ navigation }) {
           { useNativeDriver: true }
         )}
       >
-        { /*isLoggedIn &&*/ stateMarkers.map((marker, index) => (
-          <View style={[styles.card, { backgroundColor: marker.color, display: displayState }]} key={index}>
+        {stateMarkers.map((marker, index) => (
+          <View style={[styles.card, { backgroundColor: marker.color }]} key={index}>
             <Image
               source={marker.image}
               style={styles.cardImage}
               resizeMode='cover'
             />
             <View style={styles.textContent}>
-              <Text numberOfLines={1} style={styles.cardtitle}>{marker.address},  {distances[index] / 1000} Km</Text>
+              <Text numberOfLines={1} style={styles.cardtitle}>{marker.address}</Text>
+              {distances.length > 1 ? <Text>Entfernung:  <B>{distances[index] / 1000} Km </B></Text> : <Text></Text>}
               <Text numberOfLines={1} style={styles.cardDescription}>In diesem Bikenest sind <B>{marker.capacity}</B> Plätze frei</Text>
               <View style={styles.button}>
                 <TouchableOpacity
                   // onPress={() => navigation.navigate('Booking')}
-                  onPress={() => onCardPress(index)}
+                  onPress={() => onCardPress(currentMarkerIndex, stateMarkers[currentMarkerIndex].id)}
                   style={[styles.signIn, {
                     borderColor: '#FFF',
                     borderWidth: 1
@@ -333,7 +360,7 @@ export default function FindBikeNestScreen({ navigation }) {
                   <Text style={styles.textSign}>Zur Buchung</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => { }}
+                  onPress={() => { Linking.openURL('https://www.google.com/maps/search/?api=1&query=' + stateMarkers[currentMarkerIndex].coordinate.latitude + ',' + stateMarkers[currentMarkerIndex].coordinate.longitude) }}
                   style={[styles.signIn, {
                     borderColor: '#FFF',
                     borderWidth: 1
