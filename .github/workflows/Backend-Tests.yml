@@ -1,12 +1,12 @@
 # This workflow will build a Java project with Gradle
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
 
-name: Backend Unit Tests (Gradle)
+name: Backend Tests (Gradle)
 
 on: [push]
 
 jobs:
-  test:
+  Backend-Tests:
 
     runs-on: ubuntu-latest
     env:
@@ -32,7 +32,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 15.x
-    # Sudo required to install wait-on globally
+    # Install the wait-on script, that can be used to wait until the docker containers are running.
     - name: Install wait-on script
       run: npm install -g wait-on
       
@@ -71,52 +71,59 @@ jobs:
           --env MYSQL_DATABASE=test \
           --name bikenestdb mysql:latest
             
-
-     
-    # Give execute rights to all gradlew files
-    - name: Execute rights for gradlew in Bikenest Service.
-      working-directory: ${{env.bikenest-service}}
-      run: chmod +x gradlew
-    - name: Execute rights for gradlew in in Booking Service
-      working-directory: ${{env.booking-service}}
-      run: chmod +x gradlew
-    - name: Execute rights for gradlew in in UserMGMT Service
-      working-directory: ${{env.usermanagement-service}}
-      run: chmod +x gradlew
-    - name: Execute rights for gradlew in in API Gateway
-      working-directory: ${{env.apigateway}}
-      run: chmod +x gradlew
-    - name: Execute rights for gradlew in in Payment Service
-      working-directory: ${{env.payment-service}}
-      run: chmod +x gradlew
     
     # Execute all of the unit tests with correctly set environments so that the service can connect to the db
     # Also wait for the databases to be ready, before tests are executed
     - name: API Gateway Unit Tests
       working-directory: ${{env.apigateway}}
       run: ./gradlew test --tests com.bikenest.apigateway.unit.*
-    - run: wait-on tcp:3306
     - name: UserMGMT Service Unit Tests
       working-directory: ${{env.usermanagement-service}}
       run: ./gradlew test --tests com.bikenest.serviceusermgmt.unit.*
       env:
         MYSQL_PORT: 3306
-    - run: wait-on tcp:3309
     - name: Bikenest Service Unit Tests
       working-directory: ${{env.bikenest-service}}
       run: ./gradlew test --tests com.bikenest.servicebikenest.unit.*
       env:
         MYSQL_PORT: 3309
-    - run: wait-on tcp:3307
     - name: Booking Service Unit Tests
       working-directory: ${{env.booking-service}}
       run: ./gradlew test --tests com.bikenest.servicebooking.unit.*
       env:
         MYSQL_PORT: 3307
-    - run: wait-on tcp:3308
     - name: Payment Service Unit Tests
       working-directory: ${{env.payment-service}}
       run: ./gradlew test --tests com.bikenest.servicepayment.unit.*
+      env:
+        MYSQL_PORT: 3308
+        
+    # Execute all Integration tests
+    - name: API Gateway Integration Tests
+      working-directory: ${{env.apigateway}}
+      run: ./gradlew test --tests com.bikenest.apigateway.integration.*
+    - run: wait-on tcp:3306
+    - name: UserMGMT Service Integration Tests
+      working-directory: ${{env.usermanagement-service}}
+      run: ./gradlew test --tests com.bikenest.serviceusermgmt.integration.*
+      env:
+        MYSQL_PORT: 3306
+    - run: wait-on tcp:3309
+    - name: Bikenest Service Integration Tests
+      working-directory: ${{env.bikenest-service}}
+      run: ./gradlew test --tests com.bikenest.servicebikenest.integration.*
+      env:
+        MYSQL_PORT: 3309
+    - run: wait-on tcp:3307
+    - name: Booking Service Integration Tests
+      working-directory: ${{env.booking-service}}
+      run: ./gradlew test --tests com.bikenest.servicebooking.integration.*
+      env:
+        MYSQL_PORT: 3307
+    - run: wait-on tcp:3308
+    - name: Payment Service Integration Tests
+      working-directory: ${{env.payment-service}}
+      run: ./gradlew test --tests com.bikenest.servicepayment.integration.*
       env:
         MYSQL_PORT: 3308
       
