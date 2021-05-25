@@ -1,10 +1,10 @@
 ## Note
 - Docker required
-- JDK 11 required to build
-- Java path has to be set (restart after installation)
+- JDK 11 required to build (JDK 16 doesn't work with gradle 6.x)
+- If you encounter errors with building make sure the JAVA_HOME environment variable is correctly set to your JDK directory.
 
 ## General
-This folder contains all of the Microservices used inside the backend.
+This folder contains all of the Microservices used inside the backend. For detailed information about the services, visit the respective directories.
 Each of these microservice projects contains a Dockerfile that contains the instructions on how the Docker Container has to be built. In case of a Java Application the docker building process goes like this: 
 - Specify the Java Runtime Environment (openjdk Version 11.0.11 in our case)
 - Copy the application jar into the container as app.jar
