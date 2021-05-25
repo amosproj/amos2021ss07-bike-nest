@@ -6,7 +6,7 @@ name: Backend Unit Tests (Gradle)
 on: [push]
 
 jobs:
-  unittest:
+  test:
 
     runs-on: ubuntu-latest
     env:
@@ -26,7 +26,17 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
-    
+        
+    # For now use the node js script to wait on the docker containers
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v1
+      with:
+        node-version: 15.x
+    # Sudo required to install wait-on globally
+    - name: Install wait-on script
+      run: npm install -g wait-on
+      
+
     # Start up all Database Docker Containers.
     - name: Start UserDB Container
       run: |
@@ -61,12 +71,7 @@ jobs:
           --env MYSQL_DATABASE=test \
           --name bikenestdb mysql:latest
             
-    # For now use the node js script to wait on the docker containers
-    - name: Setup Node.js environment
-      uses: actions/setup-node@v2.1.5
-    # Sudo required to install wait-on globally
-    - name: Install wait-on script
-      run: sudo npm install -g wait-on
+
      
     # Give execute rights to all gradlew files
     - name: Execute rights for gradlew in Bikenest Service.
