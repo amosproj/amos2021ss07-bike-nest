@@ -64,6 +64,8 @@ jobs:
     # For now use the node js script to wait on the docker containers
     - name: Setup Node.js environment
       uses: actions/setup-node@v2.1.5
+    # Required to install wait-on globally
+    - run: sudo chown -R `whoami` /usr/local/lib/node_modules
     - name: Install wait-on script
       run: npm install -g wait-on
      
