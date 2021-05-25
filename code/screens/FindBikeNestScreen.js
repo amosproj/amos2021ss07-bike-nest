@@ -64,6 +64,7 @@ export default function FindBikeNestScreen({ navigation }) {
 
   const getMarkers = async () => {
     const MarkersFromServer = await fetchMarkers();
+    console.log("Markers from server: " + MarkersFromServer);
     populateMarkers(MarkersFromServer);
   };
 
@@ -102,11 +103,21 @@ export default function FindBikeNestScreen({ navigation }) {
         image: require("../assets/bike_nest.png"),
         color: getColor(marker.currentSpots),
         id: marker.id,
-        chargingOptionAvailable: marker.chargingAvailable,
+        chargingOptionAvailable: marker.chargingAvailable
       });
     }
+    getLocationAsync(tempMarkers);
+  };
+
+  const getLocationAsync = async (tempMarkers) => {
+    let location = await Location.getCurrentPositionAsync({});
+    console.log("location: "+ location);
+    let localdistances = [];
+    tempMarkers.map((marker, index) => {
+      localdistances.push(getDistanceToUser(marker, location));
+    });
+    setDistances(localdistances);
     setMarkers(tempMarkers);
-    getLocationAsync();
   };
 
   function getColor(capacity) {
@@ -137,19 +148,7 @@ export default function FindBikeNestScreen({ navigation }) {
   //     }
   //   })();
   // }, [stateMarkers]);
-
-
-  const getLocationAsync = async () => {
-        let location = await Location.getCurrentPositionAsync({});
-        let localdistances = [];
-        stateMarkers.map((marker, index) => {
-          localdistances.push(getDistanceToUser(marker, location));
-        });
-        setDistances(localdistances);
-        console.log(localdistances);
-  };
   
-
   // compute scaling of markers
   // var interpolations = stateMarkers.map((marker, index) => {
   //   const inputRange = [
@@ -230,6 +229,7 @@ export default function FindBikeNestScreen({ navigation }) {
 
   const onCardPress = (index, currentMarkerId) => {
     if (!modalState) {
+      console.log("ungleich modal state")
       bikenestService.getBikenestInfo(currentMarkerId).then((response) => {
         stateMarkers[index].capacity = response.spotsLeft;
         stateMarkers[index].chargingOptionAvailable = response.chargingOptionAvailable;
@@ -237,6 +237,7 @@ export default function FindBikeNestScreen({ navigation }) {
       }).then(() => setModalState(!modalState));
     }
     else {
+      console.log("else state")
       getMarkers().then(setModalState(!modalState));
     }
 
