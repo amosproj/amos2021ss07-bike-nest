@@ -30,7 +30,7 @@ jobs:
     # Start up all Database Docker Containers.
     - name: Start UserDB Container
       run: |
-        docker run -p 3306:3306 \
+        docker run -d -p 3306:3306 \
           --env MYSQL_ROOT_PASSWORD=test \
           --env MYSQL_USER=user \
           --env MYSQL_PASSWORD=test \
@@ -46,20 +46,20 @@ jobs:
           --name bookingdb mysql:latest
     - name: Start PaymentDB Container
       run: |
-          docker run -d -p 3308:3306 \
-          	--env MYSQL_ROOT_PASSWORD=test \
-          	--env MYSQL_USER=user \
-          	--env MYSQL_PASSWORD=test \
-            --env MYSQL_DATABASE=test \
-          	--name paymentdb mysql:latest
+        docker run -d -p 3308:3306 \
+          --env MYSQL_ROOT_PASSWORD=test \
+          --env MYSQL_USER=user \
+          --env MYSQL_PASSWORD=test \
+          --env MYSQL_DATABASE=test \
+          --name paymentdb mysql:latest
     - name: Start BikenestDB Container
       run: |
-          docker run -d -p 3309:3306 \
-          	--env MYSQL_ROOT_PASSWORD=test \
-          	--env MYSQL_USER=user \
-          	--env MYSQL_PASSWORD=test \
-            --env MYSQL_DATABASE=test \
-          	--name bikenestdb mysql:latest
+        docker run -d -p 3309:3306 \
+          --env MYSQL_ROOT_PASSWORD=test \
+          --env MYSQL_USER=user \
+          --env MYSQL_PASSWORD=test \
+          --env MYSQL_DATABASE=test \
+          --name bikenestdb mysql:latest
             
     # For now use the node js script to wait on the docker containers
     - name: Setup Node.js environment
@@ -91,25 +91,25 @@ jobs:
     - name: API Gateway Unit Tests
       working-directory: ${{env.apigateway}}
       run: ./gradlew test --tests com.bikenest.apigateway.unit.*
-    - run: npx wait-on http://localhost:3306
+    - run: npx wait-on localhost:3306
     - name: UserMGMT Service Unit Tests
       working-directory: ${{env.usermanagement-service}}
       run: ./gradlew test --tests com.bikenest.serviceusermgmt.unit.*
       env:
         MYSQL_PORT: 3306
-    - run: npx wait-on http://localhost:3309
+    - run: npx wait-on localhost:3309
     - name: Bikenest Service Unit Tests
       working-directory: ${{env.bikenest-service}}
       run: ./gradlew test --tests com.bikenest.servicebikenest.unit.*
       env:
         MYSQL_PORT: 3309
-    - run: npx wait-on http://localhost:3307
+    - run: npx wait-on localhost:3307
     - name: Booking Service Unit Tests
       working-directory: ${{env.booking-service}}
       run: ./gradlew test --tests com.bikenest.servicebooking.unit.*
       env:
         MYSQL_PORT: 3307
-    - run: npx wait-on http://localhost:3308
+    - run: npx wait-on localhost:3308
     - name: Payment Service Unit Tests
       working-directory: ${{env.payment-service}}
       run: ./gradlew test --tests com.bikenest.servicepayment.unit.*
