@@ -58,10 +58,10 @@ public class BikenestController {
                 new GeneralResponse(false, "Admin role for this operation required.", null));
     }
 
-    @GetMapping(path = "/bikenestInfo")
+    @PostMapping(path = "/bikenestInfo")
     public @ResponseBody
-    ResponseEntity<BikenestInfoResponse> getBikenestInfo(@RequestBody BikenestInfoRequest request) {
-        int id = request.getID();
+    ResponseEntity<BikenestInfoResponse> getBikenestInfo(@RequestBody BikenestInfoRequest request) {       
+        int id = request.getBikenestID();
 
         if(bikenestService.existsBikenest(id)){
             Bikenest bikenestInfo = bikenestService.getBikenestInfo(id).get();
