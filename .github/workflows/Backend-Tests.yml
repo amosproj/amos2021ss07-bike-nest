@@ -64,10 +64,9 @@ jobs:
     # For now use the node js script to wait on the docker containers
     - name: Setup Node.js environment
       uses: actions/setup-node@v2.1.5
-    # Required to install wait-on globally
-    - run: sudo chown -R `whoami` /usr/local/lib/node_modules
+    # Sudo required to install wait-on globally
     - name: Install wait-on script
-      run: npm install -g wait-on
+      run: sudo npm install -g wait-on
      
     # Give execute rights to all gradlew files
     - name: Execute rights for gradlew in Bikenest Service.
