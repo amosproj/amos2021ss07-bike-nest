@@ -73,4 +73,22 @@ public class GatewayTest {
 
         assert(!actualRequest.getHeaders().containsKey("Authorization"));
     }
+
+    /**
+     * Checks if the Gateway strips away an authorization header with value service
+     */
+    @Test
+    void checkServiceStripped(){
+        MockServerWebExchange exchange = MockServerWebExchange.from(
+                MockServerHttpRequest.get("/booking/all")
+                        .header("Authorization", "SERVICE")
+        );
+
+        filter.filter(exchange, filterChain);
+
+        //Get the request of the Captured Value (captured by the mocked filterChain
+        ServerHttpRequest actualRequest = captor.getValue().getRequest();
+
+        assert(!actualRequest.getHeaders().containsKey("Authorization"));
+    }
 }
