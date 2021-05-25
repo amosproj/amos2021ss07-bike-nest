@@ -35,9 +35,8 @@ export default function LockScreen({ navigation }) {
             
             <View style={styles.storeText}>
                 <Text style={mainStyles.h1}> Main Door </Text>
-                <Text style={mainStyles.h2}>
-                    Store your bike
-                </Text>
+                <Text style={mainStyles.h2}>Open the door </Text>
+                <Text style={mainStyles.h2}> with the button below {"\n"}</Text>
             </View>
 
             
@@ -49,7 +48,7 @@ export default function LockScreen({ navigation }) {
             </TouchableOpacity> */}
             
 
-            <TouchableOpacity onPress={() => alert('go to next screen')} style={styles.Icon}>
+            <TouchableOpacity onPress={() => navigation.navigate("LockSpot")} style={styles.Icon}>
                 <SimpleLineIcons name="lock-open" size={24} color="black" />
                 <Text style={mainStyles.h3}> Unlock </Text>
             </TouchableOpacity> 
@@ -65,7 +64,7 @@ export default function LockScreen({ navigation }) {
 const styles = StyleSheet.create({
     Icon:{
         position: 'absolute',
-        left: 60,
+        left: 90,
         top: '70%',
         height:128,
         width: 128,
@@ -80,6 +79,12 @@ const styles = StyleSheet.create({
     lockContainer: {
         flex: 1,
         alignItems: 'center',
+
+      },
+      storeText: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'flex-start',
 
       },
 

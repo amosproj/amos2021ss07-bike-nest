@@ -12,6 +12,7 @@ import BookingScreen from './screens/BookingScreen';
 import LockScreen from './screens/LockScreen';
 import PaymentConfirmationScreen from './screens/PaymentConfirmationScreen';
 import ReservationSuccessScreen from './screens/ReservationSuccessScreen';
+import LockSpotScreen from './screens/LockSpotScreen';
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
         <AppNavigator.Screen name='History' component={HistoryScreen} />
         <AppNavigator.Screen name='Booking' component={BookingScreen} />
         <AppNavigator.Screen name='Lock' component={LockScreen} />
+        <AppNavigator.Screen name= 'LockSpot' component ={LockSpotScreen}/>
         <AppNavigator.Screen name='ReservationSuccess' component={ReservationSuccessScreen} />
         <AppNavigator.Screen name='PaymentConfirmation' component={PaymentConfirmationScreen} />
       </AppNavigator.Navigator>
