@@ -18,7 +18,6 @@ export default function App() {
   return (
     <NavigationContainer>
       <AppNavigator.Navigator screenOptions={{ headerShown: false }}>
-        <AppNavigator.Screen name='FindBikeNest' component={FindBikeNestScreen} />
         <AppNavigator.Screen name='Login' component={LoginScreen} />
         <AppNavigator.Screen name='Profile' component={ProfileScreen} />
         <AppNavigator.Screen name='Payment' component={PaymentScreen} />
@@ -30,6 +29,7 @@ export default function App() {
         <AppNavigator.Screen name= 'LockSpot' component ={LockSpotScreen}/>
         <AppNavigator.Screen name='ReservationSuccess' component={ReservationSuccessScreen} />
         <AppNavigator.Screen name='PaymentConfirmation' component={PaymentConfirmationScreen} />
+        <AppNavigator.Screen name='FindBikeNest' component={FindBikeNestScreen} />
       </AppNavigator.Navigator>
     </NavigationContainer>
   );
