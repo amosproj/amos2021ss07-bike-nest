@@ -19,7 +19,7 @@ Further Backend documentation can be found [here](https://github.com/amosproj/am
 
 ## How to run the project after initial setup.
 1. **Backend**: Navigate into the `Backend` directory. Run the `run-release.bat` (or rename it to run-release.sh to run it on Unix-based OS) via the command `run-release.bat` or `sh run-release.sh` for UNIX systems.
-2. **Frontend**: Navigate into the `code` directory and start the Expo CLI via `yarn start`.
+2. **Frontend**: Navigate into the `code` directory and install the dependencies needed via `yarn install`. After everything is set up, start the Expo CLI via `yarn start`. Download the `Expo Go` App in your appstore and scan the given QR-code with it or use an emulator on your pc.
 
 
 

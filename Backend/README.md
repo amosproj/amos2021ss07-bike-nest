@@ -96,3 +96,12 @@ For unit tests the services can run independently and therefore Github is config
 to just execute the test task for gradlew with only the unit tests specified.
 
 To execute integration tests, github actions will have to be configured so that the required containers are started up first.
+
+## Get User Data (for Testing)
+
+Go into Docker Desktop and search for "userdb". enter this service and enter the CLI with the top right button. 
+execute `sql -d` in the Commandline. 
+Then enter Password test,
+then  `use user;`,
+the `select * from user`
+
