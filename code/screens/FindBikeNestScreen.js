@@ -191,7 +191,7 @@ export default function FindBikeNestScreen({ navigation }) {
   useEffect(() => {
     mapAnimation.addListener(({ value }) => {
       if (/*value % 1 !== 0 && */value !== 0) {
-        let index = Math.floor(value / (CARD_WIDTH * 1.06)); // 
+        let index = Math.round(value / (CARD_WIDTH * 1.06));
         if (index >= stateMarkers.length) {
           index = stateMarkers.length - 1;
         }
@@ -209,7 +209,7 @@ export default function FindBikeNestScreen({ navigation }) {
                 latitudeDelta: region.latitudeDelta,
                 longitudeDelta: region.longitudeDelta
               },
-              200
+              300
             );
           }
         }, 10);
@@ -226,9 +226,8 @@ export default function FindBikeNestScreen({ navigation }) {
       x = x - spacing_for_card_inset;
     }
 
-    _scrollView.current.scrollTo({ x: x, y: 0, animated: true });
-
-  }
+    _scrollView.current.scrollTo({ x: x, y: 0, animated: false });
+  };
 
   const onCardPress = (index, currentMarkerId) => {
     if (!modalState) {
@@ -308,7 +307,7 @@ export default function FindBikeNestScreen({ navigation }) {
       <Animated.ScrollView
         ref={_scrollView}
         horizontal
-        scrollEventThrottle={1}
+        scrollEventThrottle={5}
         showsHorizontalScrollIndicator={false}
         pagingEnabled
         snapToInterval={CARD_WIDTH + 20}
