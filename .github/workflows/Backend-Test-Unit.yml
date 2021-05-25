@@ -59,7 +59,13 @@ jobs:
           	--env MYSQL_USER=user \
           	--env MYSQL_PASSWORD=test \
             --env MYSQL_DATABASE=test \
-          	--name userdb mysql:latest
+          	--name bikenestdb mysql:latest
+            
+    # For now use the node js script to wait on the docker containers
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v2.1.5
+    - name: Install wait-on script
+      run: npm install wait-on
      
     # Give execute rights to all gradlew files
     - name: Execute rights for gradlew in Bikenest Service.
@@ -79,24 +85,29 @@ jobs:
       run: chmod +x gradlew
     
     # Execute all of the unit tests with correctly set environments so that the service can connect to the db
+    # Also wait for the databases to be ready, before tests are executed
+    - name: API Gateway Unit Tests
+      working-directory: ${{env.apigateway}}
+      run: ./gradlew test --tests com.bikenest.apigateway.unit.*
+    - run: npm wait-on http://localhost:3309
     - name: Bikenest Service Unit Tests
       working-directory: ${{env.bikenest-service}}
       run: ./gradlew test --tests com.bikenest.servicebikenest.unit.*
       env:
         MYSQL_PORT: 3309
+    - run: npm wait-on http://localhost:3307
     - name: Booking Service Unit Tests
       working-directory: ${{env.booking-service}}
       run: ./gradlew test --tests com.bikenest.servicebooking.unit.*
       env:
         MYSQL_PORT: 3307
+    - run: npm wait-on http://localhost:3306
     - name: UserMGMT Service Unit Tests
       working-directory: ${{env.usermanagement-service}}
       run: ./gradlew test --tests com.bikenest.serviceusermgmt.unit.*
       env:
         MYSQL_PORT: 3306
-    - name: API Gateway Unit Tests
-      working-directory: ${{env.apigateway}}
-      run: ./gradlew test --tests com.bikenest.apigateway.unit.*
+    - run: npm wait-on http://localhost:3308
     - name: Payment Service Unit Tests
       working-directory: ${{env.payment-service}}
       run: ./gradlew test --tests com.bikenest.servicepayment.unit.*
