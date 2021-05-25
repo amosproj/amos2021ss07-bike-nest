@@ -19,6 +19,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     // https://mvnrepository.com/artifact/com.braintreepayments.gateway/braintree-java
     implementation group: 'com.braintreepayments.gateway', name: 'braintree-java', version: '3.10.0'
+    implementation 'junit:junit:4.12'
     runtimeOnly 'mysql:mysql-connector-java'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
