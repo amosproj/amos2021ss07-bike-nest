@@ -83,17 +83,17 @@ jobs:
       working-directory: ${{env.bikenest-service}}
       run: ./gradlew test --tests com.bikenest.servicebikenest.unit.*
       env:
-        MYSQL_PORT=3309
+        MYSQL_PORT: 3309
     - name: Booking Service Unit Tests
       working-directory: ${{env.booking-service}}
       run: ./gradlew test --tests com.bikenest.servicebooking.unit.*
       env:
-        MYSQL_PORT=3307
+        MYSQL_PORT: 3307
     - name: UserMGMT Service Unit Tests
       working-directory: ${{env.usermanagement-service}}
       run: ./gradlew test --tests com.bikenest.serviceusermgmt.unit.*
       env:
-        MYSQL_PORT=3306
+        MYSQL_PORT: 3306
     - name: API Gateway Unit Tests
       working-directory: ${{env.apigateway}}
       run: ./gradlew test --tests com.bikenest.apigateway.unit.*
@@ -101,5 +101,5 @@ jobs:
       working-directory: ${{env.payment-service}}
       run: ./gradlew test --tests com.bikenest.servicepayment.unit.*
       env:
-        MYSQL_PORT=3308
+        MYSQL_PORT: 3308
       
