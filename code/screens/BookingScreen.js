@@ -79,7 +79,7 @@ export default function BookingScreen({ navigation }) {
   }
   const getPrice = () => {
     let price = (costHours*costSlots) + costEbike;
-    setEstimatedPrice(price + " €");
+    setEstimatedPrice("~" + price + " €");
   };
   const getMwst = () => {
     return "9,50€";
