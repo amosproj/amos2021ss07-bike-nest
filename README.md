@@ -6,6 +6,17 @@
 
 Welcome to the Bikenest Repository. This project is working on a bicycle parking app. Imagine a locked cage for bicycles. Users can book places for their own bikes in it. Account creation, reservations, payment and locking and unlocking of the cage + their bike spaces inside should be possible via the app. The goal is a working Proof-of-Concept from Frontend to Backend, including the real (un)lock processes of existing locks.
 
+<div align="center">
+  <h3>
+    <a href="https://github.com/amosproj/amos-ss2021-bike-nest/wiki">Documentation</a>
+  </h3>
+  <h4>
+    <a href="https://github.com/amosproj/amos-ss2021-bike-nest/wiki/Technical-Documentation">Technical Documentation</a> |
+    <a href="https://raw.githack.com/amosproj/amos-ss2021-bike-nest/main/Deliverables/media/Architecture%20C4%20Model.html">Software Architecture</a> |
+    <a href="https://github.com/amosproj/amos-ss2021-bike-nest/wiki/User-Documentation">User Documentation</a>
+  </h4>
+</div>
+
 ## AMOS Project
 The project is created as a work as part of a student project, carried out by [Prof. Riehle](https://oss.cs.fau.de/person/riehle-dirk/) at the [Friedrich-Alexander University of Erlangen-Nuremberg](https://www.fau.de).
 
