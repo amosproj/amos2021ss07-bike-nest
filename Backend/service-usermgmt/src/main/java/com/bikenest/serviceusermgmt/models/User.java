@@ -13,7 +13,11 @@ public class User {
 
 	@NotBlank
 	@Size(max = 20)
-	private String username;
+	private String name;
+
+	@NotBlank
+	@Size(max = 20)
+	private String lastname;
 
 	@NotBlank
 	@Size(max = 50)
@@ -23,11 +27,13 @@ public class User {
 	@NotBlank
 	@Size(max = 120)
 	private String password;
+
 	public User() {
 	}
 
-	public User(String username, String email, String password) {
-		this.username = username;
+	public User(String name, String lastname, String email, String password) {
+		this.name = name;
+		this.lastname = lastname;
 		this.email = email;
 		this.password = password;
 	}
@@ -38,14 +44,6 @@ public class User {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
 	}
 
 	public String getEmail() {
@@ -62,5 +60,21 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

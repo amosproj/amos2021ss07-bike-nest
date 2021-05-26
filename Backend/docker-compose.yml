@@ -65,6 +65,7 @@ services:
      - MYSQL_PASSWORD=${BIKENEST_DB_PASSWORD}
     networks:
      - bikenest-db
+     - services
      
   booking:
     container_name: booking
@@ -78,6 +79,7 @@ services:
      - MYSQL_PASSWORD=${BOOKING_DB_PASSWORD}
     networks:
      - booking-db
+     - services
    
   gateway:
     container_name: gateway
@@ -86,9 +88,7 @@ services:
     ports:
      - "9000:9000"
     networks:
-     - booking-db
-     - bikenest-db
-     - user-db
+     - services
      
   usermgmt:
     container_name: usermgmt
@@ -102,6 +102,7 @@ services:
       - MYSQL_PASSWORD=${USER_DB_PASSWORD}
     networks:
       - user-db
+      - services
 
   payment:
     container_name: payment
@@ -122,3 +123,4 @@ networks:
   booking-db:
   bikenest-db:
   user-db:
+  services:
