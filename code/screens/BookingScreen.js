@@ -1,42 +1,24 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { ImageBackground, Pressable, StyleSheet, Text, TextInput, View, Image} from 'react-native';
-import { Keyboard } from 'react-native'
+import { Pressable, StyleSheet, Text, TextInput, View, Image} from 'react-native';
 import { Dimensions } from "react-native";
 import Colors from '../styles/Colors';
 import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
 import { mainStyles } from "../styles/MainStyles";
-import BikeNest_Button, { ButtonStyle } from '../components/BikeNest_Button';
-import {Picker} from '@react-native-picker/picker';
+import ModalDropdown from 'react-native-modal-dropdown';
+import colors from '../styles/Colors';
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
 export default function BookingScreen({ navigation }) {
-  const [selectedLanguage, setSelectedLanguage] = React.useState();
-  var [ isPress, setIsPress ] = React.useState(false);
+  const [textSlots, setTextSlots] = React.useState();
+  const [textHours, setTextHours] = React.useState();
+  const [textEbike, setTextEbike] = React.useState();
+  const [costSlots, setcostSlots] = React.useState();
+  const [costHours, setcostHours] = React.useState();
+  const [costEbike, setcostEbike] = React.useState();
+  const [estimatedPrice, setEstimatedPrice] = React.useState();
 
-  var touchProps = {
-    activeOpacity: 1,
-    underlayColor: 'white',                               // <-- "backgroundColor" will be always overwritten by "underlayColor"
-    style: isPress ? myStyles.btnPress : myStyles.button, // <-- but you can still apply other style changes
-    onHideUnderlay: () => setIsPress(false),
-    onShowUnderlay: () => setIsPress(true),
-    onPress: () => console.log('HELLO'),                 // <-- "onPress" is apparently required
-  };
-
-  const onPressPaypal = () => {
-    //reconnect to paypal
-    //change style to border orange
-    //change style of pressable Visa to no border
-    
-    borderWidth: 1
-    borderColor: Colors.UI_Light_2
-  };
-
-  const onPressAdd = () => {
-    //Zu Zahlungsmethodenauswahl?
-  };
   const onPressInfo = () => {
     //zurück zu Find Bike Nest
     alert('this is an info.');
@@ -45,15 +27,58 @@ export default function BookingScreen({ navigation }) {
     //weiter zu order verarbeitung
     navigation.navigate("Payment");
   }
-  const getSlots = () => {
-    return "1 Slot";
-  };
   const getLocation = () => {
     return "Nürnberg HBF";
   };
-  const getHours = () => {
-    return "3 Stunden";
-  };
+  const getSelectedHours = (value) => {
+    if(value == 0){
+      setTextHours('1 Tag');
+      setcostHours(1);
+    }else if(value == 1){
+      setTextHours('2 Tage');
+      setcostHours(2);
+    }else if(value == 2){
+      setTextHours('3 Tage');
+      setcostHours(3);
+    }else if(value == 3){
+      setTextHours('1 Monat');
+      setcostHours(12);
+    } else {
+      setTextHours('Keine Zeit ausgewählt.');
+      setcostHours(0);
+    }
+  }
+  const getSelectedSlots = (value) => {
+
+    if(value == 0){
+      setTextSlots('1 Slot');
+      setcostSlots(1);
+    } else if(value == 1){
+      setTextSlots('2 Slots');
+      setcostSlots(2);
+    } else {
+      setTextSlots('Keine Slots ausgewählt.');
+      setcostSlots(0);
+    }
+  }
+
+  const getSelectedEbike = (value) => {
+    if(value == 0){
+      setTextEbike('1 E-Bike Ladestation');
+      setcostEbike(5);
+    } else if(value == 1){
+      setTextEbike('2 E-Bike Ladestation');
+      setcostEbike(10);
+    } else if(value == 2){
+      setTextEbike('keine E-Bike Ladestation');
+      setcostEbike(0);
+    } else {
+      setTextEbike('kein E-bike ausgewählt.');
+      setcostEbike(0);
+    }
+    let price = (costHours*costSlots) + costEbike;
+    setEstimatedPrice(price);
+  }
   const getPrice = () => {
     return "50€";
   };
@@ -71,7 +96,7 @@ export default function BookingScreen({ navigation }) {
       <View style={myStyles.paymentContainer}>
         <View style={{alignSelf:'center'}}>
             <Text style={myStyles.h2}>
-                Buchungsinformationen <Image onPress={onPressInfo} source={require('../assets/payment/info.png')}/>
+                Buchungsinformationen <Image onPress={() => onPressInfo()} source={require('../assets/payment/info.png')}/>
             </Text>
         </View>
         <View style={myStyles.headline}>
@@ -88,38 +113,18 @@ export default function BookingScreen({ navigation }) {
         <View style={myStyles.headline}>
             <Text style={myStyles.h3}> {"\n"} Zusätzliche Informationen </Text>
         </View>
+       
         <View style={myStyles.headline}>
           <Text style={myStyles.h3}> Wie viele Slots? </Text>
-          <Picker
-            selectedValue={selectedLanguage}
-            onValueChange={(itemValue, itemIndex) =>
-              setSelectedLanguage(itemValue)
-            }>
-            <Picker.Item label="Java" value="java" />
-            <Picker.Item label="JavaScript" value="js" />
-          </Picker>
+          <ModalDropdown onSelect={(value) => getSelectedSlots(value)} options={['1 Slot', '2 Slots']} defaultValue={'Bitte wählen...'} textStyle={{fontSize: 18 }} dropdownTextStyle={{fontSize: 18}}/>
         </View>
         <View style={myStyles.headline}>
           <Text style={myStyles.h3}> Wie lange buchen? </Text>
-          <Picker
-            selectedValue={selectedLanguage}
-            onValueChange={(itemValue, itemIndex) =>
-              setSelectedLanguage(itemValue)
-            }>
-            <Picker.Item label="Java" value="java" />
-            <Picker.Item label="JavaScript" value="js" />
-          </Picker>
+          <ModalDropdown onSelect={(value) => getSelectedHours(value)} options={['1 Tag', '2 Tage', '3 Tage', '1 Monat']} defaultValue={'Bitte wählen...'} textStyle={{fontSize: 18 }} dropdownTextStyle={{fontSize: 18}}/>
         </View>
         <View style={myStyles.headline}>
           <Text style={myStyles.h3}> E-Bike Ladestation? </Text>
-          <Picker
-            selectedValue={selectedLanguage}
-            onValueChange={(itemValue, itemIndex) =>
-              setSelectedLanguage(itemValue)
-            }>
-            <Picker.Item label="Java" value="java" />
-            <Picker.Item label="JavaScript" value="js" />
-          </Picker>
+          <ModalDropdown onSelect={(value) => getSelectedEbike(value)} options={['ja, eine', 'ja, zwei', 'nein, danke']} defaultValue={'Bitte wählen...'} textStyle={{fontSize: 18 }} dropdownTextStyle={{fontSize: 18}}/>
         </View>
 
         <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider}/>
@@ -131,9 +136,10 @@ export default function BookingScreen({ navigation }) {
                 {"\n"} 
                 BIKE NEST {"\n"}
                 {getLocation()} {"\n"}
-                {/* {getSlots()} {"\n"}
-                {getHours()} {"\n"}
-                {getEbike()} */}
+                {textSlots}{"\n"}
+                {textHours}{"\n"}
+                {textEbike}{"\n"}
+                {estimatedPrice}
               </Text>
         </View>
           <Pressable style={[myStyles.reserved, {justifyContent: 'flex-end'}]}  onPress={() => onPressOrder(this)}>
@@ -176,6 +182,8 @@ const myStyles = StyleSheet.create({
   },
   headline: {
       flex: 1,
+      fontSize: 18,
+      fontWeight: "300",
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center', 

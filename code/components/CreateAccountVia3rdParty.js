@@ -28,10 +28,8 @@ export function CreateAccountVia3rdParty() {
     });
 
     React.useEffect(() => {
-        console.log("test");
         if (response?.type === 'success') {
             const { authentication } = response;
-            console.log("success");
 
             const auth = response.params;
             const storageValue = JSON.stringify(auth);

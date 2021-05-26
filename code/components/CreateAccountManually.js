@@ -9,9 +9,10 @@ import BikeNest_Modal from './BikeNest_Modal';
 import BikeNest_Button, { ButtonStyle } from './BikeNest_Button';
 import BikeNest_TextInput from './BikeNest_TextInput';
 import global from '../components/GlobalVars';
+import {UserService} from "../services/UserService";
 
 export function CreateAccountManually() {
-    let userdata = new UserDataService();
+    let userSerivce = new UserService();
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -58,60 +59,28 @@ export function CreateAccountManually() {
     // }
 
     let setModalInfo = (json) => {
-        //setAccountCreated(json.accountCreated);
-        //setAccountCreated(json.mockAccountCreated);
+        setAccountCreated(json.success);
 
-        //TODO: Refactor when backend is ready
-        if (json.error != null) {
-            setModalHeadline("Oops!");
-            setModalText(json.error);
-            setAccountCreated(false);
-        }
-        else if (json.message === "Error: Username is already taken!") {
-            setModalHeadline("Oops!");
-            setModalText("Der Benutzername existiert bereits!");
-            setAccountCreated(false);
-        }
-        else if (json.message === "User registered successfully!") {
+        if (json.success) {
             setModalHeadline("Hurra!");
-            setModalText("Dein Account wurde erfolgreich eingerichtet");
-            setAccountCreated(true);
-        }
-        else if (json.message === "Error: Email is already in use!") {
-            setModalHeadline("Oops!!");
-            setModalText("Die Email wird schon verwendet, versuche es mit einer anderen Email.");
-            setAccountCreated(true);
-        }
-        else {
-            setModalHeadline("Oops!!");
-            setModalText("Etwas ist schief gelaufen versuche es nochmale");
-            setAccountCreated(false);
+            setModalText("Dein Account wurde erfolgreich erstellt.")
+        } else {
+            setModalHeadline("Oops!");
+            if (json.error != null)
+                setModalText(json.error);
         }
 
         setModalVisible(true);
     }
 
     let tryCreateAccount = () => {
-        let username = firstName;
-        let data = { username, email, password };
-      
-        return fetch(global.globalIPAddress + "/usermanagement/signup", {
-
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: { Accept: 'application/json', 'Content-Type': 'application/json' }
+        let name = firstName;
+        let lastname = lastName;
+        let data = { name, lastname, email, password };
+        userSerivce.registerUser(email, password, name, lastName).then(response =>{
+            setModalInfo(response);
+            console.log(JSON.stringify(response));
         })
-            .then((response) => response.json())
-            .then((json) => {
-                console.log(json);
-                setModalInfo(json);
-            })
-            .catch((error) => {
-                setModalHeadline("Sorry!");
-                setModalText("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
-                setModalVisible(true);
-                console.error(error);
-            });
     }
 
 

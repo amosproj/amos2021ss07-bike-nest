@@ -33,6 +33,9 @@ public class ApigatewayApplication {
                 .route("usermanagement", r -> r.path("/usermanagement/**")
                         .filters(f -> f.filter(authenticationFilter))
                         .uri("http://usermgmt:9003"))
+                .route("payment", r -> r.path("/payment/**")
+                        .filters(f -> f.filter(authenticationFilter))
+                        .uri("http://payment:9004"))
                 .build();
     }
 }

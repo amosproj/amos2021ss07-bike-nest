@@ -1,6 +1,7 @@
 package com.bikenest.servicebooking.DB;
 
-import com.bikenest.common.interfaces.booking.AddReservationInterface;
+import com.bikenest.common.interfaces.booking.CreateReservationRequest;
+import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -13,88 +14,65 @@ import java.util.Date;
 public class Reservation {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private Integer Id;
-    private Integer UserId;
-    private Integer BikenestId;
+    private Integer id;
+    private Integer userId;
+    private Integer bikenestId;
+    private Integer reservationMinutes; // For how long is this reservation?
+    private boolean paid; // Is this booking payed?
+    private boolean cancelled;
     @Basic
     @Temporal(TemporalType.TIMESTAMP)
-    private Date StartDateTime;   //For what time was the Reservation planned
+    private Date reservationStart;   // Begin of reservation time frame (set to the time the server got the request)
     @Basic
     @Temporal(TemporalType.TIMESTAMP)
-    private Date ActualStartDateTime;   //When was the Bike actually stored inside the Bikenest?
+    private Date reservationEnd;   // End of reservation time frame
     @Basic
     @Temporal(TemporalType.TIMESTAMP)
-    private Date EndDateTime;     //For what time was it planned that the Reservation ends
+    private Date actualStart;     // When did the user deliver his bike?
     @Basic
     @Temporal(TemporalType.TIMESTAMP)
-    private Date ActualEndDateTime;   //When was the Bike actually taken from the Bikenest?
+    private Date actualEnd;   // When did the user take his bike?
 
-    public static Reservation FromNewReservation(Integer userId, AddReservationInterface newReservationPOJO){
-        Reservation result = new Reservation();
-        result.setActualEndDateTime(null);
-        result.setActualStartDateTime(null);
-        result.setStartDateTime(newReservationPOJO.getStartDateTime());
-        result.setEndDateTime(newReservationPOJO.getEndDateTime());
-        result.setBikenestId(newReservationPOJO.getBikenestId());
-        result.setUserId(userId);
-        return result;
+    public Reservation(Integer userId, Integer bikenestId, Integer reservationMinutes, boolean paid,
+                       LocalDateTime reservationStart, LocalDateTime reservationEnd) {
+        this.userId = userId;
+        this.bikenestId = bikenestId;
+        this.reservationMinutes = reservationMinutes;
+        this.paid = paid;
+        setReservationStart(reservationStart);
+        setReservationEnd(reservationEnd);
+        this.actualStart = null;
+        this.actualEnd = null;
+        this.cancelled = false;
     }
 
+    public Reservation(){}
+
+
     public Integer getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Integer id) {
-        Id = id;
+        this.id = id;
     }
 
     public Integer getUserId() {
-        return UserId;
+        return userId;
     }
 
     public void setUserId(Integer userId) {
-        UserId = userId;
+        this.userId = userId;
     }
 
     public Integer getBikenestId() {
-        return BikenestId;
+        return bikenestId;
     }
 
     public void setBikenestId(Integer bikenestId) {
-        BikenestId = bikenestId;
+        this.bikenestId = bikenestId;
     }
 
-    public LocalDateTime getStartDateTime() {
-        return DateToLocalDateTime(StartDateTime);
-    }
-
-    public void setStartDateTime(LocalDateTime startDateTime) {
-        StartDateTime = LocalDateTimeToDate(startDateTime);
-    }
-
-    public LocalDateTime getActualStartDateTime() {
-        return DateToLocalDateTime(ActualStartDateTime);
-    }
-
-    public void setActualStartDateTime(LocalDateTime actualStartDateTime) {
-        ActualStartDateTime = LocalDateTimeToDate(actualStartDateTime);
-    }
-
-    public LocalDateTime getEndDateTime() {
-        return DateToLocalDateTime(EndDateTime);
-    }
-
-    public void setEndDateTime(LocalDateTime endDateTime) {
-        EndDateTime = LocalDateTimeToDate(endDateTime);
-    }
-
-    public LocalDateTime getActualEndDateTime() {
-        return DateToLocalDateTime(ActualEndDateTime);
-    }
-
-    public void setActualEndDateTime(LocalDateTime actualEndDateTime) {
-        ActualEndDateTime = LocalDateTimeToDate(actualEndDateTime);
-    }
 
     private LocalDateTime DateToLocalDateTime(Date date){
         if(date == null)
@@ -108,5 +86,61 @@ public class Reservation {
         ZonedDateTime zdt = ldt.atZone(ZoneId.systemDefault());
         Instant in = zdt.toInstant();
         return Date.from(zdt.toInstant());
+    }
+
+    public Integer getReservationMinutes() {
+        return reservationMinutes;
+    }
+
+    public void setReservationMinutes(Integer reservationMinutes) {
+        this.reservationMinutes = reservationMinutes;
+    }
+
+    public LocalDateTime getReservationStart() {
+        return DateToLocalDateTime(reservationStart);
+    }
+
+    public void setReservationStart(LocalDateTime reservationStart) {
+        this.reservationStart = LocalDateTimeToDate(reservationStart);
+    }
+
+    public LocalDateTime getReservationEnd() {
+        return DateToLocalDateTime(reservationEnd);
+    }
+
+    public void setReservationEnd(LocalDateTime reservationEnd) {
+        this.reservationEnd = LocalDateTimeToDate(reservationEnd);
+    }
+
+    public LocalDateTime getActualStart() {
+        return DateToLocalDateTime(actualStart);
+    }
+
+    public void setActualStart(LocalDateTime actualStart) {
+        this.actualStart = LocalDateTimeToDate(actualStart);
+    }
+
+    public LocalDateTime getActualEnd() {
+        return DateToLocalDateTime(actualEnd);
+    }
+
+    public void setActualEnd(LocalDateTime actualEnd) {
+        this.actualEnd = LocalDateTimeToDate(actualEnd);
+    }
+
+    public boolean isPaid() {
+        return paid;
+    }
+
+    public void setPaid(boolean paid) {
+        this.paid = paid;
+    }
+
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 }

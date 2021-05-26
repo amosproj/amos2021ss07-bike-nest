@@ -1,60 +1,72 @@
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View, Image, TouchableOpacity  } from 'react-native';
+import { ImageBackground, Pressable, StyleSheet, Text, View, Image, TouchableOpacity  } from 'react-native';
 import { Dimensions } from "react-native";
 import Avatar from '../assets/Avatar.png'; 
 import bike from '../assets/bike.png'; 
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import global from '../components/GlobalVars';
+import { mainStyles } from "../styles/MainStyles";
+import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
+import {BookingService} from "../services/BookingService";
 
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
-
 export default function HistoryScreen({ navigation }) {
   // const [myListData, setData] = useState("");
+  let bookingService = new BookingService();
 
   let tryGETBooking = () => {
     console.log('start pulling reservation info');
 
-    return fetch(global.globalIPAddress + "/booking/all", {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-    })
-        .then((response) => response.json())
-        .then((json) => {
-          alert(JSON.stringify(json));
-          console.log(json);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
+    bookingService.getAllReservations().then(response => {
+      if(response.success){
+        alert(JSON.stringify(response.reservations));
+        console.log(response.reservations);
+      }else{
+        console.log(response.error);
+      }
+    });
 }
 
   return (
-    <View style={styles.container}>
-      <Image source={Avatar} style={styles.avatar} />
+    <View style={mainStyles.container}>
+      <View style={styles.historyContainer}>
+        <View style={styles.containerRow}>
+        <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+          <Image source={Avatar} style={styles.avatar} />
+          </TouchableOpacity>
+          <Text style={styles.name} >
+            Max Muster </Text>
+        </View>
+        <TouchableOpacity onPress={() => navigation.navigate("FindBikeNest") }
+          style={[styles.heightBike, {
+            backgroundColor: '#FFF',
+            height: 230,
+            width: 370,
+            margin: 10,
+            position: 'relative'
+          }]}>
+          <ImageBackground
+            source={bike}
+            style={{
+              height: 230,
+              width: 370,
+              position: 'absolute',
+            }}
+          />
+          <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start', padding: 30}}>
+            <Text style={{fontSize: 16}}>Danke für dein Vertrauen! </Text>
+            <Text style={{fontSize: 16}}>Dein Fahrrad befindet sich hier: {"\n"}</Text>
+            <Text style={{textDecorationLine: 'underline', fontSize: 16, fontStyle:'italic' }}> Zeig es auf der Karte </Text>
+          </View>
+        </TouchableOpacity>
 
-      <Text style={styles.name} >
-        Max Muster </Text>
-      <Text style={styles.welcome} >
-        Willkommen Zurück! </Text>
-      <TouchableOpacity  onPress={() => navigation.navigate("Lock") }>
-        <Image source={bike} style={styles.bike}/>
-        <Text style={styles.place} >
-          Du hast einen Platz in: </Text>
-        <Text style={styles.nest} >
-          Fetch data of where bike is parked </Text>
-      </TouchableOpacity>
+      
 
-      <TouchableOpacity onPress={() => navigation.navigate("EditPersonalInformation")} style={styles.buttonLock}>
-        <Text style={styles.buttonLockOwner}> Max Muster's bike </Text>
-        <Text style={styles.buttonLockText}> locked </Text>
-      </TouchableOpacity>
-
+      <View style={styles.containerRow}>
       <TouchableOpacity style={styles.time}>
         <Text style={styles.timeText}> Zeit verging </Text>
         <SimpleLineIcons name="clock" size={24} color="black" />
@@ -66,11 +78,19 @@ export default function HistoryScreen({ navigation }) {
         <AntDesign name="creditcard" size={24} color="black" />
         <Text style={styles.costRecord}> 50 $ </Text> 
       </TouchableOpacity>
+      </View>
+
+      <TouchableOpacity onPress={() => navigation.navigate("Lock")} style={mainStyles.buttonBig}>
+        {/* <SimpleLineIcons name="lock-open" size={10} color="black" style={styles.icon} /> */}
+        <Text style={mainStyles.buttonText}> Max Muster's bike </Text>
+        <Text style={mainStyles.buttonText}> locked on spot X </Text>
+      </TouchableOpacity>
 
       <TouchableOpacity onPress={() => tryGETBooking(this)} style={styles.buttonHistory}>
         <Text style={styles.buttonHistoryText}> Frühere Reservierungen und Zahlungen </Text>
       </TouchableOpacity>
-
+      </View>
+      <BikeNest_NavigationFooter></BikeNest_NavigationFooter>
     </View>
   );
 }
@@ -78,158 +98,135 @@ export default function HistoryScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    // backgroundColor: 'red',
     alignItems: 'center',
     justifyContent: 'center',
   },
-
+  historyContainer: {
+    flex: 1,
+    padding: 15,
+    marginTop: 10,
+    margin: 10,
+    justifyContent: 'space-around',
+    position: 'relative',
+  },
+  containerRow:{
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    margin: 10,
+  },
   avatar: {
-    position: 'absolute',
-    width:60,
-    height: 66,
-    left: 13,
-    top:25,
+    flex: 1,
+    maxWidth: 60, 
+    resizeMode: 'contain',
+    marginLeft: 10,
+    marginRight: 10,
   },
   name: {
-    position: 'absolute',
+    flex: 1,
     color: '#000000',
     fontSize: 18,
     fontWeight: 'bold',
-    top:25,
-    left: 91,
+    marginLeft: 10,
   },
   welcome: {
-    position: 'absolute',
+    flex: 1,
     color: '#000000',
     fontSize: 15,
     fontWeight: 'normal',
-    top:49,
-    left: 91,
   },
-  bike: {
-    position: 'absolute',
-    width: 362,
-    height:225,
-    top: 118,
-    left: 0,
-    
-  },
-  place: {
-    position: 'absolute',
-    color: '#FFFFFF',
-    fontSize:16,
-    fontWeight:'bold',
-    left: 60,
-    top: 169,
-  },
-  nest: {
-    position: 'absolute',
-    color: '#FFFFFF',
-    fontSize:14,
-    fontWeight:'normal',
-    left: 60,
-    top: 197,
-    width:150,
-    height:109,
-    padding:0,
-  },
-  buttonLock: {
-    position:'absolute',
-    top: 355,
-    left:25,
-    backgroundColor: '#FFA500',
-    padding: 20,
-    borderRadius: 30,
-    width: 325,
-    height:104,
-    marginTop: 20,
 
+  cardTextContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  buttonLockOwner: {
-    fontSize: 20,
-    color: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+
+  place: {
+    flex: 1,
+    margin: 10,
   }, 
-  buttonLockText: {
-    fontSize: 18,
-    color: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }, 
+  cardBikeContainer2: {
+    flex: 1,
+    marginTop: Dimensions.get('window').height * 0.02,
+    marginLeft: Dimensions.get('window').width * 0.01,
+    resizeMode: 'contain',
+    backgroundColor: '#fff',
+    alignItems: 'flex-start',
+    alignContent: 'space-around',
+  },
   time:{
-    position:'absolute',
-    width:152,
-    height:127,
-    left:25,
-    top:500,
+    flex: 1,
     borderColor: '#E6E5F2',
     borderWidth:1,
     borderRadius: 30,
-    padding: 20,
+    padding: 10,
+    maxWidth: 160,
   }, 
   timeText: {
+    flex: 1,
     fontSize: 16,
     color: '#55418E',
     alignItems: 'center',
     justifyContent: 'center',
     fontWeight: 'bold',
-    marginBottom:10,
   }, 
   timeRecord:{
+    flex: 1,
     fontSize: 16,
     color: '#FFA500',
     alignItems: 'center',
     justifyContent: 'center',
     fontWeight: 'normal',
-    marginTop:10,
   }, 
 
   cost:{
-    position:'absolute',
-    width:152,
-    height:127,
-    right:30,
-    top:500,
+    flex: 1,
     borderColor: '#E6E5F2',
     borderWidth:1,
     borderRadius: 30,
-    padding: 20,
+    padding: 10,
+    maxWidth: 160,
   }, 
   costText: {
+    flex: 1,
     fontSize: 16,
     color: '#55418E',
     alignItems: 'center',
     justifyContent: 'center',
     fontWeight: 'bold',
-    marginBottom:10,
   }, 
   costRecord:{
+    flex: 1,
     fontSize: 16,
     color: '#FFA500',
     alignItems: 'center',
     justifyContent: 'center',
     fontWeight: 'normal',
-    marginTop:10,
   }, 
   buttonHistory: {
-    position:'absolute',
-    top: 627,
-    left:25,
-    padding: 20,
+    flex: 1,
     borderRadius: 30,
-    width: 322,
-    height:63,
-    marginTop: 20,
     borderColor: '#E6E5F2',
     borderWidth:1,
-
+    maxHeight: 50,
+    margin: 10,
   },
   buttonHistoryText: {
+    flex: 1,
     fontSize: 15,
     color: '#55418E',
     alignItems: 'center',
     justifyContent: 'center',
+    margin: 10,
   }, 
+  icon:{
+      padding: 10,
+      margin: 5,
+      height: 25,
+      width: 25,
+    },
 
-});
+})

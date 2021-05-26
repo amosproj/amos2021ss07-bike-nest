@@ -1,6 +1,7 @@
 package com.bikenest.servicebooking.Services;
 
-import com.bikenest.common.interfaces.booking.AddReservationInterface;
+import com.bikenest.common.feignclients.BikenestClient;
+import com.bikenest.common.interfaces.booking.CreateReservationRequest;
 import com.bikenest.servicebooking.DB.Reservation;
 import com.bikenest.servicebooking.DB.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,45 +14,62 @@ import java.util.Optional;
 @Service
 public class ReservationService {
 
+    private Integer RESERVATION_MINUTES = 30;
+
     @Autowired
     ReservationRepository reservationRepository;
+    @Autowired
+    BikenestClient bikenestClient;
 
-    public Iterable<Reservation> GetAllReservations(){
+    public Iterable<Reservation> getAllReservations(){
         return reservationRepository.findAll();
     }
 
-    public Optional<Reservation> CreateReservation(Integer userId, AddReservationInterface newReservation) throws Exception {
-        if(newReservation.getBikenestId() == null || newReservation.getStartDateTime() == null ||
-                newReservation.getEndDateTime() == null)
-            throw new Exception("Invalid request.");
+    public Iterable<Reservation> getAllReservationByUserId(Integer userId){
+        return reservationRepository.findAllByUserId(userId);
+    }
 
+    public Optional<Reservation> createReservation(Integer userId, CreateReservationRequest newReservation) {
+        if (!bikenestClient.existsBikenest(newReservation.getBikenestId())){
+            return Optional.empty();
+        }
+        if (!bikenestClient.hasFreeSpots(newReservation.getBikenestId())){
+            return Optional.empty();
+        }
+        if(!bikenestClient.reserveSpot(newReservation.getBikenestId())){
+            return Optional.empty();
+        }
 
-        Reservation reservation = Reservation.FromNewReservation(userId, newReservation);
+        Reservation reservation = new Reservation(userId, newReservation.getBikenestId(),
+                newReservation.getReservationMinutes(), false, LocalDateTime.now(ZoneId.of("Europe/Berlin")),
+                LocalDateTime.now(ZoneId.of("Europe/Berlin")).plusMinutes(RESERVATION_MINUTES));
+
 
         return Optional.of(reservationRepository.save(reservation));
     }
 
-    public Optional<Reservation> StartReservation(Integer id){
+    public Optional<Reservation> startReservation(Integer id){
         Optional<Reservation> reservation = reservationRepository.findById(id);
-        //Error if the Reservation with given id does not exist
+        // Error if the Reservation with given id does not exist
         if(!reservation.isPresent()){
             return Optional.empty();
         }
 
         Reservation actualReservation = reservation.get();
 
-        //Error if the ActualStartDateTime has already been set
-        if(actualReservation.getActualStartDateTime() != null){
+        //Error if the ActualStart has already been set
+        if(actualReservation.getActualStart() != null){
             return Optional.empty();
         }
-        reservation.get().setActualStartDateTime(LocalDateTime.now(ZoneId.of("Europe/Berlin")));
+
+        actualReservation.setActualStart(LocalDateTime.now(ZoneId.of("Europe/Berlin")));
         reservationRepository.save(reservation.get());
         return Optional.of(reservation.get());
     }
 
-    public Optional<Reservation> EndReservation(Integer id){
+    public Optional<Reservation> endReservation(Integer id){
         Optional<Reservation> reservation = reservationRepository.findById(id);
-        //Error if the Reservation with given id does not exist
+        // Error if the Reservation with given id does not exist
         if(!reservation.isPresent()){
             return Optional.empty();
         }
@@ -59,11 +77,37 @@ public class ReservationService {
         Reservation actualReservation = reservation.get();
 
         //Error if the ActualStartDateTime has already been set
-        if(actualReservation.getActualEndDateTime() != null){
+        if(actualReservation.getActualEnd() != null){
             return Optional.empty();
         }
-        reservation.get().setActualEndDateTime(LocalDateTime.now(ZoneId.of("Europe/Berlin")));
+
+        if(!bikenestClient.freeSpot(actualReservation.getBikenestId())){
+            return Optional.empty();
+        }
+        actualReservation.setActualEnd(LocalDateTime.now(ZoneId.of("Europe/Berlin")));
         reservationRepository.save(reservation.get());
         return Optional.of(reservation.get());
+    }
+
+    public Optional<Reservation> cancelReservation(Integer id){
+        Optional<Reservation> reservation = reservationRepository.findById(id);
+        // Error if the Reservation with given id does not exist
+        if(!reservation.isPresent()){
+            return Optional.empty();
+        }
+
+        Reservation actualReservation = reservation.get();
+        if(actualReservation.isCancelled()){
+            return Optional.empty();
+        }
+        actualReservation.setCancelled(true);
+        reservationRepository.save(actualReservation);
+        return Optional.of(actualReservation);
+    }
+
+    public boolean isReservationOwner(Integer reservationId, Integer userId){
+        Optional<Reservation> reservation = reservationRepository.findById(reservationId);
+
+        return reservation.isPresent() && reservation.get().getUserId() == userId;
     }
 }
