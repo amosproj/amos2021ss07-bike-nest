@@ -13,16 +13,15 @@ import LockScreen from './screens/LockScreen';
 import PaymentConfirmationScreen from './screens/PaymentConfirmationScreen';
 import ReservationSuccessScreen from './screens/ReservationSuccessScreen';
 import LockSpotScreen from './screens/LockSpotScreen';
-import global from "./components/GlobalVars"
+import LoadingScreen from './screens/LoadingScreen';
+
 
 export default function App() {
 
-  let initialScreen = global.authenticationTokenExists === true ? "FindBikeNest" : "Login";
-
   return (
-
     <NavigationContainer>
-      <AppNavigator.Navigator screenOptions={{ headerShown: false }} initialRouteName={initialScreen}>
+      <AppNavigator.Navigator screenOptions={{ headerShown: false }}>
+        <AppNavigator.Screen name='LoadingScreen' component={LoadingScreen} />
         <AppNavigator.Screen name='Login' component={LoginScreen} />
         <AppNavigator.Screen name='Profile' component={ProfileScreen} />
         <AppNavigator.Screen name='Payment' component={PaymentScreen} />
@@ -41,3 +40,4 @@ export default function App() {
 }
 
 const AppNavigator = createStackNavigator();
+
