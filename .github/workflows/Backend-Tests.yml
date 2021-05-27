@@ -126,4 +126,7 @@ jobs:
       run: ./gradlew test --tests com.bikenest.servicepayment.integration.*
       env:
         MYSQL_PORT: 3308
+        BT_MERCHANT_ID: DUMMY
+        BT_PUBLIC_KEY: DUMMY
+        BT_PRIVATE_KEY: DUMMY
       
