@@ -23,9 +23,19 @@ public class PaymentController {
         return "Payment Service works!";
     }
 
+    /**
+     * API Endpoint /payment/getclienttoken
+     * Just provide the signed JWT in the Authorization Header and then this method will create a Braintree Customer for the
+     * requester and return a temporary client token, that can be used to initiate a payment with Braintree.
+     * @param userInformation
+     * @return
+     */
     @GetMapping("/getclienttoken")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public String getClientToken(@AuthenticationPrincipal UserInformation userInformation){
+        //TODO: Check if we already created a customer at braintree for this user
+        boolean success = paymentService.createCustomer(userInformation.getUserId(), userInformation.getFirstName(),
+                userInformation.getLastName(), userInformation.getEmail());
         return paymentService.generateClientToken(userInformation.getUserId());
     }
 
