@@ -13,11 +13,16 @@ import LockScreen from './screens/LockScreen';
 import PaymentConfirmationScreen from './screens/PaymentConfirmationScreen';
 import ReservationSuccessScreen from './screens/ReservationSuccessScreen';
 import LockSpotScreen from './screens/LockSpotScreen';
+import global from "./components/GlobalVars"
 
 export default function App() {
+
+  let initialScreen = global.authenticationTokenExists === true ? "FindBikeNest" : "Login";
+
   return (
+
     <NavigationContainer>
-      <AppNavigator.Navigator screenOptions={{ headerShown: false }}>
+      <AppNavigator.Navigator screenOptions={{ headerShown: false }} initialRouteName={initialScreen}>
         <AppNavigator.Screen name='Login' component={LoginScreen} />
         <AppNavigator.Screen name='Profile' component={ProfileScreen} />
         <AppNavigator.Screen name='Payment' component={PaymentScreen} />
@@ -26,7 +31,7 @@ export default function App() {
         <AppNavigator.Screen name='History' component={HistoryScreen} />
         <AppNavigator.Screen name='Booking' component={BookingScreen} />
         <AppNavigator.Screen name='Lock' component={LockScreen} />
-        <AppNavigator.Screen name= 'LockSpot' component ={LockSpotScreen}/>
+        <AppNavigator.Screen name='LockSpot' component={LockSpotScreen} />
         <AppNavigator.Screen name='ReservationSuccess' component={ReservationSuccessScreen} />
         <AppNavigator.Screen name='PaymentConfirmation' component={PaymentConfirmationScreen} />
         <AppNavigator.Screen name='FindBikeNest' component={FindBikeNestScreen} />
