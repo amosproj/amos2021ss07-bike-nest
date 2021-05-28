@@ -114,6 +114,9 @@ services:
       - MYSQL_DBNAME=${PAYMENT_DB_DATABASE}
       - MYSQL_USER=${PAYMENT_DB_USER}
       - MYSQL_PASSWORD=${PAYMENT_DB_PASSWORD}
+      - BT_MERCHANT_ID=${BT_MERCHANT_ID}
+      - BT_PUBLIC_KEY=${BT_PUBLIC_KEY}
+      - BT_PRIVATE_KEY=${BT_PRIVATE_KEY}
     networks:
       - services
       - payment-db

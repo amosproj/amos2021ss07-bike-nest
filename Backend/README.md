@@ -44,7 +44,7 @@ You can build all of the Backend Projects by executing
     
 Or if you want to build the jar of a service manually:
 - Navigate to the service folder
-- Execute `gradlew build`
+- Execute `gradlew assemble`
 
 To build the docker containers you have to execute
 - `docker-compose build` to build in release mode
@@ -62,13 +62,16 @@ If you make any changes to a backend service, you have to build the service with
 
 The easy approach is to:
 - Stop the container execution
-- rebuild all jars using `gradlew bootJar jar`
+- rebuild all jars using `gradlew assemble`
 - rebuild all containers using `docker-compose build` or
 `docker-compose -f docker-compose-debug.yml build`
 - start the containers up using the **docker-compose up** command from above
 
 It is possible to only rebuild a single container by executing
 `docker-compose build {NAME}`
+
+For convenience there are the shellscripts run-debug.sh and run-release.sh, that will execute all the necessary command to get the backend
+fully running.
 
 ## Debugging
  
@@ -96,3 +99,14 @@ For unit tests the services can run independently and therefore Github is config
 to just execute the test task for gradlew with only the unit tests specified.
 
 To execute integration tests, github actions will have to be configured so that the required containers are started up first.
+
+## Get User Data (for Testing)
+
+It is possible to directly retrieve the Backend Data by opening a CLI for the mysql Docker Container.
+An example for the user database goes like this:
+Go into Docker Desktop and search for the Container"user-db". Enter this container and enter the CLI with the top right button. 
+execute `mysql -p` in the Commandline. 
+Then enter the root password, that is set in the .env file in Backend/. (By default the password is "test")
+Execute  `use user;`, to select the user database.
+Then execute `select * from user`, to show all of the entries for the user table.
+
