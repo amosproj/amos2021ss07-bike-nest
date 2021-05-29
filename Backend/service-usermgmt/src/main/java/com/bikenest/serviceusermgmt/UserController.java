@@ -80,7 +80,7 @@ public class UserController {
     }
 
     @PostMapping("/changePassword")
-    public ResponseEntity<GeneralResponse> changePassword(@AuthenticationPrinciple UserInformation user,
+    public ResponseEntity<GeneralResponse> changePassword(@AuthenticationPrincipal UserInformation user,
                                                           @Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
         if (accountService.existsAccountWithEmail(user.getEmail())) {
             boolean success = accountService.changePassword(user.getEmail(), changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());

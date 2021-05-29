@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Pressable, Text, View, TextInput } from 'react-native';
-import { UserService } from '../../services/UserService';
-import { styles } from "./styles";
+import React, {useState} from 'react';
+import {Pressable, Text, View, TextInput} from 'react-native';
+import {UserService} from '../../services/UserService';
+import {styles} from "./styles";
+import BikeNest_Modal from '../BikeNest_Modal';
 
 export default function EditPassword() {
     let userService = new UserService();
@@ -26,6 +27,7 @@ export default function EditPassword() {
             return;
         }
         userService.changePassword(oldPassword, newPassword1).then((response) => {
+            console.log(JSON.stringify(response));
             if (response.success === true) {
                 setModalHeadline("Yuhu!");
                 setModalText("Dein Passwort wurde erfolgreich geändert.");
@@ -44,6 +46,17 @@ export default function EditPassword() {
     if (isEditing) {
         return (
             <View style={styles.mainview}>
+                <BikeNest_Modal
+                    modalHeadLine={modalHeadline}
+                    modalText={modalText}
+                    isVisible={modalVisible}
+                    onPress={() => {
+                        setModalVisible(!modalVisible);
+                    }}
+                    onRequestClose={() => {
+                        setModalVisible(!modalVisible);
+                    }}
+                />
                 <Text style={styles.stdText}>Old Password:</Text>
                 <TextInput style={styles.inputField} onChangeText={setOldPassword} value={oldPassword}></TextInput>
                 <Text style={styles.stdText}>New Password:</Text>
@@ -67,8 +80,12 @@ export default function EditPassword() {
                     modalHeadLine={modalHeadline}
                     modalText={modalText}
                     isVisible={modalVisible}
-                    onPress={() => onModalPress()}
-                    onRequestClose={() => { setModalVisible(!modalVisible); }}
+                    onPress={() => {
+                        setModalVisible(!modalVisible);
+                    }}
+                    onRequestClose={() => {
+                        setModalVisible(!modalVisible);
+                    }}
                 />
                 <View style={styles.cell}><Text style={styles.stdText}>Password:</Text></View>
                 <View style={styles.cell}><Text style={styles.stdText}>*****</Text></View>
