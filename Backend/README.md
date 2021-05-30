@@ -100,7 +100,7 @@ To execute integration tests, github actions will have to be configured so that 
 ## Get User Data (for Testing)
 
 Go into Docker Desktop and search for "userdb". enter this service and enter the CLI with the top right button. 
-execute `sql -d` in the Commandline. 
+execute `sql -p` in the Commandline. 
 Then enter Password test,
 then  `use user;`,
 the `select * from user`
