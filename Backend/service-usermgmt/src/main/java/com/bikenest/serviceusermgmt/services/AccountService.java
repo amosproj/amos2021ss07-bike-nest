@@ -41,6 +41,7 @@ public class AccountService {
 
         if (user.isPresent() && user.get().getPassword().equals(oldPassword)) {
             user.get().setPassword(newPassword);
+            userRepository.save(user.get());
             return true;
         }
         return false;
