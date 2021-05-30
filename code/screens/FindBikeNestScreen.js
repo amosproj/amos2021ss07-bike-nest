@@ -244,9 +244,11 @@ export default function FindBikeNestScreen({ navigation }) {
     }
   };
 
-  const proceedBooking = () => {
+  const proceedBooking = (index, currentMarkerId) => {
     setModalState(!modalState);
-    navigation.navigate('Booking');
+    navigation.navigate('Booking',  {
+      state: stateMarkers[index], nestID: currentMarkerId
+    })
   };
 
   // currently not used, hides cards at the bottom of screen
@@ -298,7 +300,7 @@ export default function FindBikeNestScreen({ navigation }) {
               <BikeNest_Button
                 type={ButtonStyle.medium}
                 text="Ich möchte Buchen"
-                onPress={() => proceedBooking()}
+                onPress={() => proceedBooking(currentMarkerIndex, stateMarkers[currentMarkerIndex].id)}
               />
             </View>
           </View>}

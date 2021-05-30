@@ -6,11 +6,14 @@ import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
 import { mainStyles } from "../styles/MainStyles";
 import ModalDropdown from 'react-native-modal-dropdown';
 import colors from '../styles/Colors';
+import { BikenestService } from "../services/BikenestService";
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
-export default function BookingScreen({ navigation }) {
+export default function BookingScreen({ route, navigation }) {
+  let bikenestService = new BikenestService();
+
   const [textSlots, setTextSlots] = React.useState();
   const [textHours, setTextHours] = React.useState();
   const [textEbike, setTextEbike] = React.useState();
@@ -19,16 +22,34 @@ export default function BookingScreen({ navigation }) {
   const [costEbike, setcostEbike] = React.useState();
   const [estimatedPrice, setEstimatedPrice] = React.useState();
 
+  const [spotsLeft, setSpotsLeft] = React.useState(0);
+  const [chargingOption, setChargingOption] = React.useState(true);
+  const [bikenestName, setbikenestName] = React.useState('default Bikenest');
+
+  let bikenest = route.params.state;
+  console.log(bikenest.id);
+
+  const fetchBikenestInfos = () => {
+      bikenestService.getBikenestInfo(bikenest.id).then((response) => {
+        setSpotsLeft(response.spotsLeft);
+        setChargingOption(response.chargingOptionAvailable);
+        setbikenestName(response.bikenestName);
+      }).catch((error) => {
+        console.error("getBikenest Infos Error:" + error);
+     });
+  };
+
   const onPressInfo = () => {
     //zurück zu Find Bike Nest
     alert('this is an info.');
   };
   const onPressOrder = () => {
     //weiter zu order verarbeitung
-    navigation.navigate("Payment");
+    navigation.navigate("Payment", {state: bikenest, name: bikenestName, slots: textSlots, time: textHours, ebike: textEbike, price: estimatedPrice});
   }
   const getLocation = () => {
-    return "Nürnberg HBF";
+    fetchBikenestInfos();
+    return bikenestName;
   };
   const getSelectedHours = (value) => {
     if(value == 0){
@@ -79,16 +100,7 @@ export default function BookingScreen({ navigation }) {
   }
   const getPrice = () => {
     let price = (costHours*costSlots) + costEbike;
-    setEstimatedPrice("~" + price + " €");
-  };
-  const getMwst = () => {
-    return "9,50€";
-  };
-  const getDiscount = () => {
-    return "-5€";
-  };
-  const getSum = () => {
-    return "54,50€";
+    setEstimatedPrice(price);
   };
   return (
     <View style={myStyles.container}>
@@ -138,7 +150,7 @@ export default function BookingScreen({ navigation }) {
                 {textSlots}{"\n"}
                 {textHours}{"\n"}
                 {textEbike}{"\n"}
-                {estimatedPrice}
+                ~{estimatedPrice}€
               </Text>
         </View>
           <Pressable style={[myStyles.reserved, {justifyContent: 'flex-end'}]}  onPress={() => getPrice(this)}>

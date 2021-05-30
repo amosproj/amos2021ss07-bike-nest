@@ -14,7 +14,7 @@ import moment from "moment";
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
-export default function PaymentScreen({ navigation }) {
+export default function PaymentScreen({ route,navigation }) {
     let bookingService = new BookingService();
     const [slots, setSlots] = useState("");
     const [hours, setHours] = useState("");
@@ -24,6 +24,14 @@ export default function PaymentScreen({ navigation }) {
     const [modalText, setModalText] = useState("");
     const [modalHeadline, setModalHeadline] = useState("");
 
+    let bikenest = route.params.state;
+    let bikenestName = route.params.name;
+    let selectedSlots = route.params.slots;
+    let selectedTime = route.params.time;
+    let selectedEbike = route.params.ebike;
+    let estimatedPrice = route.params.price;
+    console.log(bikenest.id + "; " + bikenestName);
+
     let tryCreateBooking = (bikenestId) => {
 
         bookingService.createReservation(bikenestId, 30)
@@ -31,7 +39,7 @@ export default function PaymentScreen({ navigation }) {
                 if(response.success){
                     console.log("Success with create reservation.");
                     //Pageforwarding
-                    navigation.navigate("ReservationSuccess");
+                    navigation.navigate("ReservationSuccess", {state: bikenest, name: bikenestName});
                 }else{
                     setModalHeadline("Sorry!");
                     setModalText("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
@@ -60,45 +68,32 @@ export default function PaymentScreen({ navigation }) {
   };
   const onPressInfo = () => {
     //zurück zu Find Bike Nest
-    alert('this is an info.');
+    alert('Info','Du kannst hier deinen BIKE NEST Spot buchen. Wenn du dein Fahrrad wieder abholst werden wir dir die benutzte dauer über deine ausgewählte Zahlungsmethode berechnen.');
   };
   const onPressOrder = () => {
-    var dateStart = moment()
-    .utcOffset('+05:30')
-    .format('yyyy-MM-DD');
-    var timeStart =  moment()
-    .utcOffset('+02:00')
-    .format('HH:mm:ss');
-    var dateEnd = moment()
-    .utcOffset('+05:30')
-    .format('yyyy-MM-DD');
-    var timeEnd =  moment()
-    .utcOffset('+02:30')
-    .format('HH:mm:ss');
-
     var bikenestId = '1';
     tryCreateBooking(bikenestId);
   }
   const getSlots = () => {
-    return "1 Slot";
+    return selectedSlots;
   };
   const getLocation = () => {
-    return "Nürnberg HBF";
+    return bikenestName;
+  };
+  const getEbike = () =>{
+    return selectedEbike;
   };
   const getHours = () => {
-    return "1 Tag";
+    return selectedTime;
   };
   const getPrice = () => {
-    return "6€";
-  };
-  const getMwst = () => {
-    return "9,50€";
+    return estimatedPrice;
   };
   const getDiscount = () => {
-    return "-0,50€";
+    return 0.10;
   };
   const getSum = () => {
-    return "5,50€";
+    return (estimatedPrice-getDiscount());
   };
   return (
     <View style={myStyles.container}>
@@ -124,7 +119,8 @@ export default function PaymentScreen({ navigation }) {
             <Text style={myStyles.stdText}>
                 {"\n"} 
                 {getSlots()} im BIKE NEST {"\n"}
-                {getLocation()}
+                {getLocation()}  {"\n"}
+                {getEbike()}
             </Text>
             <Text style={myStyles.stdText}> {getHours()} </Text>
         </View>
@@ -162,15 +158,15 @@ export default function PaymentScreen({ navigation }) {
         <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider}/>
         <View style={[myStyles.headline,{marginTop: 10, marginBottom: 10}]}>
             <Text style={myStyles.h3}>Geschätzter Preis</Text>
-            <Text style={[myStyles.h3, { fontWeight: 'bold', color: Colors.UI_Light_2}]}> {getPrice()} </Text>
+            <Text style={[myStyles.h3, { fontWeight: 'bold', color: Colors.UI_Light_2}]}> ~{getPrice()}€ </Text>
         </View>
         <View style={[myStyles.headline,{marginTop: 10, marginBottom: 10}]}>
             <Text style={myStyles.h3}>Rabatt</Text>
-            <Text style={[myStyles.h3, { fontWeight: 'bold', color: Colors.UI_Light_2}]}> {getDiscount()} </Text>
+            <Text style={[myStyles.h3, { fontWeight: 'bold', color: Colors.UI_Light_2}]}> {getDiscount()}€ </Text>
         </View>
         <View style={[myStyles.headline,{marginTop: 10, marginBottom: 10}]}>
             <Text style={myStyles.h3}>Gesamt (für {getHours()})</Text>
-            <Text style={[myStyles.h3, { fontWeight: 'bold', color: Colors.UI_Light_2}]}> {getSum()} </Text>
+            <Text style={[myStyles.h3, { fontWeight: 'bold', color: Colors.UI_Light_2}]}> ~{getSum()}€ </Text>
         </View>
         {/* <View style={myStyles.headline}>
             <Text style={myStyles.stdText}>Gesamt exkl. Mwst.</Text>

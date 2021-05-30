@@ -15,7 +15,6 @@ var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
 export default function HistoryScreen({ navigation }) {
-  // const [myListData, setData] = useState("");
   let bookingService = new BookingService();
 
   let tryGETBooking = () => {
