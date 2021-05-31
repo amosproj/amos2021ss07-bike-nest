@@ -1,8 +1,8 @@
 package com.bikenest.servicebikenest.services;
 
 import com.bikenest.common.interfaces.bikenest.AddBikenestRequest;
-import com.bikenest.servicebikenest.DB.Bikenest;
-import com.bikenest.servicebikenest.DB.BikenestRepository;
+import com.bikenest.servicebikenest.db.Bikenest;
+import com.bikenest.servicebikenest.db.BikenestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

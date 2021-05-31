@@ -1,10 +1,10 @@
-package com.bikenest.servicebikenest.Controllers;
+package com.bikenest.servicebikenest.controllers;
 
 import com.bikenest.common.interfaces.GeneralResponse;
 import com.bikenest.common.interfaces.bikenest.AddBikenestRequest;
 import com.bikenest.common.security.UserInformation;
 import com.bikenest.common.security.UserRole;
-import com.bikenest.servicebikenest.DB.Bikenest;
+import com.bikenest.servicebikenest.db.Bikenest;
 import com.bikenest.servicebikenest.services.BikenestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

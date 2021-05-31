@@ -1,4 +1,4 @@
-package com.bikenest.servicebikenest.Controllers;
+package com.bikenest.servicebikenest.controllers;
 
 import com.bikenest.servicebikenest.services.BikenestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
+/**
+ * This Controller provides functionality that will be used by the Booking Microservice.
+ * You can reserve concrete spots for
+ */
 @RestController
 @RequestMapping(path = "/bikenest/service")
 public class BookingInfoController {

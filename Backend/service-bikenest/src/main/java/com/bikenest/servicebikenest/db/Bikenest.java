@@ -1,11 +1,10 @@
-package com.bikenest.servicebikenest.DB;
+package com.bikenest.servicebikenest.db;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
+@Table(name = "bikenest")
 public class Bikenest {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -15,6 +14,10 @@ public class Bikenest {
     private Integer maximumSpots;
     private Integer currentSpots;
     private boolean chargingAvailable;
+
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    private Set<BikenestSpots> spots;
 
     public Bikenest(String name, String gpsCoordinates, Integer maximumSpots, boolean chargingAvailable){
         this.name = name;
@@ -72,5 +75,13 @@ public class Bikenest {
 
     public void setChargingAvailable(boolean chargingAvailable) {
         this.chargingAvailable = chargingAvailable;
+    }
+
+    public Set<BikenestSpots> getSpots() {
+        return spots;
+    }
+
+    public void setSpots(Set<BikenestSpots> spots) {
+        this.spots = spots;
     }
 }
