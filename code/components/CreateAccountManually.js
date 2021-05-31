@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import { UserDataService } from "../services/UserData";
 import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 import { mainStyles } from "../styles/MainStyles";
@@ -8,7 +7,6 @@ import BikeNest_CheckBox from './BikeNest_CheckBox';
 import BikeNest_Modal from './BikeNest_Modal';
 import BikeNest_Button, { ButtonStyle } from './BikeNest_Button';
 import BikeNest_TextInput from './BikeNest_TextInput';
-import global from '../components/GlobalVars';
 import {UserService} from "../services/UserService";
 
 export function CreateAccountManually() {

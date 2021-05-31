@@ -31,6 +31,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         // Configure what requests should be authorized. In thise case none.
         // Also we set a filter, that will check the Authorization Header and set the SecurityContext, if a JWT is provided.
         http.cors().and().authorizeRequests()
+                .antMatchers("/usermanagement/changePassword")
+                .authenticated()
                 .anyRequest().permitAll()
 				.and()
 				.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
