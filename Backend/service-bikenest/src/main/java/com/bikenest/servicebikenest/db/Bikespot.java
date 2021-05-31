@@ -1,9 +1,11 @@
 package com.bikenest.servicebikenest.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 @Entity
-@Table(name = "bikespot")
+@JsonIgnoreProperties({ "bikenest"})
 public class Bikespot {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -12,10 +14,13 @@ public class Bikespot {
     private Integer spotNumber;
     private Integer userId;
     private Boolean reserved;
+    private Boolean leftSide; // is the Bikespot on the left side of the cage?
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "bikenest_id", nullable = false)
+    @JoinColumn(name="bikenest_id")
     private Bikenest bikenest;
+
+    public Bikespot(){}
 
     public Integer getId() {
         return id;
@@ -24,7 +29,6 @@ public class Bikespot {
     public void setId(Integer id) {
         this.id = id;
     }
-
 
     public Integer getSpotNumber() {
         return spotNumber;
@@ -48,6 +52,14 @@ public class Bikespot {
 
     public void setReserved(Boolean reserved) {
         this.reserved = reserved;
+    }
+
+    public Boolean getLeftSide() {
+        return leftSide;
+    }
+
+    public void setLeftSide(Boolean leftSide) {
+        this.leftSide = leftSide;
     }
 
     public Bikenest getBikenest() {

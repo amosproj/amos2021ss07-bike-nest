@@ -8,18 +8,24 @@ import com.bikenest.servicebikenest.db.BikespotRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.*;
 
 @Service
+@DependsOn({"bikenestRepository", "bikespotRepository"})
 public class BikenestService {
-    @Autowired
     BikenestRepository bikenestRepository;
-    @Autowired
     BikespotRepository bikespotRepository;
 
     Logger logger = LoggerFactory.getLogger(BikenestService.class);
+
+    @Autowired
+    public BikenestService(BikenestRepository bikenestRepository, BikespotRepository bikespotRepository){
+        this.bikenestRepository = bikenestRepository;
+        this.bikespotRepository = bikespotRepository;
+    }
 
 
     public boolean existsBikenest(Integer bikenestId){
@@ -39,7 +45,7 @@ public class BikenestService {
             return Optional.empty();
 
         // Takes a spot that isn't currently reserved (if there are any...)
-        Optional<Bikespot> bikespot = bikenest.get().getSpots().stream().filter(spot -> !spot.getReserved()).findFirst();
+        Optional<Bikespot> bikespot = bikenest.get().getBikespots().stream().filter(spot -> !spot.getReserved()).findFirst();
 
         if(!bikespot.isPresent())
             return Optional.empty();
@@ -71,7 +77,7 @@ public class BikenestService {
             return false;
 
         // Find the reserved spot and also check if that spot is owned by userId and is reserved
-        Optional<Bikespot> bikespot = bikenest.get().getSpots().stream()
+        Optional<Bikespot> bikespot = bikenest.get().getBikespots().stream()
                 .filter(spot -> spot.getSpotNumber().equals(spotId) && spot.getUserId().equals(userId) && spot.getReserved())
                 .findFirst();
 
@@ -90,8 +96,10 @@ public class BikenestService {
         return true;
     }
 
-    public Iterable<Bikenest> getAllBikenests(){
-        return bikenestRepository.findAll();
+    public List<Bikenest> getAllBikenests(){
+        List<Bikenest> result = new ArrayList<>();
+        bikenestRepository.findAll().forEach(result::add);
+        return result;
     }
 
     public void deleteAllBikenests(){
@@ -102,12 +110,33 @@ public class BikenestService {
         bikenestRepository.deleteById(bikenestId);
     }
 
+
+    /**
+     * Creates a Bikenest and automatically also creates the Bikespots for this Bikenest.
+     * TODO: Set if the Bikespot is on the left or right side of the cage. Right now it is just divded evenly.
+     * @param request
+     * @return
+     */
     public Optional<Bikenest> addBikenest(AddBikenestRequest request){
         if(bikenestRepository.findByName(request.getName()).isPresent())
             return Optional.empty();
 
         Bikenest bikenest = new Bikenest(request.getName(), request.getGpsCoordinates(), request.getMaximumSpots(),
                 request.isChargingAvailable());
+
+        // Create the Bikespots (TODO: Do you also have to save each bikespot?)
+        Set<Bikespot> spots = new HashSet<>();
+        for(int i = 1; i <= request.getMaximumSpots(); i++){
+            Bikespot bikespot = new Bikespot();
+            bikespot.setLeftSide(i < (request.getMaximumSpots()/2));
+            bikespot.setReserved(false);
+            bikespot.setUserId(null);
+            bikespot.setSpotNumber(i);
+            bikespot.setBikenest(bikenest);
+            spots.add(bikespot);
+        }
+        bikenest.setBikespots(spots);
+
         return Optional.of(bikenestRepository.save(bikenest));
     }
 
@@ -121,7 +150,7 @@ public class BikenestService {
 
         Bikenest actualBikenest = bikenest.get();
         // This additional check should not be required
-        Long freeSpots = actualBikenest.getSpots().stream().filter(spot -> !spot.getReserved()).count();
+        Long freeSpots = actualBikenest.getBikespots().stream().filter(spot -> !spot.getReserved()).count();
         if(freeSpots.intValue() == actualBikenest.getCurrentSpots()){
             this.logger.error("The number of free Bikespots according to Bikespot Table is different to" +
                     " the number of free spots according to the Bikenest!");

@@ -4,7 +4,6 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "bikenest")
 public class Bikenest {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -17,7 +16,7 @@ public class Bikenest {
 
     @OneToMany(mappedBy = "bikenest", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
-    private Set<Bikespot> spots;
+    private Set<Bikespot> bikespots;
 
     public Bikenest(String name, String gpsCoordinates, Integer maximumSpots, boolean chargingAvailable){
         this.name = name;
@@ -77,11 +76,11 @@ public class Bikenest {
         this.chargingAvailable = chargingAvailable;
     }
 
-    public Set<Bikespot> getSpots() {
-        return spots;
+    public Set<Bikespot> getBikespots() {
+        return bikespots;
     }
 
-    public void setSpots(Set<Bikespot> spots) {
-        this.spots = spots;
+    public void setBikespots(Set<Bikespot> bikespots) {
+        this.bikespots = bikespots;
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -43,7 +44,10 @@ public class BikenestController {
     @GetMapping(path = "/all")
     public @ResponseBody
     Iterable<Bikenest> getAllBikenests() {
-        return bikenestService.getAllBikenests();
+        // Remove the Bikespot Information before returning this
+        List<Bikenest> bikenests = bikenestService.getAllBikenests();
+        bikenests.forEach(x -> x.setBikespots(null));
+        return bikenests;
     }
 
     @GetMapping(path = "/deleteAll")
