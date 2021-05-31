@@ -151,7 +151,7 @@ public class BikenestService {
         Bikenest actualBikenest = bikenest.get();
         // This additional check should not be required
         Long freeSpots = actualBikenest.getBikespots().stream().filter(spot -> !spot.getReserved()).count();
-        if(freeSpots.intValue() == actualBikenest.getCurrentSpots()){
+        if(freeSpots.intValue() != actualBikenest.getCurrentSpots()){
             this.logger.error("The number of free Bikespots according to Bikespot Table is different to" +
                     " the number of free spots according to the Bikenest!");
             return Optional.empty();
