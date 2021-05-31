@@ -15,7 +15,7 @@ public class Bikenest {
     private Integer currentSpots;
     private boolean chargingAvailable;
 
-    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY,
+    @OneToMany(mappedBy = "bikenest", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private Set<Bikespot> spots;
 

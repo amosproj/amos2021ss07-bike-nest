@@ -3,7 +3,7 @@ package com.bikenest.servicebikenest.db;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "bikenestspots")
+@Table(name = "bikespot")
 public class Bikespot {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
