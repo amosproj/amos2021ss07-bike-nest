@@ -1,5 +1,8 @@
 package com.bikenest.common.feignclients;
 
+import com.bikenest.common.interfaces.bikenest.FreeSpotRequest;
+import com.bikenest.common.interfaces.bikenest.ReserveSpotRequest;
+import com.bikenest.common.interfaces.bikenest.ReserveSpotResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,14 +23,14 @@ public interface BikenestClient {
             produces = {MediaType.APPLICATION_JSON_VALUE},
             headers = {"Authorization=SERVICE"})
     @ResponseBody
-    boolean reserveSpot(@RequestBody Integer bikenestId);
+    ReserveSpotResponse reserveSpot(@RequestBody ReserveSpotRequest request);
 
     @RequestMapping(method = RequestMethod.POST, value = "/bikenest/service/freespot",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE},
             headers = {"Authorization=SERVICE"})
     @ResponseBody
-    boolean freeSpot(@RequestBody Integer bikenestId);
+    boolean freeSpot(@RequestBody FreeSpotRequest request);
 
     @RequestMapping(method = RequestMethod.POST, value = "/bikenest/service/hasfreespots",
             consumes = {MediaType.APPLICATION_JSON_VALUE},

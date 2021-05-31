@@ -17,6 +17,7 @@ public class Reservation {
     private Integer id;
     private Integer userId;
     private Integer bikenestId;
+    private Integer bikespotId;
     private Integer reservationMinutes; // For how long is this reservation?
     private boolean paid; // Is this booking payed?
     private boolean cancelled;
@@ -33,10 +34,11 @@ public class Reservation {
     @Temporal(TemporalType.TIMESTAMP)
     private Date actualEnd;   // When did the user take his bike?
 
-    public Reservation(Integer userId, Integer bikenestId, Integer reservationMinutes, boolean paid,
+    public Reservation(Integer userId, Integer bikenestId, Integer bikespotId, Integer reservationMinutes, boolean paid,
                        LocalDateTime reservationStart, LocalDateTime reservationEnd) {
         this.userId = userId;
         this.bikenestId = bikenestId;
+        this.bikespotId = bikespotId;
         this.reservationMinutes = reservationMinutes;
         this.paid = paid;
         setReservationStart(reservationStart);
@@ -142,5 +144,13 @@ public class Reservation {
 
     public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
+    }
+
+    public Integer getBikespotId() {
+        return bikespotId;
+    }
+
+    public void setBikespotId(Integer bikespotId) {
+        this.bikespotId = bikespotId;
     }
 }

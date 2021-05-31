@@ -17,7 +17,7 @@ public class Bikenest {
 
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
-    private Set<BikenestSpots> spots;
+    private Set<Bikespot> spots;
 
     public Bikenest(String name, String gpsCoordinates, Integer maximumSpots, boolean chargingAvailable){
         this.name = name;
@@ -77,11 +77,11 @@ public class Bikenest {
         this.chargingAvailable = chargingAvailable;
     }
 
-    public Set<BikenestSpots> getSpots() {
+    public Set<Bikespot> getSpots() {
         return spots;
     }
 
-    public void setSpots(Set<BikenestSpots> spots) {
+    public void setSpots(Set<Bikespot> spots) {
         this.spots = spots;
     }
 }
