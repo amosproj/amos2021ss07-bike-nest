@@ -2,8 +2,6 @@ package com.bikenest.servicepayment.controllers;
 
 import com.bikenest.common.security.UserInformation;
 import com.bikenest.servicepayment.services.PaymentService;
-import com.braintreegateway.BraintreeGateway;
-import com.braintreegateway.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

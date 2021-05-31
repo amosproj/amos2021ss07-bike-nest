@@ -1,7 +1,6 @@
 package com.bikenest.servicebikenest.services;
 
 import com.bikenest.common.interfaces.bikenest.AddBikenestRequest;
-import com.bikenest.common.security.ServiceAuthentication;
 import com.bikenest.servicebikenest.db.Bikenest;
 import com.bikenest.servicebikenest.db.BikenestRepository;
 import com.bikenest.servicebikenest.db.Bikespot;

@@ -1,6 +1,7 @@
 package com.bikenest.common.interfaces.usermgmt;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 public class ChangePasswordRequest {
     @NotBlank

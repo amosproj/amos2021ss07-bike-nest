@@ -2,6 +2,8 @@ package com.bikenest.servicebikenest.controllers;
 
 import com.bikenest.common.interfaces.GeneralResponse;
 import com.bikenest.common.interfaces.bikenest.AddBikenestRequest;
+import com.bikenest.common.interfaces.bikenest.BikenestInfoRequest;
+import com.bikenest.common.interfaces.bikenest.BikenestInfoResponse;
 import com.bikenest.common.security.UserInformation;
 import com.bikenest.common.security.UserRole;
 import com.bikenest.servicebikenest.db.Bikenest;
@@ -13,8 +15,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
-import com.bikenest.common.interfaces.bikenest.BikenestInfoResponse;
-import com.bikenest.common.interfaces.bikenest.BikenestInfoRequest;
 
 @RestController
 @RequestMapping(path = "/bikenest")

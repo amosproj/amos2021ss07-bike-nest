@@ -1,11 +1,10 @@
 package com.bikenest.serviceusermgmt.repository;
 
-import java.util.Optional;
-
+import com.bikenest.serviceusermgmt.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.bikenest.serviceusermgmt.models.User;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {

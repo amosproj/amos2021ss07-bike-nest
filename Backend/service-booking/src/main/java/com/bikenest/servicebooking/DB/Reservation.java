@@ -1,8 +1,5 @@
 package com.bikenest.servicebooking.DB;
 
-import com.bikenest.common.interfaces.booking.CreateReservationRequest;
-import org.apache.tomcat.jni.Local;
-
 import javax.persistence.*;
 import java.time.Instant;
 import java.time.LocalDateTime;
