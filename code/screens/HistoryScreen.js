@@ -14,7 +14,6 @@ import {BookingService} from "../services/BookingService";
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
-
 export default function HistoryScreen({ navigation }) {
   // const [myListData, setData] = useState("");
   let bookingService = new BookingService();
@@ -42,7 +41,7 @@ export default function HistoryScreen({ navigation }) {
           <Text style={styles.name} >
             Max Muster </Text>
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate("Lock") }
+        <TouchableOpacity onPress={() => navigation.navigate("FindBikeNest") }
           style={[styles.heightBike, {
             backgroundColor: '#FFF',
             height: 230,
@@ -59,16 +58,13 @@ export default function HistoryScreen({ navigation }) {
             }}
           />
           <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start', padding: 30}}>
-            <Text style={{fontSize: 16}}>Vielen Dank für die Reservierung! </Text>
-            <Text style={{fontSize: 16}}>Begib dich zu folgendem BIKE NEST: {"\n"}</Text>
-            <Text style={{fontWeight: 'bold', fontSize: 16}}>BIKE NEST {"\n"}Nürnberg HBF </Text>
+            <Text style={{fontSize: 16}}>Danke für dein Vertrauen! </Text>
+            <Text style={{fontSize: 16}}>Dein Fahrrad befindet sich hier: {"\n"}</Text>
+            <Text style={{textDecorationLine: 'underline', fontSize: 16, fontStyle:'italic' }}> Zeig es auf der Karte </Text>
           </View>
         </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate("EditPersonalInformation")} style={styles.buttonLock}>
-        <Text style={styles.buttonLockOwner}> Max Muster's bike </Text>
-        <Text style={styles.buttonLockText}> locked </Text>
-      </TouchableOpacity>
+      
 
       <View style={styles.containerRow}>
       <TouchableOpacity style={styles.time}>
@@ -83,6 +79,12 @@ export default function HistoryScreen({ navigation }) {
         <Text style={styles.costRecord}> 50 $ </Text> 
       </TouchableOpacity>
       </View>
+
+      <TouchableOpacity onPress={() => navigation.navigate("Lock")} style={mainStyles.buttonBig}>
+        {/* <SimpleLineIcons name="lock-open" size={10} color="black" style={styles.icon} /> */}
+        <Text style={mainStyles.buttonText}> Max Muster's bike </Text>
+        <Text style={mainStyles.buttonText}> locked on spot X </Text>
+      </TouchableOpacity>
 
       <TouchableOpacity onPress={() => tryGETBooking(this)} style={styles.buttonHistory}>
         <Text style={styles.buttonHistoryText}> Frühere Reservierungen und Zahlungen </Text>
@@ -135,40 +137,26 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'normal',
   },
+
+  cardTextContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
   place: {
     flex: 1,
-    color: '#FFFFFF',
-    fontSize:16,
-    fontWeight:'bold',
-  },
-  nest: {
-    flex: 1,
-    color: '#FFFFFF',
-    fontSize:14,
-    fontWeight:'normal',
-  },
-  buttonLock: {
-    flex: 1,
-    backgroundColor: '#FFA500',
-    borderRadius: 30,
-    margin: 10,
-  },
-  buttonLockOwner: {
-    flex: 1,
-    fontSize: 20,
-    color: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
     margin: 10,
   }, 
-  buttonLockText: {
+  cardBikeContainer2: {
     flex: 1,
-    fontSize: 18,
-    color: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 10,
-  }, 
+    marginTop: Dimensions.get('window').height * 0.02,
+    marginLeft: Dimensions.get('window').width * 0.01,
+    resizeMode: 'contain',
+    backgroundColor: '#fff',
+    alignItems: 'flex-start',
+    alignContent: 'space-around',
+  },
   time:{
     flex: 1,
     borderColor: '#E6E5F2',
@@ -234,5 +222,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     margin: 10,
   }, 
+  icon:{
+      padding: 10,
+      margin: 5,
+      height: 25,
+      width: 25,
+    },
 
-});
+})

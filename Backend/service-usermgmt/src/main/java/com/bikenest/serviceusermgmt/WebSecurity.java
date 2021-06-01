@@ -2,18 +2,11 @@ package com.bikenest.serviceusermgmt;
 
 import com.bikenest.common.security.JWTAuthenticationEntrypoint;
 import com.bikenest.common.security.JWTAuthenticationFilter;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @EnableWebSecurity
@@ -31,6 +24,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         // Configure what requests should be authorized. In thise case none.
         // Also we set a filter, that will check the Authorization Header and set the SecurityContext, if a JWT is provided.
         http.cors().and().authorizeRequests()
+                .antMatchers("/usermanagement/changePassword")
+                .authenticated()
                 .anyRequest().permitAll()
 				.and()
 				.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)

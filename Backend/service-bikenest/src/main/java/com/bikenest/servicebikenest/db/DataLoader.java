@@ -1,39 +1,46 @@
-package com.bikenest.servicebikenest.DB;
+package com.bikenest.servicebikenest.db;
 
+import com.bikenest.common.interfaces.bikenest.AddBikenestRequest;
+import com.bikenest.servicebikenest.services.BikenestService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DataLoader {
 
-    private BikenestRepository bikenestRepository;
+    private BikenestService bikenestService;
 
     @Autowired
-    public DataLoader(BikenestRepository bikenestRepository) {
-        this.bikenestRepository = bikenestRepository;
+    public DataLoader(BikenestService bikenestService) {
+        this.bikenestService = bikenestService;
         this.LoadData();
     }
 
     public void LoadData() {
-        if(bikenestRepository.count() == 0){
-            Bikenest bikenest_hbf_1 = new Bikenest("Nürnberg Hbf Süd 1",
-                    "49.444081807031665, 11.082422685617997", 13, true);
-            bikenestRepository.save(bikenest_hbf_1);
+        if(bikenestService.getAllBikenests().size() == 0){
+            // Add the Bikenest with the service method, so that the Bikespots are correctly created.
+            bikenestService.addBikenest(
+                    new AddBikenestRequest("Nürnberg Hbf Süd 1", "49.444081807031665, 11.082422685617997",
+                    13, true));
 
-            Bikenest bikenest_hbf_2 = new Bikenest("Nürnberg Hbf Süd 2",
-                    "49.44408428763211, 11.0826287061008", 8, true);
-            bikenestRepository.save(bikenest_hbf_2);
+            bikenestService.addBikenest(
+                    new AddBikenestRequest("Nürnberg Hbf Süd 2", "49.44408428763211, 11.0826287061008",
+                            8, true));
 
-            Bikenest bikenest_hbf_3 = new Bikenest("Nürnberg Hbf Nord 1",
-                    "49.446344470022375, 11.0810884309534938", 13, false);
-            bikenestRepository.save(bikenest_hbf_3);
+            bikenestService.addBikenest(
+                    new AddBikenestRequest("Nürnberg Hbf Nord 1", "49.446344470022375, 11.0810884309534938",
+                            13, false));
 
-            Bikenest bikenest_hbf_4 = new Bikenest("Nürnberg Hbf Nord 2", "49.44640223259086, 11.081398793547217", 5,
-                    true);
-            bikenestRepository.save(bikenest_hbf_4);
+            bikenestService.addBikenest(
+                    new AddBikenestRequest("Nürnberg Hbf Nord 2", "49.44640223259086, 11.081398793547217",
+                            5, true));
 
+
+/*          TODO: Readd this (i changed the code for the bikenest and all of these would have had to be changed)
             Bikenest bikenest_wiese_1 = new Bikenest("Nürnberg Wöhrder Wiese 1", "49.45050866440126, 11.087981724233893", 6,
                     true);
             bikenestRepository.save(bikenest_wiese_1);
@@ -109,6 +116,8 @@ public class DataLoader {
             Bikenest bikenest_maxfeld_1 = new Bikenest("Nürnberg Maxfeld 1", "49.466134986292765, 11.088486236822144", 13,
                     true);
             bikenestRepository.save(bikenest_maxfeld_1);
+
+ */
         }
     }
 }

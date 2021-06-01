@@ -5,6 +5,7 @@ import Colors from '../styles/Colors';
 import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
 import { mainStyles } from "../styles/MainStyles";
 import ModalDropdown from 'react-native-modal-dropdown';
+import colors from '../styles/Colors';
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
@@ -13,6 +14,9 @@ export default function BookingScreen({ navigation }) {
   const [textSlots, setTextSlots] = React.useState();
   const [textHours, setTextHours] = React.useState();
   const [textEbike, setTextEbike] = React.useState();
+  const [costSlots, setcostSlots] = React.useState();
+  const [costHours, setcostHours] = React.useState();
+  const [costEbike, setcostEbike] = React.useState();
   const [estimatedPrice, setEstimatedPrice] = React.useState();
 
   const onPressInfo = () => {
@@ -28,38 +32,52 @@ export default function BookingScreen({ navigation }) {
   };
   const getSelectedHours = (value) => {
     if(value == 0){
-      setTextHours('1 Stunde');
+      setTextHours('1 Tag');
+      setcostHours(1);
     }else if(value == 1){
-      setTextHours('2 Stunden');
+      setTextHours('2 Tage');
+      setcostHours(2);
     }else if(value == 2){
-      setTextHours('3 Stunden');
+      setTextHours('3 Tage');
+      setcostHours(3);
     }else if(value == 3){
-      setTextHours('4 Stunden');
+      setTextHours('1 Monat');
+      setcostHours(12);
     } else {
       setTextHours('Keine Zeit ausgewählt.');
+      setcostHours(0);
     }
   }
   const getSelectedSlots = (value) => {
 
     if(value == 0){
       setTextSlots('1 Slot');
+      setcostSlots(1);
     } else if(value == 1){
       setTextSlots('2 Slots');
+      setcostSlots(2);
     } else {
       setTextSlots('Keine Slots ausgewählt.');
+      setcostSlots(0);
     }
   }
 
   const getSelectedEbike = (value) => {
     if(value == 0){
       setTextEbike('1 E-Bike Ladestation');
+      setcostEbike(5);
     } else if(value == 1){
       setTextEbike('2 E-Bike Ladestation');
+      setcostEbike(10);
     } else if(value == 2){
       setTextEbike('keine E-Bike Ladestation');
+      setcostEbike(0);
     } else {
       setTextEbike('kein E-bike ausgewählt.');
+      setcostEbike(0);
     }
+    let price = (costHours*costSlots) + costEbike;
+    setEstimatedPrice(price);
   }
   const getPrice = () => {
     return "50€";
@@ -102,7 +120,7 @@ export default function BookingScreen({ navigation }) {
         </View>
         <View style={myStyles.headline}>
           <Text style={myStyles.h3}> Wie lange buchen? </Text>
-          <ModalDropdown onSelect={(value) => getSelectedHours(value)} options={['1 Stunde', '2 Stunden', '3 Stunden', '4 Stunden']} defaultValue={'Bitte wählen...'} textStyle={{fontSize: 18 }} dropdownTextStyle={{fontSize: 18}}/>
+          <ModalDropdown onSelect={(value) => getSelectedHours(value)} options={['1 Tag', '2 Tage', '3 Tage', '1 Monat']} defaultValue={'Bitte wählen...'} textStyle={{fontSize: 18 }} dropdownTextStyle={{fontSize: 18}}/>
         </View>
         <View style={myStyles.headline}>
           <Text style={myStyles.h3}> E-Bike Ladestation? </Text>
@@ -121,6 +139,7 @@ export default function BookingScreen({ navigation }) {
                 {textSlots}{"\n"}
                 {textHours}{"\n"}
                 {textEbike}{"\n"}
+                {estimatedPrice}
               </Text>
         </View>
           <Pressable style={[myStyles.reserved, {justifyContent: 'flex-end'}]}  onPress={() => onPressOrder(this)}>

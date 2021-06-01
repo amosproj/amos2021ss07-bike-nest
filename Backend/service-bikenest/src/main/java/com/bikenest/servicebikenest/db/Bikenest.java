@@ -1,9 +1,7 @@
-package com.bikenest.servicebikenest.DB;
+package com.bikenest.servicebikenest.db;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Bikenest {
@@ -15,6 +13,10 @@ public class Bikenest {
     private Integer maximumSpots;
     private Integer currentSpots;
     private boolean chargingAvailable;
+
+    @OneToMany(mappedBy = "bikenest", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    private Set<Bikespot> bikespots;
 
     public Bikenest(String name, String gpsCoordinates, Integer maximumSpots, boolean chargingAvailable){
         this.name = name;
@@ -72,5 +74,13 @@ public class Bikenest {
 
     public void setChargingAvailable(boolean chargingAvailable) {
         this.chargingAvailable = chargingAvailable;
+    }
+
+    public Set<Bikespot> getBikespots() {
+        return bikespots;
+    }
+
+    public void setBikespots(Set<Bikespot> bikespots) {
+        this.bikespots = bikespots;
     }
 }
