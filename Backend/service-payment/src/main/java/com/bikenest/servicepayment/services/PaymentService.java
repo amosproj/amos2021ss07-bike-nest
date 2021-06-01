@@ -15,18 +15,14 @@ public class PaymentService {
         merchantId = System.getenv("BT_MERCHANT_ID");
         publicKey = System.getenv("BT_PUBLIC_KEY");
         privateKey = System.getenv("BT_PRIVATE_KEY");
-        if (merchantId == null || publicKey == null || privateKey == null){
-            throw new IllegalArgumentException("A Braintree Environment Variable is not correctly set. Check your .env file!");
-        }
-        if(merchantId.equals("FILL_THIS") || publicKey.equals("FILL_THIS") || privateKey.equals("FILL_THIS")){
-            throw new IllegalArgumentException("A Braintree Environment Variable is still set to the default value 'FILL_THIS'." +
-                    "Replace it with a valid value.");
-        }
 
         gateway = new BraintreeGateway(Environment.SANDBOX, merchantId, publicKey, privateKey);
     }
 
-    public String generateClientToken(Integer userId){
+    public String generateClientToken(Integer userId) throws Exception {
+        if(merchantId.equals("FILL_THIS") || privateKey.equals("FILL_THIS") || publicKey.equals("FILL_THIS")){
+            throw new Exception("BRAINTREE API KEYS ARE NOT SET!");
+        }
         ClientTokenRequest clientTokenRequest = new ClientTokenRequest().customerId(String.valueOf(userId));
         return gateway.clientToken().generate(clientTokenRequest);
     }

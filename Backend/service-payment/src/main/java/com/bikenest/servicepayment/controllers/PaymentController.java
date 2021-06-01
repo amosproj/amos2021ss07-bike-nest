@@ -30,7 +30,7 @@ public class PaymentController {
      */
     @GetMapping("/getclienttoken")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public String getClientToken(@AuthenticationPrincipal UserInformation userInformation){
+    public String getClientToken(@AuthenticationPrincipal UserInformation userInformation) throws Exception {
         //TODO: Check if we already created a customer at braintree for this user
         boolean success = paymentService.createCustomer(userInformation.getUserId(), userInformation.getFirstName(),
                 userInformation.getLastName(), userInformation.getEmail());
