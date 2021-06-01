@@ -1,27 +1,27 @@
 package com.bikenest.serviceusermgmt;
 
-import com.bikenest.common.interfaces.usermgmt.*;
+import com.bikenest.common.interfaces.GeneralResponse;
+import com.bikenest.common.interfaces.usermgmt.ChangePasswordRequest;
+import com.bikenest.common.interfaces.usermgmt.SigninRequest;
+import com.bikenest.common.interfaces.usermgmt.SigninResponse;
+import com.bikenest.common.interfaces.usermgmt.SignupRequest;
+import com.bikenest.common.security.UserInformation;
+import com.bikenest.serviceusermgmt.models.User;
 import com.bikenest.serviceusermgmt.services.AccountService;
 import com.bikenest.serviceusermgmt.services.JWTService;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.http.ResponseEntity;
-
-import java.security.Key;
-import java.util.Optional;
-
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
-import com.bikenest.serviceusermgmt.models.User;
-import com.bikenest.common.security.UserInformation;
-import com.bikenest.common.interfaces.*;
+import javax.validation.Valid;
+import java.security.Key;
+import java.util.Optional;
 
 
 /**

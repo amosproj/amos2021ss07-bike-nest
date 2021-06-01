@@ -1,4 +1,4 @@
-package com.bikenest.servicebikenest.DB;
+package com.bikenest.servicebikenest.db;
 
 import org.springframework.data.repository.CrudRepository;
 
