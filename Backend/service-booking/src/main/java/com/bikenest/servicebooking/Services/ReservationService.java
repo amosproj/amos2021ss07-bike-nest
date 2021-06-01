@@ -112,9 +112,10 @@ public class ReservationService {
         return Optional.of(actualReservation);
     }
 
-    public boolean isReservationOwner(Integer reservationId, Integer userId){
+    public Optional<Reservation> isReservationOwner(Integer reservationId, Integer userId){
         Optional<Reservation> reservation = reservationRepository.findById(reservationId);
-
-        return reservation.isPresent() && reservation.get().getUserId() == userId;
+        if (reservation.isPresent() && reservation.get().getUserId() == userId)
+            return reservation;
+        return Optional.empty();
     }
 }
