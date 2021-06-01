@@ -1,7 +1,7 @@
 import global from "../components/GlobalVars";
 import JwtDecoder from "../components/JwtDecoder";
 
-export class UserService{
+export class UserService {
 
     /**
      * Tries to login using the provided credentials. Returns a dict that contains the field success and the field error.
@@ -34,16 +34,16 @@ export class UserService{
             .then((response) => response.json())
             .then((json) => {
                 console.log("loginUser Response:" + JSON.stringify(json));
-                if(json.success){
+                if (json.success) {
                     global.saveAuthenticationToken(json.jwt);
-                    return {"success": true, "error":null};
-                }else{
-                    return {"success": false, "error": json.error};
+                    return { "success": true, "error": null };
+                } else {
+                    return { "success": false, "error": json.error };
                 }
             })
             .catch((error) => {
                 console.error("loginUser Error:" + error);
-                return {"success": false, "error": error}
+                return { "success": false, "error": error }
             });
     }
 
@@ -65,7 +65,7 @@ export class UserService{
      * @param lastName {string}
      * @returns {Promise<any | {success: boolean, error: any}>} A promise with a dictionary that contains the fields success and error. If success is false, you can read the error field.
      */
-    async registerUser(email, password, firstName, lastName){
+    async registerUser(email, password, firstName, lastName) {
         let request = {
             "name": firstName,
             "lastname": lastName,
@@ -81,16 +81,47 @@ export class UserService{
             .then((response) => response.json())
             .then((json) => {
                 console.log("registerUser Response:" + JSON.stringify(json));
-                if(json.success){
+                if (json.success) {
                     global.saveAuthenticationToken(json.jwt);
-                    return {"success": true, "error": null};
-                }else{
-                    return {"success": false, "error": json.error};
+                    return { "success": true, "error": null };
+                } else {
+                    return { "success": false, "error": json.error };
                 }
             })
             .catch((error) => {
                 console.error("registerUser Error:" + error);
-                return {"success": false, "error": error}
+                return { "success": false, "error": error }
+            });
+    }
+
+    async changePassword(oldPassword, newPassword) {
+        let request = {
+            "oldPassword": oldPassword,
+            "newPassword": newPassword,
+        };
+
+        let jwt = await global.getAuthenticationToken();
+
+        return fetch(global.globalIPAddress + "/usermanagement/changePassword", {
+            method: 'POST',
+            body: JSON.stringify(request),
+            headers: {
+                Accept: 'application/json', 'Content-Type': 'application/json',
+                Authorization: jwt
+            }
+        })
+            .then((response) => response.json())
+            .then((json) => {
+                console.log("changePassword Response:" + JSON.stringify(json));
+                if (json.success) {
+                    return { "success": true, "error": null };
+                } else {
+                    return { "success": false, "error": json.error };
+                }
+            })
+            .catch((error) => {
+                console.error("changePassword Error:" + error);
+                return { "success": false, "error": error }
             });
     }
 
@@ -98,26 +129,26 @@ export class UserService{
      * Returns if the user is currently logged in or not.
      * @returns {boolean}
      */
-    isLoggedIn(){
+    isLoggedIn() {
         //TODO: Actually check if the jwt is not expired
         let jwt = global.getAuthenticationToken();
         return jwt != null;
     }
 
     //TODO: These functions are not tested yet
-    getFirstName(){
+    getFirstName() {
         let jwt = global.getAuthenticationToken();
         let payload = JwtDecoder.decode(jwt);
         return payload.FirstName;
     }
 
-    getLastName(){
+    getLastName() {
         let jwt = global.getAuthenticationToken();
         let payload = JwtDecoder.decode(jwt);
         return payload.LastName;
     }
 
-    getEmail(){
+    getEmail() {
         let jwt = global.getAuthenticationToken();
         let payload = JwtDecoder.decode(jwt);
         return payload.sub;

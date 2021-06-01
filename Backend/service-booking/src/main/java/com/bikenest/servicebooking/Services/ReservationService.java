@@ -1,6 +1,9 @@
 package com.bikenest.servicebooking.Services;
 
 import com.bikenest.common.feignclients.BikenestClient;
+import com.bikenest.common.interfaces.bikenest.FreeSpotRequest;
+import com.bikenest.common.interfaces.bikenest.ReserveSpotRequest;
+import com.bikenest.common.interfaces.bikenest.ReserveSpotResponse;
 import com.bikenest.common.interfaces.booking.CreateReservationRequest;
 import com.bikenest.servicebooking.DB.Reservation;
 import com.bikenest.servicebooking.DB.ReservationRepository;
@@ -36,11 +39,14 @@ public class ReservationService {
         if (!bikenestClient.hasFreeSpots(newReservation.getBikenestId())){
             return Optional.empty();
         }
-        if(!bikenestClient.reserveSpot(newReservation.getBikenestId())){
+
+        ReserveSpotResponse response = bikenestClient.reserveSpot(new ReserveSpotRequest(newReservation.getBikenestId(), userId));
+        if(!response.isSuccess()){
             return Optional.empty();
         }
 
-        Reservation reservation = new Reservation(userId, newReservation.getBikenestId(),
+
+        Reservation reservation = new Reservation(userId, response.getBikenestId(), response.getSpotId(),
                 newReservation.getReservationMinutes(), false, LocalDateTime.now(ZoneId.of("Europe/Berlin")),
                 LocalDateTime.now(ZoneId.of("Europe/Berlin")).plusMinutes(RESERVATION_MINUTES));
 
@@ -81,7 +87,8 @@ public class ReservationService {
             return Optional.empty();
         }
 
-        if(!bikenestClient.freeSpot(actualReservation.getBikenestId())){
+        if(!bikenestClient.freeSpot(new FreeSpotRequest(actualReservation.getBikenestId(), actualReservation.getBikespotId(),
+                actualReservation.getUserId()))){
             return Optional.empty();
         }
         actualReservation.setActualEnd(LocalDateTime.now(ZoneId.of("Europe/Berlin")));
