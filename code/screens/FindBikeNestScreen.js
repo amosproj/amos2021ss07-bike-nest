@@ -344,7 +344,7 @@ export default function FindBikeNestScreen({ navigation }) {
             />
             <View style={styles.textContent}>
               <Text numberOfLines={1} style={styles.cardtitle}>{marker.address}</Text>
-              {distances.length > 1 ? <Text>Entfernung:  <B>{distances[index] / 1000} Km </B></Text> : <Text></Text>}
+              {distances.length > 1 ? <Text>Entfernung:  <B>{(distances[index] / 1000).toFixed(2).toLocaleString()} Km </B></Text> : <Text></Text>}
               <Text numberOfLines={1} style={styles.cardDescription}>In diesem Bikenest sind <B>{marker.capacity}</B> Plätze frei</Text>
               <View style={styles.button}>
                 <TouchableOpacity
@@ -358,7 +358,7 @@ export default function FindBikeNestScreen({ navigation }) {
                   <Text style={styles.textSign}>Zur Buchung</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => { Linking.openURL('https://www.google.com/maps/search/?api=1&query=' + stateMarkers[currentMarkerIndex].coordinate.latitude + ',' + stateMarkers[currentMarkerIndex].coordinate.longitude) }}
+                  onPress={() => { Linking.openURL('https://www.google.com/maps/dir//' + stateMarkers[currentMarkerIndex].coordinate.latitude + ',' + stateMarkers[currentMarkerIndex].coordinate.longitude) }}
                   style={[styles.signIn, {
                     borderColor: '#FFF',
                     borderWidth: 1
