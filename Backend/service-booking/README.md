@@ -82,6 +82,16 @@ Reservation:
       sound. Or if he want to take his bike home, opens the cage but for some reason leaves without his bike, there should also be
       an alarm. You get the gist. These problems are not solvable with mechanisms in the frontend and backend, so the Bikenest 
       will have to provide additional functionality later on! For a prototype our use case will work.
+    - a possible way to enforce the right lock/unlock workflow would be to store
+        - actualStartUnlock
+        - actualStartLock
+        - actualEndUnlock
+        - actualEndLock
+    for each reservation. That way we can always check if these fields are set, when we want to do the next step. For example
+          if a user wants to end his reservation and unlock the cage, actualStartUnlock and actualStartLock have to be set.
+          If another user wants to start his reservation, we can check if all other workflows for this bikenests have completed:
+          For all reservations for this bikenest, check if there are any where actualStartUnlock is set but not actualStartLock or
+          actualEndUnlock is set but not actualEndLock...
 
 The locking/unlocking process could be very complicated. For now we focus on the easy cases and ignore all the edge cases
 (for example where the user does not follow the process correctly).
