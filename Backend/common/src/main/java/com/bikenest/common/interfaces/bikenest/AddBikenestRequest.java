@@ -12,7 +12,16 @@ public class AddBikenestRequest {
     @DecimalMin("1.0")
     @Digits(integer=8,fraction = 0)
     private Integer maximumSpots;
-    private boolean chargingAvailable;
+    private Boolean chargingAvailable;
+
+    public AddBikenestRequest(String name, String gpsCoordinates, Integer maximumSpots, boolean chargingAvailable){
+        this.name = name;
+        this.gpsCoordinates = gpsCoordinates;
+        this.maximumSpots = maximumSpots;
+        this.chargingAvailable = chargingAvailable;
+    }
+
+    public AddBikenestRequest(){}
 
     public String getName() {
         return name;

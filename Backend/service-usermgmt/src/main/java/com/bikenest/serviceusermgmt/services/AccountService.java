@@ -12,19 +12,18 @@ public class AccountService {
     @Autowired
     UserRepository userRepository;
 
-    public boolean existsAccountWithEmail(String email){
+    public boolean existsAccountWithEmail(String email) {
         return userRepository.existsByEmail(email);
     }
 
-    public Optional<User> loginUser(String email, String password){
+    public Optional<User> loginUser(String email, String password) {
         Optional<User> user = userRepository.findByEmail(email);
-        if(user.isPresent() && user.get().getPassword().equals(password))
+        if (user.isPresent() && user.get().getPassword().equals(password))
             return user;
         return Optional.empty();
     }
 
-    public Optional<User> createAccount(String email, String password, String firstName, String lastName)
-    {
+    public Optional<User> createAccount(String email, String password, String firstName, String lastName) {
         if (existsAccountWithEmail(email))
             return Optional.empty();
 
@@ -32,5 +31,19 @@ public class AccountService {
         userRepository.save(user);
 
         return Optional.of(user);
+    }
+
+    public boolean changePassword(String email, String oldPassword, String newPassword) {
+        if (!existsAccountWithEmail(email))
+            return false;
+
+        Optional<User> user = userRepository.findByEmail(email);
+
+        if (user.isPresent() && user.get().getPassword().equals(oldPassword)) {
+            user.get().setPassword(newPassword);
+            userRepository.save(user.get());
+            return true;
+        }
+        return false;
     }
 }
