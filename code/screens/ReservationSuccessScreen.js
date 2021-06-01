@@ -84,7 +84,7 @@ tryGETBooking();
                              overrideTextColor={colors.UI_BaseGrey_0} 
                              type={ButtonStyle.big} 
                              text="Navigation"  
-                             onPress={() => { Linking.openURL('https://www.google.com/maps/dir/?api=1&destination=' + bikenest.coordinate.latitude + ',' + bikenest.coordinate.longitude + '&travelmode=bike') }}/>
+                             onPress={() => { Linking.openURL('https://www.google.com/maps/dir//' + bikenest.coordinate.latitude + ',' + bikenest.coordinate.longitude) }}/>
             <BikeNest_Button overrideButtonColor={colors.UI_Light_4} 
                              overrideTextColor={colors.UI_BaseGrey_0} 
                              type={ButtonStyle.big} 

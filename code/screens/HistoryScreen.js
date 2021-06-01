@@ -55,8 +55,7 @@ export default function HistoryScreen({ navigation }) {
         console.log(response.error);
       }
     });
-
-    Linking.openURL('https://www.google.com/maps/dir/?api=1&destination=' + latitude + ',' + longitude + '&travelmode=bike');
+    Linking.openURL('https://www.google.com/maps/dir//' + latitude + ',' + longitude);
   }
 
   return (
