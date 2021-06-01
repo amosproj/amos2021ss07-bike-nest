@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View, Image} from 'react-native';
 import { Dimensions } from "react-native";
 import Colors from '../styles/Colors';
@@ -98,10 +98,22 @@ export default function BookingScreen({ route, navigation }) {
       setcostEbike(0);
     }
   }
-  const getPrice = () => {
-    let price = (costHours*costSlots) + costEbike;
+
+  useEffect(()=>{
+    let price = 0
+
+    if(costHours != null){
+      price = costHours;
+    } 
+    if (costHours != null && costSlots != null){
+      price = (costHours*costSlots);
+    } 
+    if (costHours != null && costSlots != null && costEbike != null){
+      price = (costHours*costSlots) + costEbike;
+    }
     setEstimatedPrice(price);
-  };
+     
+  });
   return (
     <View style={myStyles.container}>
       <View style={myStyles.paymentContainer}>
@@ -153,9 +165,9 @@ export default function BookingScreen({ route, navigation }) {
                 ~{estimatedPrice}€
               </Text>
         </View>
-          <Pressable style={[myStyles.reserved, {justifyContent: 'flex-end'}]}  onPress={() => getPrice(this)}>
+          {/* <Pressable style={[myStyles.reserved, {justifyContent: 'flex-end'}]}  onPress={() => getPrice(this)}>
             <Text style={myStyles.h3}>Preis Kalkulieren</Text> 
-          </Pressable>
+          </Pressable> */}
           <Pressable style={[myStyles.reserved, {justifyContent: 'flex-end'}]}  onPress={() => onPressOrder(this)}>
             <Text style={myStyles.h3}>Weiter</Text> 
             <Image style={{margin: 10}} source={require('../assets/payment/mail-send.png')} />

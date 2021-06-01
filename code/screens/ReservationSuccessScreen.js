@@ -20,20 +20,25 @@ export default function ReservationSuccessScreen({ route, navigation }) {
   let bikenestName = route.params.name;
 
   let nestAdresse = bikenestName;
-  let spotNumber = 20;
+
+  const [spotNum, setSpotNumber] = useState(0);
 
   let tryGETBooking = () => {
     console.log('start pulling reservation info');
 
     bookingService.getAllReservations().then(response => {
       if(response.success){
-        alert(JSON.stringify(response.reservations));
-        console.log(response.reservations);
+        // alert(JSON.stringify(response.reservations));
+        // console.log(response.reservations);
+        
+        //TODO set spot number where reservation not expired
+        setSpotNumber(response.reservations[0].bikespotId);
       }else{
         console.log(response.error);
       }
     });
 }
+tryGETBooking();
 
   return (
     <View style={mainStyles.container}>
@@ -62,7 +67,7 @@ export default function ReservationSuccessScreen({ route, navigation }) {
           <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start', padding: 30}}>
             <Text style={{fontSize: 16, color: '#000000'}}>Vielen Dank für deine Reservierung! </Text>
             <Text style={{fontSize: 16, color: '#000000'}}>Begib dich zu folgendem BIKE NEST um dein Fahrrad abzustellen: {"\n"}</Text>
-            <Text style={{fontWeight: 'bold', fontSize: 16, color: '#000000'}}>BIKE NEST {"\n"}{nestAdresse} {"\n"}Spot Nummer {spotNumber}</Text>
+            <Text style={{fontWeight: 'bold', fontSize: 16, color: '#000000'}}>BIKE NEST {"\n"}{nestAdresse} {"\n"}Spot Nummer {spotNum}</Text>
           </View>
         </TouchableOpacity>
         <View style={styles.reserved}>
@@ -79,7 +84,7 @@ export default function ReservationSuccessScreen({ route, navigation }) {
                              overrideTextColor={colors.UI_BaseGrey_0} 
                              type={ButtonStyle.big} 
                              text="Navigation"  
-                             onPress={() => { Linking.openURL('https://www.google.com/maps/search/?api=1&query=' + bikenest.coordinate.latitude + ',' + bikenest.coordinate.longitude) }}/>
+                             onPress={() => { Linking.openURL('https://www.google.com/maps/dir/?api=1&destination=' + bikenest.coordinate.latitude + ',' + bikenest.coordinate.longitude + '&travelmode=bike') }}/>
             <BikeNest_Button overrideButtonColor={colors.UI_Light_4} 
                              overrideTextColor={colors.UI_BaseGrey_0} 
                              type={ButtonStyle.big} 

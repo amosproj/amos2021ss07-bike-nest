@@ -16,9 +16,6 @@ var height = Dimensions.get('window').height; //full height
 
 export default function PaymentScreen({ route,navigation }) {
     let bookingService = new BookingService();
-    const [slots, setSlots] = useState("");
-    const [hours, setHours] = useState("");
-    const [ebike, setEbike] = useState("");
     const [promocode, setPromoCode] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
     const [modalText, setModalText] = useState("");
@@ -90,7 +87,7 @@ export default function PaymentScreen({ route,navigation }) {
     return estimatedPrice;
   };
   const getDiscount = () => {
-    return 0.10;
+    return 0.0;
   };
   const getSum = () => {
     return (estimatedPrice-getDiscount());
