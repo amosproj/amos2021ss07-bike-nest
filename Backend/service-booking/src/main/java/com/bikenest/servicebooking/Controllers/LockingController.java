@@ -34,7 +34,7 @@ public class LockingController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<GeneralResponse> startUnlock(@AuthenticationPrincipal UserInformation user,
                                                             @RequestBody StartUnlockRequest request) {
-        if (reservationService.isReservationOwner(request.getReservationId(), user.getUserId()).isPresent()) {
+        if (reservationService.isReservationOwner(request.getReservationId(), user.getUserId()).isEmpty()) {
             return ResponseEntity.badRequest().body(
                     new GeneralResponse(false, "You can only start your own reservations.", null));
         }
@@ -64,7 +64,7 @@ public class LockingController {
     public ResponseEntity<GeneralResponse> endUnlock(@AuthenticationPrincipal UserInformation user,
                                                           @RequestBody EndUnlockRequest request) {
         //TODO: Check if the reservation is actually started and don't end it elsewise
-        if (reservationService.isReservationOwner(request.getReservationId(), user.getUserId()).isPresent()) {
+        if (reservationService.isReservationOwner(request.getReservationId(), user.getUserId()).isEmpty()) {
             return ResponseEntity.badRequest().body(
                     new GeneralResponse(false, "You can only end your own reservations.", null));
         }
