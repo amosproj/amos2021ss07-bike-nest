@@ -63,6 +63,10 @@ Reservation:
               "actualEnd": null
               }
             ]
+            
+- /booking/cancel/{reservationId}
+    - JWT Authentication.
+    - Cancel a reservation if it hasn't been started yet (Bikenest was never unlocked)
 
 ## Locking/Unlocking
 
