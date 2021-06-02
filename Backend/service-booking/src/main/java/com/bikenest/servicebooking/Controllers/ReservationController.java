@@ -1,5 +1,6 @@
 package com.bikenest.servicebooking.Controllers;
 
+import com.bikenest.common.exceptions.BusinessLogicException;
 import com.bikenest.common.interfaces.GeneralResponse;
 import com.bikenest.common.interfaces.booking.CreateReservationRequest;
 import com.bikenest.common.security.UserInformation;
@@ -65,5 +66,11 @@ public class ReservationController {
         }
 
         return ResponseEntity.ok(new GeneralResponse(true, null, reservation.get()));
+    }
+
+    @GetMapping(value = "/test")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<GeneralResponse> testExceptionHandler() throws BusinessLogicException {
+        throw new BusinessLogicException("ExceptionHandler works?");
     }
 }
