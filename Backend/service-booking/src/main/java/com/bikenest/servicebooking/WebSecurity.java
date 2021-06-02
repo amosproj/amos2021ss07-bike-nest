@@ -2,7 +2,6 @@ package com.bikenest.servicebooking;
 
 import com.bikenest.common.security.JWTAuthenticationEntrypoint;
 import com.bikenest.common.security.JWTAuthenticationFilter;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -22,7 +21,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
 
         http.cors().and().authorizeRequests()
-                .antMatchers("/booking/all", "/booking/add", "/booking/start/*", "/booking/end/*", "/booking/cancel/*")
+                .antMatchers("/booking/*", "/booking/lock/*")
                 .authenticated()
                 .anyRequest()
                 .permitAll()

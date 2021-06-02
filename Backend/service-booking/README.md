@@ -3,41 +3,137 @@
 Reservation:
 - Id
 - UserId
+- BikespotId  
 - BikenestId
-- StartDateTime
-- ActualStartDateTime
-- EndDateTime
-- ActualEndDateTime
+- ReservationMinutes  
+- ReservationStart
+- ReservationEnd
+- ActualStart
+- ActualEnd
+- Paid
+- Cancelled
 
 ## Endpoints
 
 - /booking/add
-    - Authenticated, Provide a valid JWT
-    - Adds a new Reservation for the User
-    - Provide:
-        - userId (This is implicitly provided by the JWT)
-        - bikenestId
-        - startDateTime
-        - endDateTime
-    - The DateTimes have to be formatted like
-        - yyyy-MM-dd'T'HH:mm:ss
-        - 2012-10-01T09:45:00
+    - Create a new Reservation, you have to provide the BikenestId and the number of minutes that 
+      the user wants to book this spot for. The reservation is valid for the next 30 minutes. Afterwards it will count as cancelled.
+    - Authenticated, you have to provide a valid JWT
     - Example Request Body:
         - {
-          "bikenestId":1,
-          "startDateTime":"2012-10-01T09:45:00",
-          "endDateTime":"2012-10-01T10:45:00"
+          "bikenestId": 1,
+          "reservationMinutes": 30
           }
-    - Returns the JSON of the new Reservation Object created
+    - Returns a general response with a success, error and payload field. Example:
+        - {
+          "success": true,
+          "error": null,
+          "payload": {
+          "id": 2,
+          "userId": 1,
+          "bikenestId": 15,
+          "bikespotId": 4,
+          "reservationMinutes": 30,
+          "paid": false,
+          "cancelled": false,
+          "reservationStart": "2021-06-01T15:46:58.575",
+          "reservationEnd": "2021-06-01T16:16:58.575",
+          "actualStart": null,
+          "actualEnd": null
+          }
+          }
     
 - /booking/all
-    - Currently returns all Bookings stored in the DB
-    - Later will only return the Bookings that are viewable (For normal Users only the owned bookings and for Admins all bookings)
+    - JWT Authenticated
+    - If a user accesses this, only the bookings that belong to that user are returned
+    - If an Admin accesses this, all bookings are returned
+    - Example response:
+        -   [
+              {
+              "id": 1,
+              "userId": 1,
+              "bikenestId": 1,
+              "bikespotId": 12,
+              "reservationMinutes": 30,
+              "paid": false,
+              "cancelled": false,
+              "reservationStart": "2021-06-01T01:20:15.471",
+              "reservationEnd": "2021-06-01T01:50:15.473",
+              "actualStart": null,
+              "actualEnd": null
+              }
+            ]
+            
+- /booking/cancel/{reservationId}
+    - JWT Authentication.
+    - Cancel a reservation if it hasn't been started yet (Bikenest was never unlocked)
 
-- /booking/start/{reservationId}
-    - Starts the reservation with Id = {reservationId}. So ActualStartDateTime will be set.
-    - Checks if the user owns the reservation and if not, an error is returned.
-    - In case of success: returns the edited Reservation Object as JSON (with ActualStartDateTime filled)
+## Locking/Unlocking
 
-- /booking/end/{reservationId}
-    - See /booking/end ... Only difference is that here the ActualEndDateTime is set.
+- Few open points:
+    - How will this mechanism work with concurrency? We should probably only allow one person at a time to do anything.
+    This means that once /booking/startunlock or /booking/endunlock is called, further access on the locking endpoints should be
+      restricted for other users.
+    - The workflow with having the user close the Bikenest by pressing a button is error prone and very uncomfortable.
+    In a real world environment, the best would be to have more functionality inside the Bikenest. For security reasons the Bikenest
+      will need a few sensors anyways (so that the cage won't close if anything is blocking the way). There should be some sort of
+      sensor that can detect if a user left the Bikenest. If he left the Bikenest and the Bike is at the correct spot, the door 
+      closes itself and a message is sent to the Backend. If he leaves and the Bike is at an incorrect sport, there should be an alarm
+      sound. Or if he want to take his bike home, opens the cage but for some reason leaves without his bike, there should also be
+      an alarm. You get the gist. These problems are not solvable with mechanisms in the frontend and backend, so the Bikenest 
+      will have to provide additional functionality later on! For a prototype our use case will work.
+    - a possible way to enforce the right lock/unlock workflow would be to store
+        - actualStartUnlock
+        - actualStartLock
+        - actualEndUnlock
+        - actualEndLock
+    for each reservation. That way we can always check if these fields are set, when we want to do the next step. For example
+          if a user wants to end his reservation and unlock the cage, actualStartUnlock and actualStartLock have to be set.
+          If another user wants to start his reservation, we can check if all other workflows for this bikenests have completed:
+          For all reservations for this bikenest, check if there are any where actualStartUnlock is set but not actualStartLock or
+          actualEndUnlock is set but not actualEndLock...
+
+The locking/unlocking process could be very complicated. For now we focus on the easy cases and ignore all the edge cases
+(for example where the user does not follow the process correctly).
+The Frontend will first send a request to /booking/startunlock which indicates, that the user is in front of the Bikenest and wants
+to store his bike. We open up the cage and return success or an error message.
+
+We could then ask the user to press a button in the frontend, once he placed his bike on the correct spot.
+This button sends a request to /booking/startlock which will check, if the user placed his bike on the correct spot (using calls
+to the Raspberry Pi), if he did, then the door will be closed. If something is not correct, an error message is returned, that
+should give detailed instructions to the user.
+The Frontend should also tell the user not to try and close the door, while he is still inside of the cage...
+
+When the user wants to take his Bike from the Bikenest, the frontend will first call /booking/endunlock
+which tells the Backend, that the Bikenest should be opened so that the user can get his bike.
+Once he is outside of the cage he should press a button in the frontend application that will call /booking/endlock
+so that the Bikenest will be closed again. The Backend will check, if the sensor of the assigned bikespot is inactive and if it is
+not (the user forgot his bike) an error message is displayed. If everything seems to be ok, the Bikenest is locked again.
+
+- /booking/lock/startunlock
+    - JWT Authenticated. Example request body:
+        - { "reservationId": 423, "qrCode": "3ft1j7delK%2t" }
+        - The QR Code has to be scanned with the Frontend Application and is placed on the Bikenest.
+          That way we can be pretty sure, that a user that tries to open the Bikenest is indeed standing in front of it.
+          The QR Code can be validated using the Bikenest service.
+        - The Bikenest will be opened by performing a call to the Raspberry Pi
+    - Internal the actualStart time of the reservation will be set.
+    - In case of success: returns the edited Reservation Object as JSON (with actualStart filled)
+    
+- /booking/lock/startlock
+    - JWT Authenticated. Example request body:
+        - { "reservationId": 423 }
+    - Validates if the Bikenest is currently open and if the user has correctly placed his bike on the correct bikespot.
+    - Returns either success or an error message with detailed instructions.
+
+- /booking/lock/endunlock
+    - JWT Authenticated. Example request body:
+        - { "reservationId": 423, "qrCode": "3ft1j7delK%2t" }
+    - User wants to take his bike from the Bikenest. If everything is valid (especially the QR Code), the Bikenest will be opened.
+    - Returns the edited Reservation object (with actualEnd filled)
+    
+- /booking/lock/endlock
+    - JWT Authenticated. Example request body:
+        - { "reservationId": 423 }
+    - User took his bike from the Bikenest and wants to close the cage.
+    - Checks if the sensor at the assigned Bikespot is now deactivated. If it is not an error message is returned.

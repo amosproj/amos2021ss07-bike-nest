@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ImageBackground, Pressable, StyleSheet, Text, View, Image, TouchableOpacity  } from 'react-native';
+import { ImageBackground, Pressable, StyleSheet, Text, View, Image, TouchableOpacity, Linking } from 'react-native';
 import { Dimensions } from "react-native";
 import Avatar from '../assets/Avatar.png'; 
 import bike from '../assets/bike.png'; 
@@ -9,14 +9,17 @@ import global from '../components/GlobalVars';
 import { mainStyles } from "../styles/MainStyles";
 import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
 import {BookingService} from "../services/BookingService";
+import { BikenestService } from '../services/BikenestService';
 
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
 export default function HistoryScreen({ navigation }) {
-  // const [myListData, setData] = useState("");
   let bookingService = new BookingService();
+  let bikenestService = new BikenestService();
+
+  const [bikenestIDs, setBikenestIDs] = useState();
 
   let tryGETBooking = () => {
     console.log('start pulling reservation info');
@@ -25,11 +28,35 @@ export default function HistoryScreen({ navigation }) {
       if(response.success){
         alert(JSON.stringify(response.reservations));
         console.log(response.reservations);
+        setBikenestIDs(response.reservations.bikenestId);
       }else{
         console.log(response.error);
       }
     });
-}
+  }
+  let forwardToGoogle = () => {
+    console.log('start pulling bikenest info');
+    let latitude = 49.46;
+    let longitude = 11.07;
+
+    bikenestService.getAllBikenests().then(response => {
+      if(response.success){
+        console.log(response.bikenests);
+        //TODO get right bikenest for the navigation! 
+        // for (let y of response.bikenests){
+        //   for (let x of bikenestIDs){
+        //     if (y.id == x){
+        //       latitude = y.gpsCoordinates[0];
+        //       longitude = y.gpsCoordinates[1];
+        //     }
+        //   }
+        // }
+      }else{
+        console.log(response.error);
+      }
+    });
+    Linking.openURL('https://www.google.com/maps/dir//' + latitude + ',' + longitude);
+  }
 
   return (
     <View style={mainStyles.container}>
@@ -41,7 +68,7 @@ export default function HistoryScreen({ navigation }) {
           <Text style={styles.name} >
             Max Muster </Text>
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate("FindBikeNest") }
+        <TouchableOpacity onPress={() => forwardToGoogle(this) }
           style={[styles.heightBike, {
             backgroundColor: '#FFF',
             height: 230,

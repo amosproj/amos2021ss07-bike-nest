@@ -1,10 +1,12 @@
-package com.bikenest.servicebikenest.Controllers;
+package com.bikenest.servicebikenest.controllers;
 
 import com.bikenest.common.interfaces.GeneralResponse;
 import com.bikenest.common.interfaces.bikenest.AddBikenestRequest;
+import com.bikenest.common.interfaces.bikenest.BikenestInfoRequest;
+import com.bikenest.common.interfaces.bikenest.BikenestInfoResponse;
 import com.bikenest.common.security.UserInformation;
 import com.bikenest.common.security.UserRole;
-import com.bikenest.servicebikenest.DB.Bikenest;
+import com.bikenest.servicebikenest.db.Bikenest;
 import com.bikenest.servicebikenest.services.BikenestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +14,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
-import com.bikenest.common.interfaces.bikenest.BikenestInfoResponse;
-import com.bikenest.common.interfaces.bikenest.BikenestInfoRequest;
 
 @RestController
 @RequestMapping(path = "/bikenest")
@@ -43,7 +44,10 @@ public class BikenestController {
     @GetMapping(path = "/all")
     public @ResponseBody
     Iterable<Bikenest> getAllBikenests() {
-        return bikenestService.getAllBikenests();
+        // Remove the Bikespot Information before returning this
+        List<Bikenest> bikenests = bikenestService.getAllBikenests();
+        bikenests.forEach(x -> x.setBikespots(null));
+        return bikenests;
     }
 
     @GetMapping(path = "/deleteAll")

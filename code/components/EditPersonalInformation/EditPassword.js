@@ -1,14 +1,18 @@
 import React, {useState} from 'react';
-import { Pressable, Text, View, TextInput } from 'react-native';
-import {UserDataService} from "../../services/UserData";
+import {Pressable, Text, View, TextInput} from 'react-native';
+import {UserService} from '../../services/UserService';
 import {styles} from "./styles";
+import BikeNest_Modal from '../BikeNest_Modal';
 
-export default function EditPassword(){
-    let userdata = new UserDataService();
+export default function EditPassword() {
+    let userService = new UserService();
     const [isEditing, setIsEditing] = useState(false);
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword1, setNewPassword1] = useState("");
     const [newPassword2, setNewPassword2] = useState("");
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalText, setModalText] = useState("");
+    const [modalHeadline, setModalHeadline] = useState("");
 
     let cancel = () => {
         setIsEditing(false);
@@ -18,22 +22,41 @@ export default function EditPassword(){
     }
 
     let save = () => {
-        if(!isInputValid()) {
+        if (!isInputValid()) {
             cancel();
             return;
         }
-        userdata.UpdatePassword(oldPassword, newPassword1);
-        //TODO: Display Result of Update Password?
-        cancel();
+        userService.changePassword(oldPassword, newPassword1).then((response) => {
+            console.log(JSON.stringify(response));
+            if (response.success === true) {
+                setModalHeadline("Yuhu!");
+                setModalText("Dein Passwort wurde erfolgreich geändert.");
+            } else {
+                setModalHeadline("Oh-oh!");
+                setModalText("Da ist leider etwas scheif gelaufen. Versuche es bitte erneut.");
+            }
+        });
+        setModalVisible(true);
     }
 
     let isInputValid = () => {
         return oldPassword.length > 0 && newPassword1 === newPassword2 && newPassword1.length > 0 && newPassword1 !== oldPassword;
     }
 
-    if(isEditing){
+    if (isEditing) {
         return (
             <View style={styles.mainview}>
+                <BikeNest_Modal
+                    modalHeadLine={modalHeadline}
+                    modalText={modalText}
+                    isVisible={modalVisible}
+                    onPress={() => {
+                        setModalVisible(!modalVisible);
+                    }}
+                    onRequestClose={() => {
+                        setModalVisible(!modalVisible);
+                    }}
+                />
                 <Text style={styles.stdText}>Old Password:</Text>
                 <TextInput style={styles.inputField} onChangeText={setOldPassword} value={oldPassword}></TextInput>
                 <Text style={styles.stdText}>New Password:</Text>
@@ -50,9 +73,20 @@ export default function EditPassword(){
                 </Pressable>
             </View>
         );
-    }else{
+    } else {
         return (
             <View style={styles.mainview}>
+                <BikeNest_Modal
+                    modalHeadLine={modalHeadline}
+                    modalText={modalText}
+                    isVisible={modalVisible}
+                    onPress={() => {
+                        setModalVisible(!modalVisible);
+                    }}
+                    onRequestClose={() => {
+                        setModalVisible(!modalVisible);
+                    }}
+                />
                 <View style={styles.cell}><Text style={styles.stdText}>Password:</Text></View>
                 <View style={styles.cell}><Text style={styles.stdText}>*****</Text></View>
                 <Pressable style={styles.button} onPress={() => setIsEditing(true)}>

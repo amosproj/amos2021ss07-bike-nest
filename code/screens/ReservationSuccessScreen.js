@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ImageBackground, StyleSheet, Text, View, Image, TouchableOpacity  } from 'react-native';
+import { ImageBackground, StyleSheet, Text, View, Image, TouchableOpacity,  Linking } from 'react-native';
 import { Dimensions } from "react-native";
 import bike from '../assets/bike.png'; 
 import global from '../components/GlobalVars';
@@ -7,33 +7,38 @@ import { mainStyles } from "../styles/MainStyles";
 import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
 import colors from '../styles/Colors';
 import BikeNest_Button, { ButtonStyle } from '../components/BikeNest_Button';
+import {BookingService} from "../services/BookingService";
 
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
+export default function ReservationSuccessScreen({ route, navigation }) {
+  let bookingService = new BookingService();
 
-export default function ReservationSuccessScreen({ navigation }) {
-  // const [myListData, setData] = useState("");
+  let bikenest = route.params.state;
+  let bikenestName = route.params.name;
+
+  let nestAdresse = bikenestName;
+
+  const [spotNum, setSpotNumber] = useState(0);
 
   let tryGETBooking = () => {
     console.log('start pulling reservation info');
 
-    return fetch(global.globalIPAddress + "/booking/all", {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-    })
-        .then((response) => response.json())
-        .then((json) => {
-          alert(JSON.stringify(json));
-          console.log(json);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
+    bookingService.getAllReservations().then(response => {
+      if(response.success){
+        // alert(JSON.stringify(response.reservations));
+        // console.log(response.reservations);
+        
+        //TODO set spot number where reservation not expired
+        setSpotNumber(response.reservations[0].bikespotId);
+      }else{
+        console.log(response.error);
+      }
+    });
 }
+tryGETBooking();
 
   return (
     <View style={mainStyles.container}>
@@ -60,9 +65,9 @@ export default function ReservationSuccessScreen({ navigation }) {
             }}
           />
           <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start', padding: 30}}>
-            <Text style={{fontSize: 16, color: '#000000'}}>Vielen Dank für die Reservierung! </Text>
-            <Text style={{fontSize: 16, color: '#000000'}}>Begib dich zu folgendem BIKE NEST: {"\n"}</Text>
-            <Text style={{fontWeight: 'bold', fontSize: 16, color: '#000000'}}>BIKE NEST {"\n"}Nürnberg HBF {"\n"}Spot Nummer 20</Text>
+            <Text style={{fontSize: 16, color: '#000000'}}>Vielen Dank für deine Reservierung! </Text>
+            <Text style={{fontSize: 16, color: '#000000'}}>Begib dich zu folgendem BIKE NEST um dein Fahrrad abzustellen: {"\n"}</Text>
+            <Text style={{fontWeight: 'bold', fontSize: 16, color: '#000000'}}>BIKE NEST {"\n"}{nestAdresse} {"\n"}Spot Nummer {spotNum}</Text>
           </View>
         </TouchableOpacity>
         <View style={styles.reserved}>
@@ -75,8 +80,16 @@ export default function ReservationSuccessScreen({ navigation }) {
             <Text style={mainStyles.stdText}>Bitte begib dich zu dem oben genannten BIKE NEST. Du kannst dich Navigieren lassen oder es direkt aufschließen, falls du schon hier bist.</Text>
         </View>
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <BikeNest_Button overrideButtonColor={colors.UI_Light_4} overrideTextColor={colors.UI_BaseGrey_0} type={ButtonStyle.big} text="Navigation" onPress={() => navigation.navigate("PaymentConfirmation")} />
-            <BikeNest_Button overrideButtonColor={colors.UI_Light_4} overrideTextColor={colors.UI_BaseGrey_0} type={ButtonStyle.big} text="Ich bin schon hier" onPress={() => navigation.navigate("Lock")} />
+            <BikeNest_Button overrideButtonColor={colors.UI_Light_4} 
+                             overrideTextColor={colors.UI_BaseGrey_0} 
+                             type={ButtonStyle.big} 
+                             text="Navigation"  
+                             onPress={() => { Linking.openURL('https://www.google.com/maps/dir//' + bikenest.coordinate.latitude + ',' + bikenest.coordinate.longitude) }}/>
+            <BikeNest_Button overrideButtonColor={colors.UI_Light_4} 
+                             overrideTextColor={colors.UI_BaseGrey_0} 
+                             type={ButtonStyle.big} 
+                             text="Ich bin schon hier" 
+                             onPress={() => navigation.navigate("Lock")} />
         </View>
       </View>
       <BikeNest_NavigationFooter></BikeNest_NavigationFooter>

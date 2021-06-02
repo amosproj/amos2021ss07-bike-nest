@@ -13,4 +13,18 @@ export default class GlobalVars {
                 let result = await SecureStore.getItemAsync(GlobalVars.#accessTokenKey);
                 return result;
         }
+
+        static async deleteAuthenticationToken() {
+                await SecureStore.deleteItemAsync(GlobalVars.#accessTokenKey);
+        }
+
+        static async authenticationTokenExists() {
+                let result = await this.getAuthenticationToken(GlobalVars.#accessTokenKey);
+
+                if (result !== null) {
+                        return true;
+                }
+
+                return false;
+        }
 }
