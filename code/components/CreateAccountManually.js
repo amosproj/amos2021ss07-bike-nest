@@ -18,22 +18,19 @@ export function CreateAccountManually() {
     const [modalVisible, setModalVisible] = useState(false);
     const [modalText, setModalText] = useState("");
     const [modalHeadline, setModalHeadline] = useState("");
-    const [isValidInput, setIsValidInput] = useState(false);
     const [accountCreated, setAccountCreated] = useState(false);
     const navigation = useNavigation();
 
     //TODO: real Validation + Checkbox
     let validateInput = () => {
         let isValid = (firstName.length > 0) && (lastName.length > 0) && (email.length > 0) && (password.length > 0);
-        setIsValidInput(isValid);
 
         if (isValid) {
             tryCreateAccount();
         }
         else {
-            setModalHeadline("Sorry!");
-            setModalText("Oops da ist etwas schief gelaufen. Fülle bitte alle Felder mit den passenden Infos aus.");
-            setModalVisible(true);
+            setModalInfo(false,
+                "Oops da ist etwas schief gelaufen. Fülle bitte alle Felder mit den passenden Infos aus.");
         }
     }
 
@@ -56,16 +53,13 @@ export function CreateAccountManually() {
     //     return isNewEmail;
     // }
 
-    let setModalInfo = (json) => {
-        setAccountCreated(json.success);
-
-        if (json.success) {
+    let setModalInfo = (success, message) => {
+        if(success){
             setModalHeadline("Hurra!");
             setModalText("Dein Account wurde erfolgreich erstellt.")
         } else {
             setModalHeadline("Oops!");
-            if (json.error != null)
-                setModalText(json.error);
+            setModalText(message);
         }
 
         setModalVisible(true);
@@ -76,11 +70,17 @@ export function CreateAccountManually() {
         let lastname = lastName;
         let data = { name, lastname, email, password };
         userSerivce.registerUser(email, password, name, lastName).then(response =>{
-            setModalInfo(response);
-            console.log(JSON.stringify(response));
+            setAccountCreated(true);
+            setModalInfo(true, "Dein Account wurde erfolgreich erstellt!");
+        }).catch(error =>{
+            setAccountCreated(false);
+            if(error.display){
+                setModalInfo(false, error.message);
+            }else{
+                setModalInfo(false, "Ein unbekannter Fehler ist aufgetreten!");
+            }
         })
     }
-
 
     //TODO: Replace Modal (not working in web)
     return (

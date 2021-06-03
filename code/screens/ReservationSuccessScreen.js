@@ -26,16 +26,11 @@ export default function ReservationSuccessScreen({ route, navigation }) {
   let tryGETBooking = () => {
     console.log('start pulling reservation info');
 
-    bookingService.getAllReservations().then(response => {
-      if(response.success){
-        // alert(JSON.stringify(response.reservations));
-        // console.log(response.reservations);
-        
+    bookingService.getAllReservations().then(reservations => {
         //TODO set spot number where reservation not expired
-        setSpotNumber(response.reservations[0].bikespotId);
-      }else{
-        console.log(response.error);
-      }
+        setSpotNumber(reservations[0].bikespotId);
+    }).catch(error => {
+        console.error("Error retrieving Bookings: " + JSON.stringify(error));
     });
 }
 tryGETBooking();
@@ -49,13 +44,13 @@ tryGETBooking();
             </Text>
         </View>
         <TouchableOpacity onPress={() => navigation.navigate("Lock") }
-          style={styles.heightBike, {
+          style={[styles.heightBike, {
             backgroundColor: '#FFF',
             height: 230,
             width: 370,
             margin: 10,
             position: 'relative'
-          }}>
+          }]}>
           <ImageBackground
             source={bike}
             style={{
@@ -72,7 +67,7 @@ tryGETBooking();
         </TouchableOpacity>
         <View style={styles.reserved}>
             <Image source={require('../assets/payment/clock.png')} style={{margin: 10}} />
-            <Text style={mainStyles.stdText, {color: colors.UI_Light_2}}>
+            <Text style={[mainStyles.stdText, {color: colors.UI_Light_2}]}>
                 Reserviert für 30min
             </Text>
         </View>

@@ -31,9 +31,9 @@ export default function BookingScreen({ route, navigation }) {
 
   const fetchBikenestInfos = () => {
       bikenestService.getBikenestInfo(bikenest.id).then((response) => {
-        setSpotsLeft(response.spotsLeft);
-        setChargingOption(response.chargingOptionAvailable);
-        setbikenestName(response.bikenestName);
+        setSpotsLeft(response.currentSpots);
+        setChargingOption(response.chargingAvailable);
+        setbikenestName(response.name);
       }).catch((error) => {
         console.error("getBikenest Infos Error:" + error);
      });

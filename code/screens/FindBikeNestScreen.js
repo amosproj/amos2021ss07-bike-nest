@@ -109,6 +109,8 @@ export default function FindBikeNestScreen ({ navigation }) {
   };
 
   const getLocationAsync = async (tempMarkers) => {
+    console.log("Get location async");
+    console.log(tempMarkers);
     let location = await Location.getCurrentPositionAsync({});
     let localdistances = [];
     tempMarkers.map((marker, index) => {

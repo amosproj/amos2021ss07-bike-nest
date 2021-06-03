@@ -8,7 +8,7 @@ import global from "../components/GlobalVars"
 
 export default function LoginScreen({ navigation }) {
     global.authenticationTokenExists().then((exists) => {
-        initialScreen = "Login";
+        let initialScreen = "Login";
 
         if (exists === true)
             initialScreen = "FindBikeNest";
