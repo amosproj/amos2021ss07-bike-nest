@@ -40,11 +40,11 @@ export default function PaymentScreen({route, navigation}) {
             }).catch(error => {
             if (error.display) {
                 setModalHeadline("Sorry!");
-                setModalText("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
+                setModalText(error.message);
                 setModalVisible(true);
             } else {
                 setModalHeadline("Sorry!");
-                setModalText(error.message);
+                setModalText("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
                 setModalVisible(true);
             }
         });
