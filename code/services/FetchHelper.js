@@ -39,19 +39,19 @@ async function fetchWithTimeout(url, options, timeout = 15000) {
     options.signal = controller.signal
     return fetch(url, options).then(async response => {
             clearTimeout(timeoutId)
-            console.log("Request: " + url);
-            console.log("RequestBody: " + JSON.stringify(options.body));
+            console.debug("Request: " + url);
+            console.debug("RequestBody: " + JSON.stringify(options.body));
             let responseJSON = "";
             try {
                 responseJSON = await response.json();
-                console.log("ResponseBody: " + JSON.stringify(responseJSON));
+                console.debug("ResponseBody: " + JSON.stringify(responseJSON));
             }catch(e){
-                console.log("Error retrieving JSON from the Response Body!");
+                console.debug("Error retrieving JSON from the Response Body!");
             }
 
             if (response.status == 401) {
-                console.log("### FETCH EXCEPTION ###");
-                console.log("Unauthorized! Maybe the JWT is expired?");
+                console.debug("### FETCH EXCEPTION ###");
+                console.debug("### Unauthorized! Maybe the JWT is expired?");
 
                 // Delete the global jwt, since it is invalid anyways
                 global.deleteAuthenticationToken();
@@ -60,29 +60,29 @@ async function fetchWithTimeout(url, options, timeout = 15000) {
                     "message": "Deine Sitzung ist abgelaufen. Logge dich erneut ein!"
                 };
             } else if (response.status == 400) {
-                console.log("### FETCH EXCEPTION ###");
-                console.log("Bad Request! Maybe you provided some invalid request data? For more info see Backend logs.");
+                console.debug("### FETCH EXCEPTION ###");
+                console.debug("### Bad Request! Maybe you provided some invalid request data? For more info see Backend logs.");
                 throw {
                     "display": true,
                     "message": "Die Serveranfrage enthält falsche Daten!"
                 };
             } else if (response.status == 422) {
-                console.log("### FETCH EXCEPTION ###");
-                console.log("Unprocessable Entity! Most likely caused by a BusinessLogicException in the Backend.")
+                console.debug("### FETCH EXCEPTION ###");
+                console.debug("### Unprocessable Entity! Most likely caused by a BusinessLogicException in the Backend.")
                 throw {
                     "display": true,
                     "message": responseJSON.error
                 };
             } else if (response.status == 415) {
-                console.log("### FETCH EXCEPTION ###");
-                console.log("Unsupported Media Type! Did you the the Content-Type Header?");
+                console.debug("### FETCH EXCEPTION ###");
+                console.debug("### Unsupported Media Type! Did you the the Content-Type Header?");
                 throw {
                     "display": false,
                     "message": "Unsupported Media Type"
                 };
             } else if (response.status != 200) {
-                console.log("### FETCH EXCEPTION ###");
-                console.log("Unknown response status (" + response.status + ")...")
+                console.debug("### FETCH EXCEPTION ###");
+                console.debug("### Unknown response status (" + response.status + ")...")
                 throw {
                     "display": true,
                     "message": "Ein unbekannter Fehler ist aufgetreten!"
@@ -97,9 +97,9 @@ async function fetchWithTimeout(url, options, timeout = 15000) {
         //our dictionary.
         //If it doesn't then transform it to an error that looks like our dictionary
         if (error.display === undefined) {
-            console.log("### FETCH EXCEPTION ###");
-            console.log("An error occurred during the fetch. Most likely the fetch just timed out.")
-            console.log("Is the Backend running and your IP configured correctly?");
+            console.debug("### FETCH EXCEPTION ###");
+            console.debug("### An error occurred during the fetch. Most likely the fetch just timed out.")
+            console.debug("### Is the Backend running and your IP configured correctly?");
             throw {
                 "display": true,
                 "message": "Zeitüberschreitung bei der Anfrage!"
