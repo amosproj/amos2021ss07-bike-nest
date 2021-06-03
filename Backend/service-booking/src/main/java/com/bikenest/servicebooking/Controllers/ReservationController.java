@@ -13,6 +13,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(path = "/booking")
 public class ReservationController {
@@ -27,7 +29,7 @@ public class ReservationController {
             return ResponseEntity.ok(reservationService.getAllReservations());
         } else if (user.getRole() == UserRole.User) {
             return ResponseEntity.ok(reservationService.getAllReservationByUserId(user.getUserId()));
-        }else{
+        } else {
             throw new BusinessLogicException("Du hast die Funktion nicht die erforderlichen Rechte.");
         }
     }
@@ -35,7 +37,7 @@ public class ReservationController {
     @PostMapping(value = "/add", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<Reservation> createReservation(@AuthenticationPrincipal UserInformation user,
-                                                             @RequestBody CreateReservationRequest request) throws BusinessLogicException {
+                                                         @Valid @RequestBody CreateReservationRequest request) throws BusinessLogicException {
         //TODO: Check if payment details are provided and don't create reservation else
         Reservation reservation = reservationService.createReservation(user.getUserId(), request);
         return ResponseEntity.ok(reservation);
@@ -44,7 +46,7 @@ public class ReservationController {
     @PostMapping(value = "/cancel/{reservationId}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<Reservation> cancelReservation(@AuthenticationPrincipal UserInformation user,
-                                                             @PathVariable("reservationId") Integer reservationId) throws BusinessLogicException {
+                                                         @PathVariable("reservationId") Integer reservationId) throws BusinessLogicException {
         Reservation reservation = reservationService.cancelReservation(reservationId, user.getUserId());
 
         return ResponseEntity.ok(reservation);
