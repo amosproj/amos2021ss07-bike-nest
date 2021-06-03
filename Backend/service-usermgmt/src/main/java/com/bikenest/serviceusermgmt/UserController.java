@@ -1,7 +1,9 @@
 package com.bikenest.serviceusermgmt;
 
 import com.bikenest.common.exceptions.BusinessLogicException;
+import com.bikenest.common.interfaces.BooleanResponse;
 import com.bikenest.common.interfaces.usermgmt.ChangePasswordRequest;
+import com.bikenest.common.interfaces.usermgmt.JWTResponse;
 import com.bikenest.common.interfaces.usermgmt.SigninRequest;
 import com.bikenest.common.interfaces.usermgmt.SignupRequest;
 import com.bikenest.common.security.UserInformation;
@@ -10,6 +12,7 @@ import com.bikenest.serviceusermgmt.services.AccountService;
 import com.bikenest.serviceusermgmt.services.JWTService;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -41,35 +44,36 @@ public class UserController {
         return ResponseEntity.ok(jwtService.validateJWT(JWT));
     }
 
-    @PostMapping("/signin")
-    public ResponseEntity<String> authenticateUser(@Valid @RequestBody SigninRequest signinRequest) throws BusinessLogicException {
+    @PostMapping(path="/signin")
+    public ResponseEntity<JWTResponse> authenticateUser(@Valid @RequestBody SigninRequest signinRequest) throws BusinessLogicException {
         User loggedInUser = accountService.loginUser(signinRequest.getEmail(), signinRequest.getPassword());
         String jwt = jwtService.buildJwtFromUser(loggedInUser);
-        return ResponseEntity.ok(jwt);
+        return ResponseEntity.ok(new JWTResponse(jwt));
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<String> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws BusinessLogicException {
+    @PostMapping(path="/signup")
+    public ResponseEntity<JWTResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws BusinessLogicException {
         User user = accountService.createAccount(signUpRequest.getEmail(), signUpRequest.getPassword(),
                 signUpRequest.getName(), signUpRequest.getLastname());
 
         String jwt = jwtService.buildJwtFromUser(user);
 
-        return ResponseEntity.ok(jwt);
+        return ResponseEntity.ok(new JWTResponse(jwt));
     }
 
-    @PostMapping("/admintoken")
-    public ResponseEntity<String> getAdminToken() {
-        return ResponseEntity.ok(jwtService.buildAdminJwt());
+    @PostMapping(path = "/admintoken")
+    public ResponseEntity<JWTResponse> getAdminToken() {
+        return ResponseEntity.ok(
+                new JWTResponse(jwtService.buildAdminJwt()));
     }
 
-    @PostMapping("/changePassword")
-    public ResponseEntity<Boolean> changePassword(@AuthenticationPrincipal UserInformation user,
+    @PostMapping(path="/changePassword")
+    public ResponseEntity<BooleanResponse> changePassword(@AuthenticationPrincipal UserInformation user,
                                                           @Valid @RequestBody ChangePasswordRequest changePasswordRequest) throws BusinessLogicException {
         User newUser = accountService.changePassword(
                 user.getEmail(), changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
 
-        return ResponseEntity.ok(true);
+        return ResponseEntity.ok(new BooleanResponse(true));
     }
 }
 

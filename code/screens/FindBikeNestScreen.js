@@ -83,10 +83,10 @@ export default function FindBikeNestScreen ({ navigation }) {
     getMarkers();
   }, []);
 
-  const fetchMarkers = async (id) => {
-    const res = await fetch(global.globalIPAddress + "/bikenest/all");
-    const data = await res.json();
-    return data;
+  const fetchMarkers = async () => {
+    return await bikenestService.getAllBikenests().catch(error => {
+      console.log("Error getting all Bikenests... " + JSON.stringify(error));
+    })
   };
 
   const populateMarkers = (fetchedMarkers) => {
@@ -224,9 +224,9 @@ export default function FindBikeNestScreen ({ navigation }) {
   const onCardPress = (index, currentMarkerId) => {
     if (!modalState) {
       bikenestService.getBikenestInfo(currentMarkerId).then((response) => {
-        stateMarkers[index].capacity = response.spotsLeft;
-        stateMarkers[index].chargingOptionAvailable = response.chargingOptionAvailable;
-        stateMarkers[index].address = response.bikenestName;
+        stateMarkers[index].capacity = response.currentSpots;
+        stateMarkers[index].chargingOptionAvailable = response.chargingAvailable;
+        stateMarkers[index].address = response.name;
       }).then(() => setModalState(!modalState));
     }
     else {
