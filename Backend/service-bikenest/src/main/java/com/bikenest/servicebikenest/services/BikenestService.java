@@ -1,5 +1,6 @@
 package com.bikenest.servicebikenest.services;
 
+import com.bikenest.common.exceptions.BusinessLogicException;
 import com.bikenest.common.interfaces.bikenest.AddBikenestRequest;
 import com.bikenest.servicebikenest.db.Bikenest;
 import com.bikenest.servicebikenest.db.BikenestRepository;
@@ -117,9 +118,9 @@ public class BikenestService {
      * @param request
      * @return
      */
-    public Optional<Bikenest> addBikenest(AddBikenestRequest request){
+    public Bikenest addBikenest(AddBikenestRequest request) throws BusinessLogicException {
         if(bikenestRepository.findByName(request.getName()).isPresent())
-            return Optional.empty();
+            throw new BusinessLogicException("Ein Bikenest mit diesem Namen existiert bereits!");
 
         Bikenest bikenest = new Bikenest(request.getName(), request.getGpsCoordinates(), request.getMaximumSpots(),
                 request.isChargingAvailable());
@@ -137,7 +138,7 @@ public class BikenestService {
         }
         bikenest.setBikespots(spots);
 
-        return Optional.of(bikenestRepository.save(bikenest));
+        return bikenestRepository.save(bikenest);
     }
 
     public Optional<Integer> getFreeSpots(Integer bikenestId){
@@ -160,13 +161,12 @@ public class BikenestService {
         return Optional.of(actualBikenest.getCurrentSpots());
     }
 
-    public Optional<Bikenest> getBikenestInfo(Integer bikenestId){
+    public Bikenest getBikenestInfo(Integer bikenestId) throws BusinessLogicException {
         Optional<Bikenest> bikenest = bikenestRepository.findById(bikenestId);
 
-        if(!bikenest.isPresent()){
-            return Optional.empty();
-        }
+        if(bikenest.isEmpty())
+            throw new BusinessLogicException("Ein Bikenest mit dieser ID existiert nicht!");
 
-        return Optional.of(bikenest.get());
+        return bikenest.get();
     }
 }

@@ -1,5 +1,6 @@
 package com.bikenest.servicebikenest.db;
 
+import com.bikenest.common.exceptions.BusinessLogicException;
 import com.bikenest.common.interfaces.bikenest.AddBikenestRequest;
 import com.bikenest.servicebikenest.services.BikenestService;
 import org.slf4j.Logger;
@@ -15,12 +16,12 @@ public class DataLoader {
     private BikenestService bikenestService;
 
     @Autowired
-    public DataLoader(BikenestService bikenestService) {
+    public DataLoader(BikenestService bikenestService) throws BusinessLogicException {
         this.bikenestService = bikenestService;
         this.LoadData();
     }
 
-    public void LoadData() {
+    public void LoadData() throws BusinessLogicException {
         if(bikenestService.getAllBikenests().size() == 0){
             // Add the Bikenest with the service method, so that the Bikespots are correctly created.
             bikenestService.addBikenest(

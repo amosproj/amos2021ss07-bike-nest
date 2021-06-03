@@ -1,8 +1,6 @@
 package com.bikenest.servicebooking.Controllers;
 
 import com.bikenest.common.exceptions.BusinessLogicException;
-import com.bikenest.common.interfaces.GeneralExceptionResponse;
-import com.bikenest.common.interfaces.GeneralResponse;
 import com.bikenest.common.interfaces.booking.CreateReservationRequest;
 import com.bikenest.common.security.UserInformation;
 import com.bikenest.common.security.UserRole;
@@ -14,9 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/booking")
@@ -48,10 +43,10 @@ public class ReservationController {
 
     @PostMapping(value = "/cancel/{reservationId}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<GeneralResponse> cancelReservation(@AuthenticationPrincipal UserInformation user,
+    public ResponseEntity<Reservation> cancelReservation(@AuthenticationPrincipal UserInformation user,
                                                              @PathVariable("reservationId") Integer reservationId) throws BusinessLogicException {
         Reservation reservation = reservationService.cancelReservation(reservationId, user.getUserId());
 
-        return ResponseEntity.ok(new GeneralResponse(reservation));
+        return ResponseEntity.ok(reservation);
     }
 }

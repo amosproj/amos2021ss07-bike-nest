@@ -1,10 +1,8 @@
 package com.bikenest.serviceusermgmt;
 
 import com.bikenest.common.exceptions.BusinessLogicException;
-import com.bikenest.common.interfaces.GeneralResponse;
 import com.bikenest.common.interfaces.usermgmt.ChangePasswordRequest;
 import com.bikenest.common.interfaces.usermgmt.SigninRequest;
-import com.bikenest.common.interfaces.usermgmt.SigninResponse;
 import com.bikenest.common.interfaces.usermgmt.SignupRequest;
 import com.bikenest.common.security.UserInformation;
 import com.bikenest.serviceusermgmt.models.User;
@@ -22,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.security.Key;
-import java.util.Optional;
 
 
 /**

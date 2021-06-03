@@ -1,8 +1,6 @@
 package com.bikenest.servicebooking.Controllers;
 
 import com.bikenest.common.exceptions.BusinessLogicException;
-import com.bikenest.common.interfaces.GeneralExceptionResponse;
-import com.bikenest.common.interfaces.GeneralResponse;
 import com.bikenest.common.interfaces.booking.EndUnlockRequest;
 import com.bikenest.common.interfaces.booking.StartUnlockRequest;
 import com.bikenest.common.security.UserInformation;
@@ -14,8 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping(path="/booking/lock")
