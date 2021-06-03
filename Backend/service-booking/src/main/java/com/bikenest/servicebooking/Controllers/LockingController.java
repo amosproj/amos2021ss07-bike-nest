@@ -1,5 +1,7 @@
 package com.bikenest.servicebooking.Controllers;
 
+import com.bikenest.common.exceptions.BusinessLogicException;
+import com.bikenest.common.interfaces.GeneralExceptionResponse;
 import com.bikenest.common.interfaces.GeneralResponse;
 import com.bikenest.common.interfaces.booking.EndUnlockRequest;
 import com.bikenest.common.interfaces.booking.StartUnlockRequest;
@@ -33,23 +35,14 @@ public class LockingController {
     @PostMapping(value = "/startunlock")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<GeneralResponse> startUnlock(@AuthenticationPrincipal UserInformation user,
-                                                            @RequestBody StartUnlockRequest request) {
-        if (reservationService.isReservationOwner(request.getReservationId(), user.getUserId()).isEmpty()) {
-            return ResponseEntity.badRequest().body(
-                    new GeneralResponse(false, "You can only start your own reservations.", null));
-        }
-
-        Optional<Reservation> reservation = reservationService.startReservation(request.getReservationId());
-
-        if (!reservation.isPresent()) {
-            return ResponseEntity.badRequest().body(
-                    new GeneralResponse(false, "Couldn't start reservation", null));
-        }
+                                                            @RequestBody StartUnlockRequest request) throws BusinessLogicException {
+        Reservation reservation = reservationService.getReservationVerified(request.getReservationId(), user.getUserId());
+        reservation = reservationService.startReservation(request.getReservationId());
 
         //TODO: really implement the unlocking, there should also be a return code
-        lockService.OpenLock(reservation.get().getBikenestId(), reservation.get().getBikespotId());
+        lockService.OpenLock(reservation.getBikenestId(), reservation.getBikespotId());
 
-        return ResponseEntity.ok(new GeneralResponse(true, null, reservation.get()));
+        return ResponseEntity.ok(new GeneralResponse( reservation));
     }
 
     /**
@@ -62,23 +55,14 @@ public class LockingController {
     @PostMapping(value = "/endunlock")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<GeneralResponse> endUnlock(@AuthenticationPrincipal UserInformation user,
-                                                          @RequestBody EndUnlockRequest request) {
+                                                          @RequestBody EndUnlockRequest request) throws BusinessLogicException {
         //TODO: Check if the reservation is actually started and don't end it elsewise
-        if (reservationService.isReservationOwner(request.getReservationId(), user.getUserId()).isEmpty()) {
-            return ResponseEntity.badRequest().body(
-                    new GeneralResponse(false, "You can only end your own reservations.", null));
-        }
+        Reservation reservation = reservationService.getReservationVerified(request.getReservationId(), user.getUserId());
 
-        Optional<Reservation> reservation = reservationService.endReservation(request.getReservationId());
+        reservation = reservationService.endReservation(request.getReservationId());
+        lockService.OpenLock(reservation.getBikenestId(), reservation.getBikespotId());
 
-        if (!reservation.isPresent()) {
-            return ResponseEntity.badRequest().body(
-                    new GeneralResponse(false, "Couldn't end reservation", null));
-        }
-
-        lockService.OpenLock(reservation.get().getBikenestId(), reservation.get().getBikespotId());
-
-        return ResponseEntity.ok(new GeneralResponse(true, null, reservation.get()));
+        return ResponseEntity.ok(new GeneralResponse( reservation));
     }
 
     /**
@@ -92,44 +76,33 @@ public class LockingController {
     @PostMapping(value = "/startlock")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<GeneralResponse> startLock(@AuthenticationPrincipal UserInformation user,
-                                                            @RequestBody StartUnlockRequest request) {
-        Optional<Reservation> reservation = reservationService.isReservationOwner(request.getReservationId(),
-                user.getUserId());
+                                                            @RequestBody StartUnlockRequest request) throws BusinessLogicException {
+        Reservation reservation = reservationService.getReservationVerified(request.getReservationId(), user.getUserId());
 
-        if (reservation.isEmpty()) {
-            return ResponseEntity.badRequest().body(
-                    new GeneralResponse(false, "You can only start your own reservations.", null));
-        }
-
-        Reservation actualReservation = reservation.get();
-        if(lockService.BikespotOccupied(actualReservation.getBikenestId(), actualReservation.getBikespotId())){
-            lockService.CloseLock(actualReservation.getBikenestId(), actualReservation.getBikespotId());
-            return ResponseEntity.ok(new GeneralResponse(true, null, reservation.get()));
+        if(lockService.BikespotOccupied(reservation.getBikenestId(), reservation.getBikespotId())){
+            lockService.CloseLock(reservation.getBikenestId(), reservation.getBikespotId());
+            return ResponseEntity.ok(new GeneralResponse( reservation));
         }else{
-            return ResponseEntity.badRequest().body(new GeneralResponse(false, "You didn't place your Bike on the spot." +
-                    "Make sure the LED Light on your spot is active.", null));
+            return ResponseEntity.badRequest().body(
+                    new GeneralExceptionResponse("You didn't place your Bike on the spot." +
+                    "Make sure the LED Light on your spot is active."));
         }
     }
 
     @PostMapping(value = "/endlock")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<GeneralResponse> endLock(@AuthenticationPrincipal UserInformation user,
-                                                     @RequestBody StartUnlockRequest request) {
-        Optional<Reservation> reservation = reservationService.isReservationOwner(request.getReservationId(),
+                                                     @RequestBody StartUnlockRequest request) throws BusinessLogicException {
+        Reservation reservation = reservationService.getReservationVerified(request.getReservationId(),
                 user.getUserId());
 
-        if (reservation.isEmpty()) {
-            return ResponseEntity.badRequest().body(
-                    new GeneralResponse(false, "You can only end your own reservations.", null));
-        }
-
-        Reservation actualReservation = reservation.get();
-        if(!lockService.BikespotOccupied(actualReservation.getBikenestId(), actualReservation.getBikespotId())){
-            lockService.CloseLock(actualReservation.getBikenestId(), actualReservation.getBikespotId());
-            return ResponseEntity.ok(new GeneralResponse(true, null, reservation.get()));
+        if(!lockService.BikespotOccupied(reservation.getBikenestId(), reservation.getBikespotId())){
+            lockService.CloseLock(reservation.getBikenestId(), reservation.getBikespotId());
+            return ResponseEntity.ok(new GeneralResponse(reservation));
         }else{
-            return ResponseEntity.badRequest().body(new GeneralResponse(false, "You didn't remove your Bike from the spot." +
-                    "Make sure the LED Light on your spot is inactive.", null));
+            return ResponseEntity.badRequest().body(
+                    new GeneralExceptionResponse("You didn't remove your Bike from the spot." +
+                    "Make sure the LED Light on your spot is inactive."));
         }
     }
 

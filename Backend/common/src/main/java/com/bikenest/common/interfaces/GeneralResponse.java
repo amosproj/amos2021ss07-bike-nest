@@ -1,9 +1,18 @@
 package com.bikenest.common.interfaces;
 
+/**
+ * All responses to the frontend should be done in this format.
+ */
 public class GeneralResponse {
-    private boolean success;
-    private String error;
-    private Object payload;
+    protected boolean success;
+    protected String error;
+    protected Object payload;
+
+    public GeneralResponse(Object payload){
+        this.success = true;
+        this.error = "";
+        this.payload = payload;
+    }
 
     public GeneralResponse(boolean success, String error, Object payload){
         this.success = success;

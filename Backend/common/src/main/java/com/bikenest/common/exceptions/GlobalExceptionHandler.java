@@ -18,6 +18,13 @@ import javax.servlet.http.HttpServletRequest;
  * It will differentiate between BusinessLogicExceptions, that are thrown purposefully and other Exceptions
  * that happen accidently. In the case of an BusinessException, the Exception will contain a useful message, that
  * can be displayed to the user. In the other Case, we will just return "An Unknown error occured on the server."
+ *
+ * It might also be interesting to introduce yet another Exception Class like HiddenBusinessLogicException, that will
+ * also be caught in this Exception Handler, but in that case we also only return "An Unknown error occured."
+ * That way we can prevent people with bad intents to get relevant Information from our server. Currently someone could
+ * for example try to cancel a reservation with a random id and then he will get the Information that "This reservation
+ * does not belong to you" or "This reservation does not exist".
+ * It is not that important to prevent this, but most other companies do it similar.
  */
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -36,7 +43,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<GeneralExceptionResponse> handleBusinessLogicExceptions(HttpServletRequest request, BusinessLogicException ex){
         logger.info("BusinessLogicException:: URL=" + request.getRequestURL());
         logger.info("Message:: " + ex.getMessage());
-        return ResponseEntity.unprocessableEntity().body(new GeneralExceptionResponse(false, ex.getMessage()));
+        return ResponseEntity.unprocessableEntity().body(new GeneralExceptionResponse(ex.getMessage()));
     }
 
     /**
@@ -52,7 +59,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<GeneralExceptionResponse> handleOtherExceptions(HttpServletRequest request, Exception ex){
         logger.error("Unknown error occurred::" + ex.getMessage() + "\n Stacktrace::" + ex.getStackTrace());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                new GeneralExceptionResponse(false, "Ein unbekannter Fehler ist im Server aufgetreten."));
+                new GeneralExceptionResponse("Ein unbekannter Fehler ist im Server aufgetreten."));
     }
 
 }

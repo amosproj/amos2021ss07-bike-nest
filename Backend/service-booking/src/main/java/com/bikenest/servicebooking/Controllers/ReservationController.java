@@ -1,6 +1,7 @@
 package com.bikenest.servicebooking.Controllers;
 
 import com.bikenest.common.exceptions.BusinessLogicException;
+import com.bikenest.common.interfaces.GeneralExceptionResponse;
 import com.bikenest.common.interfaces.GeneralResponse;
 import com.bikenest.common.interfaces.booking.CreateReservationRequest;
 import com.bikenest.common.security.UserInformation;
@@ -26,51 +27,31 @@ public class ReservationController {
 
     @GetMapping("/all")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<Iterable<Reservation>> GetAllReservations(@AuthenticationPrincipal UserInformation user) {
+    public ResponseEntity<GeneralResponse> GetAllReservations(@AuthenticationPrincipal UserInformation user) {
         if (user.getRole() == UserRole.Admin) {
-            return ResponseEntity.ok(reservationService.getAllReservations());
+            return ResponseEntity.ok(new GeneralResponse(reservationService.getAllReservations()));
         } else if (user.getRole() == UserRole.User) {
-            return ResponseEntity.ok(reservationService.getAllReservationByUserId(user.getUserId()));
+            return ResponseEntity.ok(new GeneralResponse(reservationService.getAllReservationByUserId(user.getUserId())));
         }
-        return ResponseEntity.badRequest().body(new ArrayList());
+        return ResponseEntity.badRequest().body(
+                new GeneralExceptionResponse("Sie besitzen nicht die nötigen Rechte für diese Operation!"));
     }
 
     @PostMapping(value = "/add", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<GeneralResponse> createReservation(@AuthenticationPrincipal UserInformation user,
-                                                             @RequestBody CreateReservationRequest request) {
+                                                             @RequestBody CreateReservationRequest request) throws BusinessLogicException {
         //TODO: Check if payment details are provided and don't create reservation else
-        Optional<Reservation> reservation = reservationService.createReservation(user.getUserId(), request);
-        if (!reservation.isPresent()) {
-            return ResponseEntity.badRequest().body(new GeneralResponse(false,
-                    "Couldn't create Reservation.", null));
-        }
-
-        return ResponseEntity.ok(new GeneralResponse(true, null, reservation.get()));
+        Reservation reservation = reservationService.createReservation(user.getUserId(), request);
+        return ResponseEntity.ok(new GeneralResponse(reservation));
     }
 
     @PostMapping(value = "/cancel/{reservationId}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<GeneralResponse> cancelReservation(@AuthenticationPrincipal UserInformation user,
-                                                             @PathVariable("reservationId") Integer reservationId) {
-        if (reservationService.isReservationOwner(reservationId, user.getUserId()).isPresent()) {
-            return ResponseEntity.badRequest().body(
-                    new GeneralResponse(false, "You can only cancel your own reservations.", null));
-        }
+                                                             @PathVariable("reservationId") Integer reservationId) throws BusinessLogicException {
+        Reservation reservation = reservationService.cancelReservation(reservationId, user.getUserId());
 
-        Optional<Reservation> reservation = reservationService.cancelReservation(reservationId);
-
-        if (!reservation.isPresent()) {
-            return ResponseEntity.badRequest().body(
-                    new GeneralResponse(false, "Couldn't cancel reservation", null));
-        }
-
-        return ResponseEntity.ok(new GeneralResponse(true, null, reservation.get()));
-    }
-
-    @GetMapping(value = "/test")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<GeneralResponse> testExceptionHandler() throws BusinessLogicException {
-        throw new BusinessLogicException("ExceptionHandler works?");
+        return ResponseEntity.ok(new GeneralResponse(reservation));
     }
 }
