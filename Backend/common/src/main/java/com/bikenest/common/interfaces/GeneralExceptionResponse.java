@@ -1,20 +1,9 @@
 package com.bikenest.common.interfaces;
 
-public class GeneralExceptionResponse extends GeneralResponse{
-
+public class GeneralExceptionResponse{
+    private String error;
     public GeneralExceptionResponse(String error){
-        super(false, error, null);
-    }
-    public GeneralExceptionResponse(){
-        super(true, "", null);
-    }
-
-    public Boolean getSuccess() {
-        return success;
-    }
-
-    public void setSuccess(Boolean success) {
-        this.success = success;
+        this.error = error;
     }
 
     public String getError() {

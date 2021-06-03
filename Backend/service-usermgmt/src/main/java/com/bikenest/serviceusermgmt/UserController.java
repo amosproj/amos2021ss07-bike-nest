@@ -1,5 +1,6 @@
 package com.bikenest.serviceusermgmt;
 
+import com.bikenest.common.exceptions.BusinessLogicException;
 import com.bikenest.common.interfaces.GeneralResponse;
 import com.bikenest.common.interfaces.usermgmt.ChangePasswordRequest;
 import com.bikenest.common.interfaces.usermgmt.SigninRequest;
@@ -44,34 +45,20 @@ public class UserController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<SigninResponse> authenticateUser(@Valid @RequestBody SigninRequest signinRequest) {
-        if (!accountService.existsAccountWithEmail(signinRequest.getEmail()))
-            return ResponseEntity.badRequest().body(new SigninResponse(false, "Email not found!", null));
-
-        Optional<User> loggedInUser = accountService.loginUser(signinRequest.getEmail(), signinRequest.getPassword());
-        if (loggedInUser.isPresent()) {
-            String jwt = jwtService.buildJwtFromUser(loggedInUser.get());
-            return ResponseEntity.ok(new SigninResponse(true, null, jwt));
-        }
-
-        return ResponseEntity.badRequest().body(new SigninResponse(false, "Invalid password!", null));
+    public ResponseEntity<String> authenticateUser(@Valid @RequestBody SigninRequest signinRequest) throws BusinessLogicException {
+        User loggedInUser = accountService.loginUser(signinRequest.getEmail(), signinRequest.getPassword());
+        String jwt = jwtService.buildJwtFromUser(loggedInUser);
+        return ResponseEntity.ok(jwt);
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<SigninResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-        if (accountService.existsAccountWithEmail(signUpRequest.getEmail())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new SigninResponse(false, "Email is already taken!", null));
-        }
-
-        // Create new user's account
-        Optional<User> user = accountService.createAccount(signUpRequest.getEmail(), signUpRequest.getPassword(),
+    public ResponseEntity<String> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws BusinessLogicException {
+        User user = accountService.createAccount(signUpRequest.getEmail(), signUpRequest.getPassword(),
                 signUpRequest.getName(), signUpRequest.getLastname());
 
-        String jwt = jwtService.buildJwtFromUser(user.get());
+        String jwt = jwtService.buildJwtFromUser(user);
 
-        return ResponseEntity.ok(new SigninResponse(true, null, jwt));
+        return ResponseEntity.ok(jwt);
     }
 
     @PostMapping("/admintoken")
@@ -80,19 +67,12 @@ public class UserController {
     }
 
     @PostMapping("/changePassword")
-    public ResponseEntity<GeneralResponse> changePassword(@AuthenticationPrincipal UserInformation user,
-                                                          @Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
-        if (accountService.existsAccountWithEmail(user.getEmail())) {
-            boolean success = accountService.changePassword(user.getEmail(), changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
+    public ResponseEntity<Boolean> changePassword(@AuthenticationPrincipal UserInformation user,
+                                                          @Valid @RequestBody ChangePasswordRequest changePasswordRequest) throws BusinessLogicException {
+        User newUser = accountService.changePassword(
+                user.getEmail(), changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
 
-            if (success) {
-                return ResponseEntity
-                        .ok(new GeneralResponse(true, "", null));
-            }
-        }
-
-        return ResponseEntity.badRequest()
-                .body(new GeneralResponse(false, "Password could not be changed.", null));
+        return ResponseEntity.ok(true);
     }
 }
 

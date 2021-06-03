@@ -4,12 +4,15 @@ import com.bikenest.common.interfaces.GeneralExceptionResponse;
 import com.bikenest.common.interfaces.GeneralResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -53,7 +56,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /**
-     * This will catch all other exceptions that might happen inside the controllers and that we are not aware off.
+     * Will catch all other exceptions that might happen inside the controllers and that we are not aware off.
      * Therefore we cannot give a meaningful message back to the frontend and just state "An unknown error has occurred on
      * the server."
      * Response Code will be 500 (Internal Server Error)
@@ -70,7 +73,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /**
-     * This handles errors that will be generated, when an API Endpoint receives and invalid RequestBody.
+     * Handles errors that will be generated, when an API Endpoint receives and invalid RequestBody.
      * Hopefully this will prevent confusion on the frontend side (for example the signup endpoint would return
      * a bad request response, when the password had less then 6 characters).
      * @param ex
@@ -82,7 +85,25 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers,
                                                                   HttpStatus status, WebRequest request) {
-        logger.error("Invalid request::" + ex.getMessage());
+        logger.error("Invalid request(handleHttpMessageNotReadable)::" + ex.getMessage());
+        return ResponseEntity.badRequest().body(new GeneralExceptionResponse("Fehlerhafte Anfrage!"));
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        logger.error("Invalid request(handleMethodArgumentNotValid)::" + ex.getMessage());
+        return ResponseEntity.badRequest().body(new GeneralExceptionResponse("Fehlerhafte Anfrage!"));
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        logger.error("Invalid request(handleTypeMismatch)::" + ex.getMessage());
+        return ResponseEntity.badRequest().body(new GeneralExceptionResponse("Fehlerhafte Anfrage!"));
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        logger.error("Invalid request(handleMissingServletRequestParameter)::" + ex.getMessage());
         return ResponseEntity.badRequest().body(new GeneralExceptionResponse("Fehlerhafte Anfrage!"));
     }
 }

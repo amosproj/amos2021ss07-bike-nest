@@ -27,23 +27,23 @@ public class ReservationController {
 
     @GetMapping("/all")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<GeneralResponse> GetAllReservations(@AuthenticationPrincipal UserInformation user) {
+    public ResponseEntity<Iterable<Reservation>> GetAllReservations(@AuthenticationPrincipal UserInformation user) throws BusinessLogicException {
         if (user.getRole() == UserRole.Admin) {
-            return ResponseEntity.ok(new GeneralResponse(reservationService.getAllReservations()));
+            return ResponseEntity.ok(reservationService.getAllReservations());
         } else if (user.getRole() == UserRole.User) {
-            return ResponseEntity.ok(new GeneralResponse(reservationService.getAllReservationByUserId(user.getUserId())));
+            return ResponseEntity.ok(reservationService.getAllReservationByUserId(user.getUserId()));
+        }else{
+            throw new BusinessLogicException("Du hast die Funktion nicht die erforderlichen Rechte.");
         }
-        return ResponseEntity.badRequest().body(
-                new GeneralExceptionResponse("Sie besitzen nicht die nötigen Rechte für diese Operation!"));
     }
 
     @PostMapping(value = "/add", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<GeneralResponse> createReservation(@AuthenticationPrincipal UserInformation user,
+    public ResponseEntity<Reservation> createReservation(@AuthenticationPrincipal UserInformation user,
                                                              @RequestBody CreateReservationRequest request) throws BusinessLogicException {
         //TODO: Check if payment details are provided and don't create reservation else
         Reservation reservation = reservationService.createReservation(user.getUserId(), request);
-        return ResponseEntity.ok(new GeneralResponse(reservation));
+        return ResponseEntity.ok(reservation);
     }
 
     @PostMapping(value = "/cancel/{reservationId}")

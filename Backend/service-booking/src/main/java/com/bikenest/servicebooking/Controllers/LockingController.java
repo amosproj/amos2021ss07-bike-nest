@@ -34,7 +34,7 @@ public class LockingController {
      */
     @PostMapping(value = "/startunlock")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<GeneralResponse> startUnlock(@AuthenticationPrincipal UserInformation user,
+    public ResponseEntity<Reservation> startUnlock(@AuthenticationPrincipal UserInformation user,
                                                             @RequestBody StartUnlockRequest request) throws BusinessLogicException {
         Reservation reservation = reservationService.getReservationVerified(request.getReservationId(), user.getUserId());
         reservation = reservationService.startReservation(request.getReservationId());
@@ -42,7 +42,7 @@ public class LockingController {
         //TODO: really implement the unlocking, there should also be a return code
         lockService.OpenLock(reservation.getBikenestId(), reservation.getBikespotId());
 
-        return ResponseEntity.ok(new GeneralResponse( reservation));
+        return ResponseEntity.ok(reservation);
     }
 
     /**
@@ -54,15 +54,15 @@ public class LockingController {
      */
     @PostMapping(value = "/endunlock")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<GeneralResponse> endUnlock(@AuthenticationPrincipal UserInformation user,
+    public ResponseEntity<Reservation> endUnlock(@AuthenticationPrincipal UserInformation user,
                                                           @RequestBody EndUnlockRequest request) throws BusinessLogicException {
         //TODO: Check if the reservation is actually started and don't end it elsewise
         Reservation reservation = reservationService.getReservationVerified(request.getReservationId(), user.getUserId());
+        reservation = reservationService.endReservation(reservation.getId());
 
-        reservation = reservationService.endReservation(request.getReservationId());
         lockService.OpenLock(reservation.getBikenestId(), reservation.getBikespotId());
 
-        return ResponseEntity.ok(new GeneralResponse( reservation));
+        return ResponseEntity.ok(reservation);
     }
 
     /**
@@ -75,34 +75,32 @@ public class LockingController {
      */
     @PostMapping(value = "/startlock")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<GeneralResponse> startLock(@AuthenticationPrincipal UserInformation user,
+    public ResponseEntity<Reservation> startLock(@AuthenticationPrincipal UserInformation user,
                                                             @RequestBody StartUnlockRequest request) throws BusinessLogicException {
         Reservation reservation = reservationService.getReservationVerified(request.getReservationId(), user.getUserId());
 
         if(lockService.BikespotOccupied(reservation.getBikenestId(), reservation.getBikespotId())){
             lockService.CloseLock(reservation.getBikenestId(), reservation.getBikespotId());
-            return ResponseEntity.ok(new GeneralResponse( reservation));
+            return ResponseEntity.ok(reservation);
         }else{
-            return ResponseEntity.badRequest().body(
-                    new GeneralExceptionResponse("You didn't place your Bike on the spot." +
-                    "Make sure the LED Light on your spot is active."));
+            throw new BusinessLogicException("Du hast dein Fahrrad noch nicht korrekt auf dem Platz abgestellt." +
+                    "Vergewissere dich, dass das LED Licht an deinem Bikespot aktiv ist.");
         }
     }
 
     @PostMapping(value = "/endlock")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<GeneralResponse> endLock(@AuthenticationPrincipal UserInformation user,
+    public ResponseEntity<Reservation> endLock(@AuthenticationPrincipal UserInformation user,
                                                      @RequestBody StartUnlockRequest request) throws BusinessLogicException {
         Reservation reservation = reservationService.getReservationVerified(request.getReservationId(),
                 user.getUserId());
 
         if(!lockService.BikespotOccupied(reservation.getBikenestId(), reservation.getBikespotId())){
             lockService.CloseLock(reservation.getBikenestId(), reservation.getBikespotId());
-            return ResponseEntity.ok(new GeneralResponse(reservation));
+            return ResponseEntity.ok(reservation);
         }else{
-            return ResponseEntity.badRequest().body(
-                    new GeneralExceptionResponse("You didn't remove your Bike from the spot." +
-                    "Make sure the LED Light on your spot is inactive."));
+            throw new BusinessLogicException("Du hast dein Fahrrad nicht vom Bikespot entfernt." +
+                    "Vergewissere dicht, dass das LED Licht am Bikespot inaktiv ist.");
         }
     }
 
