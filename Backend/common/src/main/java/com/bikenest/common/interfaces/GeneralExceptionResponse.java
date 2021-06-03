@@ -3,7 +3,7 @@ package com.bikenest.common.interfaces;
 public class GeneralExceptionResponse extends GeneralResponse{
 
     public GeneralExceptionResponse(String error){
-        super(true, error, null);
+        super(false, error, null);
     }
     public GeneralExceptionResponse(){
         super(true, "", null);
