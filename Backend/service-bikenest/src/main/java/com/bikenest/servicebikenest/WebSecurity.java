@@ -22,7 +22,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.httpBasic().disable();
 
         http.cors().and()
-                .authorizeRequests().anyRequest().permitAll()
+                .authorizeRequests()
+                .antMatchers("/bikenest/add", "/bikenest/deleteall")
+                .authenticated()
+                .anyRequest().permitAll()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()

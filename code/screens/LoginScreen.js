@@ -8,47 +8,33 @@ import BikeNest_Button, { ButtonStyle } from '../components/BikeNest_Button';
 import BikeNest_TextInput from '../components/BikeNest_TextInput';
 import BikeNest_Modal from '../components/BikeNest_Modal';
 import global from '../components/GlobalVars';
+import {UserService} from "../services/UserService";
 
 export default function LoginScreen({ navigation }) {
+  let userService = new UserService();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [modalText, setModalText] = useState("");
   const [modalHeadline, setModalHeadline] = useState("");
 
-  let setModalInfo = (jwt) => {
-    if (jwt.error != null) {
+  let setModalInfo = (message) => {
       setModalHeadline("Oops!");
-      setModalText(jwt.error);
+      setModalText(message);
       setModalVisible(true);
-    }
   }
 
   let tryLogIn = () => {
-    let data = { email, password };
-
-    return fetch(global.globalIPAddress + "/usermanagement/signin", {
-
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: { 'Content-Type': 'application/json' }
+    userService.loginUser(email, password).then(jwt => {
+      global.saveAuthenticationToken(jwt)
+          .then(navigation.navigate("FindBikeNest"));
+    }).catch(error => {
+      if(error.display){
+        setModalInfo(error.message);
+      }else{
+        setModalInfo("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
+      }
     })
-      .then((response) => response.json())
-      .then((response) => {
-        if ((response.success != null) && (response.success === true)) {
-          global.saveAuthenticationToken(response.jwt)
-            .then(navigation.navigate("FindBikeNest"));
-        }
-        else {
-          setModalInfo(response);
-        }
-      })
-      .catch((error) => {
-        setModalHeadline("Sorry!");
-        setModalText("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
-        setModalVisible(true);
-        console.error(error);
-      });
   }
 
 

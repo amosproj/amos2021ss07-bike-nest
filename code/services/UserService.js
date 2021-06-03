@@ -1,70 +1,41 @@
 import global from "../components/GlobalVars";
 import JwtDecoder from "../components/JwtDecoder";
+import fetchWithTimeout from "./FetchHelper";
 
 export class UserService {
 
     /**
-     * Tries to login using the provided credentials. Returns a dict that contains the field success and the field error.
-     * If success is false, then error will contain the error message. Also this function will automatically set the global JWT
-     * if it's successful.
-     * Use it like this:
+     * Tries to login using the provided credentials. In the successful case, you just get the raw JWT string.
+     * For the unsucessful case you have to catch the error. The error will be a dictionary like
+     * {"display": true, "message": "DISPLAY THIS MESSAGE TO THE USER"}
+     *
+     *
      * userService.loginUser(email, password)
      *      .then(response =>{
-     *          if(response?.success){
-     *              navigation.navigate("FindBikeNest");
-     *          }else{
-     *              setModalInfo(response?.error);
+     *          //response contains the jwt
+     *          global.saveAuthenticationToken(response);
+     *          navigation.navigate("FindBikeNest");
+     *      }).catch((error) => {
+     *          if(error.display){
+     *              setModalInfo(error.message);
      *          }
-     *      });
+     *      };
      * @param {string} email Email address as string
      * @param {string} password Password as string
-     * @returns {Promise<any | {success: boolean, error: any}>} A promise with a dictionary that contains the fields success and error. If success is false, you can read the error field.
+     * @returns {Promise<string>} This Promise will contain the JWT String that is sent back (if request is successful).
      */
     async loginUser(email, password) {
         let request = {
             "email": email,
             "password": password
         };
-
-        return fetch(global.globalIPAddress + "/usermanagement/signin", {
-            method: 'POST',
-            body: JSON.stringify(request),
-            headers: { Accept: 'application/json', 'Content-Type': 'application/json' }
-        })
-            .then((response) => response.json())
-            .then((json) => {
-                console.log("loginUser Response:" + JSON.stringify(json));
-                if (json.success) {
-                    global.saveAuthenticationToken(json.jwt);
-                    return { "success": true, "error": null };
-                } else {
-                    return { "success": false, "error": json.error };
-                }
-            })
-            .catch((error) => {
-                console.error("loginUser Error:" + error);
-                return { "success": false, "error": error }
-            });
+        return fetchWithTimeout(global.globalIPAddress + "/usermanagement/signin", {
+                method: 'POST',
+                body: JSON.stringify(request),
+                headers: { Accept: 'application/json', 'Content-Type': 'application/json' }
+            }, 10000).then(json => json.jwt);
     }
 
-    /**
-     * Tries to sign up with the backend using email, password, first name and last name. Returns a promise with a dictionary. You can check the success field of this dictionary and
-     * if success is false, show the error message to the user.
-     * Use it like this:
-     * userService.registerUser(email, password, firstName, lastName)
-     *      .then(response =>{
-     *          if(response?.success){
-     *              setModalInfo("Erfolgreich registriert.");
-     *          }else{
-     *              setModalInfo(response?.error);
-     *          }
-     *      });
-     * @param email {string}
-     * @param password {string}
-     * @param firstName {string}
-     * @param lastName {string}
-     * @returns {Promise<any | {success: boolean, error: any}>} A promise with a dictionary that contains the fields success and error. If success is false, you can read the error field.
-     */
     async registerUser(email, password, firstName, lastName) {
         let request = {
             "name": firstName,
@@ -73,25 +44,13 @@ export class UserService {
             "password": password
         };
 
-        return fetch(global.globalIPAddress + "/usermanagement/signup", {
+        return fetchWithTimeout(global.globalIPAddress + "/usermanagement/signup", {
             method: 'POST',
             body: JSON.stringify(request),
-            headers: { Accept: 'application/json', 'Content-Type': 'application/json' }
-        })
-            .then((response) => response.json())
-            .then((json) => {
-                console.log("registerUser Response:" + JSON.stringify(json));
-                if (json.success) {
-                    global.saveAuthenticationToken(json.jwt);
-                    return { "success": true, "error": null };
-                } else {
-                    return { "success": false, "error": json.error };
-                }
-            })
-            .catch((error) => {
-                console.error("registerUser Error:" + error);
-                return { "success": false, "error": error }
-            });
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            }}, 10000).then(json => json.jwt);
     }
 
     async changePassword(oldPassword, newPassword) {
@@ -100,29 +59,14 @@ export class UserService {
             "newPassword": newPassword,
         };
 
-        let jwt = await global.getAuthenticationToken();
-
-        return fetch(global.globalIPAddress + "/usermanagement/changePassword", {
+        return fetchWithTimeout(global.globalIPAddress + "/usermanagement/changePassword", {
             method: 'POST',
             body: JSON.stringify(request),
             headers: {
-                Accept: 'application/json', 'Content-Type': 'application/json',
-                Authorization: jwt
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
             }
-        })
-            .then((response) => response.json())
-            .then((json) => {
-                console.log("changePassword Response:" + JSON.stringify(json));
-                if (json.success) {
-                    return { "success": true, "error": null };
-                } else {
-                    return { "success": false, "error": json.error };
-                }
-            })
-            .catch((error) => {
-                console.error("changePassword Error:" + error);
-                return { "success": false, "error": error }
-            });
+        }, 10000).then(json => json.success);
     }
 
     /**

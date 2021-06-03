@@ -17,24 +17,15 @@ var height = Dimensions.get('window').height; //full height
 
 export default function PaymentConfirmationScreen({ navigation }) {
   // const [myListData, setData] = useState("");
+    let bookingService = new BookingService();
 
   let tryGETBooking = () => {
     console.log('start pulling reservation info');
-
-    return fetch(global.globalIPAddress + "/booking/all", {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-    })
-        .then((response) => response.json())
-        .then((json) => {
-          alert(JSON.stringify(json));
-          console.log(json);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
+    return bookingService.getAllReservations().then(reservations =>{
+        alert(JSON.stringify(reservations));
+    }).catch(error =>{
+        console.error(JSON.stringify(error));
+    });
 }
 const downloadInvoice = () => {
     Alert.alert('You are downloading the invoice');
@@ -70,13 +61,13 @@ const getLocation = () =>{
             </Text>
         </View>
         <TouchableOpacity
-          style={myStyles.heightBike, {
+          style={[myStyles.heightBike, {
             backgroundColor: '#FFF',
             height: 230,
             width: 370,
             margin: 10,
             position: 'relative'
-          }}>
+          }]}>
           <ImageBackground
             source={bike}
             style={{
