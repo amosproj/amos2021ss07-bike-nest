@@ -46,14 +46,14 @@ jobs:
     - name: API Gateway Integration Tests
       working-directory: ${{env.backend}}
       run: ./gradlew :apigateway:test --tests com.bikenest.apigateway.integration.*
+      
+    - name: Bikenest Service Integration Tests
+      working-directory: ${{env.backend}}
+      run: ./gradlew :service-bikenest:test --tests com.bikenest.servicebikenest.integration.*
 
     - name: UserMGMT Service Integration Tests
       working-directory: ${{env.backend}}
       run: ./gradlew :service-usermgmt:test --tests com.bikenest.serviceusermgmt.integration.*
-
-    - name: Bikenest Service Integration Tests
-      working-directory: ${{env.backend}}
-      run: ./gradlew :service-bikenest:test --tests com.bikenest.servicebikenest.integration.*
 
     - name: Booking Service Integration Tests
       working-directory: ${{env.backend}}
