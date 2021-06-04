@@ -16,7 +16,9 @@ public class PaymentService {
         publicKey = System.getenv("BT_PUBLIC_KEY");
         privateKey = System.getenv("BT_PRIVATE_KEY");
 
-        gateway = new BraintreeGateway(Environment.SANDBOX, merchantId, publicKey, privateKey);
+        try {
+            gateway = new BraintreeGateway(Environment.SANDBOX, merchantId, publicKey, privateKey);
+        }catch(Exception ex){}
     }
 
     public String generateClientToken(Integer userId) throws Exception {

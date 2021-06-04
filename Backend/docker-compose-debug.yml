@@ -43,15 +43,6 @@ services:
       - MYSQL_DATABASE=${PAYMENT_DB_DATABASE}
     networks:
       - payment-db
-  #php:
-  #  container_name: phpadmin
-  #  image: phpmyadmin/phpmyadmin
-  #  ports:
-  #   - "8080:80"
-  #  environment:
-  #   - PMA_HOST=booking-db
-  #  networks:
-  #   - booking-db
 
   bikenest:
     container_name: bikenest

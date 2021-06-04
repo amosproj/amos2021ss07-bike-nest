@@ -1,48 +1,146 @@
 version: "3.8"
 services:
   booking-db:
+    container_name: booking-db
     image: mysql
     environment:
-     - MYSQL_ROOT_PASSWORD=test
-     - MYSQL_USER=booking
-     - MYSQL_PASSWORD=test
-     - MYSQL_DATABASE=booking
+      - MYSQL_ROOT_PASSWORD=${BOOKING_DB_ROOTPW}
+      - MYSQL_USER=${BOOKING_DB_USER}
+      - MYSQL_PASSWORD=${BOOKING_DB_PASSWORD}
+      - MYSQL_DATABASE=${BOOKING_DB_DATABASE}
+      - MYSQL_TCP_PORT=4203
+    ports:
+      - "4203:4203"
     networks:
-     - booking-db
+      - host
 
   bikenest-db:
+    container_name: bikenest-db
     image: mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=test
-      - MYSQL_USER=bikenest
-      - MYSQL_PASSWORD=test
-      - MYSQL_DATABASE=bikenest
+      - MYSQL_ROOT_PASSWORD=${BIKENEST_DB_ROOTPW}
+      - MYSQL_USER=${BIKENEST_DB_USER}
+      - MYSQL_PASSWORD=${BIKENEST_DB_PASSWORD}
+      - MYSQL_DATABASE=${BIKENEST_DB_DATABASE}
+      - MYSQL_TCP_PORT=4204
+    ports:
+      - "4204:4204"
     networks:
-     - bikenest-db
+      - host
 
   user-db:
+    container_name: user-db
     image: mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=test
-      - MYSQL_USER=user
-      - MYSQL_PASSWORD=test
-      - MYSQL_DATABASE=user
+      - MYSQL_ROOT_PASSWORD=${USER_DB_ROOTPW}
+      - MYSQL_USER=${USER_DB_USER}
+      - MYSQL_PASSWORD=${USER_DB_PASSWORD}
+      - MYSQL_DATABASE=${USER_DB_DATABASE}
+      - MYSQL_TCP_PORT=4202
+    ports:
+      - "4202:4202"
     networks:
-      - user-db
+      - host
 
   payment-db:
+    container_name: payment-db
     image: mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=test
-      - MYSQL_USER=payment
-      - MYSQL_PASSWORD=test
-      - MYSQL_DATABASE=payment
+      - MYSQL_ROOT_PASSWORD=${PAYMENT_DB_ROOTPW}
+      - MYSQL_USER=${PAYMENT_DB_USER}
+      - MYSQL_PASSWORD=${PAYMENT_DB_PASSWORD}
+      - MYSQL_DATABASE=${PAYMENT_DB_DATABASE}
+      - MYSQL_TCP_PORT=4201
+    ports:
+      - "4201:4201"
     networks:
-      - payment-db
+      - host
 
+  bikenest:
+    container_name: bikenest
+    build:
+      context: service-bikenest
+      dockerfile: Dockerfile_debug
+    restart: always
+    ports:
+      - "5005:5005"
+      - "9001:9001"
+    environment:
+      - MYSQL_HOST=bikenest-db
+      - MYSQL_PORT=4204
+      - MYSQL_DBNAME=${BIKENEST_DB_DATABASE}
+      - MYSQL_USER=${BIKENEST_DB_USER}
+      - MYSQL_PASSWORD=${BIKENEST_DB_PASSWORD}
+    networks:
+      - host
+
+  booking:
+    container_name: booking
+    build:
+      context: service-booking
+      dockerfile: Dockerfile_debug
+    restart: always
+    ports:
+      - "5006:5006"
+      - "9002:9002"
+    environment:
+      - MYSQL_HOST=booking-db
+      - MYSQL_PORT=4203
+      - MYSQL_DBNAME=${BOOKING_DB_DATABASE}
+      - MYSQL_USER=${BOOKING_DB_USER}
+      - MYSQL_PASSWORD=${BOOKING_DB_PASSWORD}
+    networks:
+      - host
+
+  gateway:
+    container_name: gateway
+    build:
+      context: apigateway
+      dockerfile: Dockerfile_debug
+    restart: always
+    ports:
+      - "9000:9000"
+      - "5007:5007"
+    networks:
+      - host
+
+  usermgmt:
+    container_name: usermgmt
+    build:
+      context: service-usermgmt
+      dockerfile: Dockerfile_debug
+    restart: always
+    environment:
+      - MYSQL_HOST=user-db
+      - MYSQL_PORT=4202
+      - MYSQL_DBNAME=${USER_DB_DATABASE}
+      - MYSQL_USER=${USER_DB_USER}
+      - MYSQL_PASSWORD=${USER_DB_PASSWORD}
+    ports:
+      - "5008:5008"
+      - "9003:9003"
+    networks:
+      - host
+
+  payment:
+    container_name: payment
+    build:
+      context: service-payment
+      dockerfile: Dockerfile_debug
+    restart: always
+    environment:
+      - MYSQL_HOST=payment-db
+      - MYSQL_PORT=4201
+      - MYSQL_DBNAME=${PAYMENT_DB_DATABASE}
+      - MYSQL_USER=${PAYMENT_DB_USER}
+      - MYSQL_PASSWORD=${PAYMENT_DB_PASSWORD}
+      - BT_MERCHANT_ID=${BT_MERCHANT_ID}
+      - BT_PUBLIC_KEY=${BT_PUBLIC_KEY}
+      - BT_PRIVATE_KEY=${BT_PRIVATE_KEY}
+    ports:
+      - "5009:5009"
+      - "9004:9004"
+    networks:
+      - host
 networks:
-  payment-db:
-  user-db:
-  booking-db:
-  bikenest-db:
-  services:
+  host:

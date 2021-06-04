@@ -24,27 +24,7 @@ import java.io.File;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ContextConfiguration(initializers = {BikenestControllerTest.Initializer.class})
 class BikenestControllerTest {
-
-    @ClassRule
-    public static DockerComposeContainer environment =
-            new DockerComposeContainer(new File("../docker-compose-testcontainers.yml"))
-                    .withExposedService("bikenest-db", 3306)
-                    .withLocalCompose(true);
-
-    static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            environment.start();
-            environment.waitingFor("bikenest-db", Wait.forListeningPort());
-            TestPropertyValues.of(
-                    "spring.datasource.url=jdbc:mysql://" + environment.getServiceHost("bikenest-db", 3306)
-                        + ":" + environment.getServicePort("bikenest-db", 3306) + "/bikenest",
-                    "spring.datasource.username=bikenest",
-                    "spring.datasource.password=test"
-            ).applyTo(configurableApplicationContext.getEnvironment());
-        }
-    }
 
     @Test
     void dummyTest() {
