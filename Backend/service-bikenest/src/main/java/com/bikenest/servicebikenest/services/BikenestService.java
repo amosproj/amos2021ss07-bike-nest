@@ -122,6 +122,19 @@ public class BikenestService {
         if(bikenestRepository.findByName(request.getName()).isPresent())
             throw new BusinessLogicException("Ein Bikenest mit diesem Namen existiert bereits!");
 
+        //Check the GPS Coordinates format
+        request.setGpsCoordinates(request.getGpsCoordinates().trim().replace(" ", ""));
+        try{
+            String[] splitted = request.getGpsCoordinates().trim().split(",");
+            if(splitted.length != 2){
+                throw new BusinessLogicException("Die angegebenen GPS Koordinaten müssen durch ein Komma getrennt werden.");
+            }
+            Float.parseFloat(splitted[0]);
+            Float.parseFloat(splitted[1]);
+        }catch(Exception ex){
+            throw new BusinessLogicException("Die GPS Koordinaten besitzen nicht das richtige Gleitkommazahlformat.");
+        }
+
         Bikenest bikenest = new Bikenest(request.getName(), request.getGpsCoordinates(), request.getMaximumSpots(),
                 request.isChargingAvailable());
 
