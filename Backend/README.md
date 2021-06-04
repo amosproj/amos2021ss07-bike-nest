@@ -1,25 +1,23 @@
 ## Requirements
-- Docker
-- JDK 11
+- [Docker](https://www.docker.com)
+- [JDK 11](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
 - If you encounter errors with building make sure the JAVA_HOME environment variable is correctly set to your JDK directory
 
 ## Build and Run
 
 - Navigate to the Backend Folder
-
-- Build all the Microservice Projects by executing
-- `gradlew assemble`
   
+- Build all the Microservice Projects by executing `gradlew assemble`
 
-- Build the Docker Containers
-- `docker-compose build` for release mode
-- `docker-compose -f docker-compose-debug.yml build` for debug mode
+- Build the Docker Containers:
+  - `docker-compose build` for release mode
+  - `docker-compose -f docker-compose-debug.yml build` for debug mode
 
 All docker containers are successfully built now and are ready to be executed.
 
-- Starting all containers
-- `docker-compose up` for release mode
-- `docker-compose -f docker-compose-debug.yml up` for debug mode
+- Starting all containers:
+  - `docker-compose up` for release mode
+  - `docker-compose -f docker-compose-debug.yml up` for debug mode
 
 ---
 Or use the scripts:
@@ -36,18 +34,17 @@ connection to the databases and therefore they will crash repeatedly.**
 **If you make any changes to the project, the docker containers will have to be
 rebuilt. Also keep in mind that you will have to reinitialize your database
 containers after making a change to a db schema. This can be easily done by
-calling
-- `docker-compose down`
-
-before starting the containers.
+calling `docker-compose down` before starting the containers.**
 
 
 ## Debugging
 
-There are different Dockerfiles for debugging purposes, because the application jars have to be started with remote debugging enabled.
-These options are 
+Because the Spring Application JAR Files have to be started with remote debugging enabled, there is a different Dockerfile
+for debugging mode.
 
-`-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005` which might have to be copied to your IDE.
+Use these Options in your IDE for Remote Debugging:
+`-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005` 
+
 The port is configured differently for each service, you can look that up inside the Dockerfile_debug.
 Right now the ports are:
 - Bikenest Service => 5005
@@ -116,7 +113,7 @@ host system. This is usually done by specifing port mappings, that map a port on
 E. g. you specify the portmapping -p "4503:1234" for a container. If you try to connect to port 4503 on your host system, this
 request will be sent to the port 1234 inside the container environment.
 For communication between containers you have to specify docker networks, that the containers should use. Then the containers can
-communicate with each other using their container name as ip address. (A concrete could be found inside the Usermgmt FeignClient.
+communicate with each other using their container name as ip address. (A concrete example could be found inside the Usermgmt FeignClient.
 There the address of the Usermgmt Service is specified as http://usermgmt:9003/)
 ---
 **Docker and Spring**
