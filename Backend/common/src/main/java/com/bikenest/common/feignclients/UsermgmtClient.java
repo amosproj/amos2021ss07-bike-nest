@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 
-@FeignClient(url="http://usermgmt:9003/", name="UsermgmtClient")
+@FeignClient(url="${client.usermgmt.url}", name="UsermgmtClient")
 public interface UsermgmtClient {
     @RequestMapping(method = RequestMethod.POST, value = "/usermanagement/validatejwt",
             consumes = {MediaType.APPLICATION_JSON_VALUE},

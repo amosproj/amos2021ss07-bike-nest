@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@FeignClient(url="http://bikenest:9001/", name="BikenestClient")
+@FeignClient(url="${client.bikenest.url}", name="BikenestClient")
 public interface BikenestClient {
 
     @RequestMapping(method = RequestMethod.POST, value = "/bikenest/service/bikenestexists",
