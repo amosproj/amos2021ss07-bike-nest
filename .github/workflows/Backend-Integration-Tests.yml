@@ -38,7 +38,7 @@ jobs:
     # Start up all Database Docker Containers.
     - name: Start all Containers
       working-directory: ${{env.backend}}
-      run: docker-compose -f docker-compose-testcontainers.yml up
+      run: docker-compose -f docker-compose-testcontainers.yml -d up
             
     # Wait for all services to be up
     - run: wait-on http://localhost:9000
