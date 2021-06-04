@@ -1,112 +1,152 @@
-## Note
-- Docker required
-- JDK 11 required to build (JDK 16 doesn't work with gradle 6.x)
-- If you encounter errors with building make sure the JAVA_HOME environment variable is correctly set to your JDK directory.
+## Requirements
+- Docker
+- JDK 11
+- If you encounter errors with building make sure the JAVA_HOME environment variable is correctly set to your JDK directory
 
-## General
-This folder contains all of the Microservices used inside the backend. For detailed information about the services, visit the respective directories.
-Each of these microservice projects contains a Dockerfile that contains the instructions on how the Docker Container has to be built. In case of a Java Application the docker building process goes like this: 
-- Specify the Java Runtime Environment (openjdk Version 11.0.11 in our case)
-- Copy the application jar into the container as app.jar
-- Specify "java -jar app.jar" as entry point for the container, so that the java app is executed, once the container is started up
+## Build and Run
 
-You could start the docker containers for each individual service using the "docker run" command, but the services that require a database will crash, because no database server is running. To fix that issue you could start up a MySQL Docker Container beforehand.
+- Navigate to the Backend Folder
 
-Since Docker Containers run isolated by default, you have to specify additional settings to make the communication between multiple docker containers work. This means you have to create a "docker network" that each Container will use. Then you don't have to use regular IP Addresses for communication between containers, but you can actually just use the name of the container.
-To have a Spring Application connect to a MySQL database, in it's application.properties settings you would have to write:
-
-    spring.datasource.url=jdbc:mysql://mysql-container:3306/dbname
-where **mysql-container** is the name of the running mysql container.
-
-Then to make the spring application accessible from outside the container (by your browser for example), you have to define a port mapping, that maps the port you want to use on your host machine to the port that your spring application listens to inside the container.
-
-    docker run --network servicenet -p 9999:9001 bikenest-service
-In the above command it was specified that the bikenest-service container should use the servicenet network and map the port 9999 to 9001. So if the database is also using the servicenet network, the app would be able to start succesful and you could access the API Endpoints via localhost:9999.
-
-The above was alot of theory about the docker architecture, so that one can actually understand what is happening with the docker-compose command.
-Inside the docker-compose.yml everything about the services that should be ran is defined:
-- Name of the running container
-- What image they are using or how their image is built
-- Environment variables that should be set (the spring project was configured in a way, that the mysql connection string and password comes from environment variables. Also the settings for the MySQL dbs like the root password are set by environment variables)
-- The networks the containers will use
-- The port mappings
-- Restart strategies
-
-So by just running docker-compose up, you can get the whole backend running independent of your environment.
-
-## Building
-
-As explained in General, the docker container is built by copying the application jar into the container filesystem. This means before building the container, you have to make sure that the Spring Project has been built using gradle.
-
-You can build all of the Backend Projects by executing
+- Build all the Microservice Projects by executing
 - `gradlew assemble`
-    - Builds the jar files for each subproject
-    
-Or if you want to build the jar of a service manually:
-- Navigate to the service folder
-- Execute `gradlew assemble`
+  
 
-To build the docker containers you have to execute
-- `docker-compose build` to build in release mode
-- `docker-compose -f docker-compose-debug.yml build` to build in debug mode
+- Build the Docker Containers
+- `docker-compose build` for release mode
+- `docker-compose -f docker-compose-debug.yml build` for debug mode
 
 All docker containers are successfully built now and are ready to be executed.
 
-## Running
-
-Starting all the containers:
-- `docker-compose up`
+- Starting all containers
+- `docker-compose up` for release mode
 - `docker-compose -f docker-compose-debug.yml up` for debug mode
 
-If you make any changes to a backend service, you have to build the service with gradlew again and rebuilt the corresponding container.
+---
+Or use the scripts:
+- `run-debug.bat`
+- `run-release.bat`
+- `run-debug.sh`
+- `run-release.sh`
 
-The easy approach is to:
-- Stop the container execution
-- rebuild all jars using `gradlew assemble`
-- rebuild all containers using `docker-compose build` or
-`docker-compose -f docker-compose-debug.yml build`
-- start the containers up using the **docker-compose up** command from above
+**Important: If you start the containers for the first time on your local
+machine, the database containers will take some time for initialization.
+During this time frame none of the Microservices will be able to build up a
+connection to the databases and therefore they will crash repeatedly.** 
 
-It is possible to only rebuild a single container by executing
-`docker-compose build {NAME}`
+**If you make any changes to the project, the docker containers will have to be
+rebuilt. Also keep in mind that you will have to reinitialize your database
+containers after making a change to a db schema. This can be easily done by
+calling
+- `docker-compose down`
 
-For convenience there are the shellscripts run-debug.sh and run-release.sh, that will execute all the necessary command to get the backend
-fully running.
+before starting the containers.
+
 
 ## Debugging
- 
+
 There are different Dockerfiles for debugging purposes, because the application jars have to be started with remote debugging enabled.
-These options are `-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005` which might have to be copied to your IDE.
+These options are 
+
+`-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005` which might have to be copied to your IDE.
 The port is configured differently for each service, you can look that up inside the Dockerfile_debug.
-Right now for the
-- Bikenest Service it is 5005
-- Booking Service it is 5006 
-- Gateway it is 5007
-- UserMgmt it is 5008
-	
-   
-One important note for debugging: the JDK version you are using on your host machine should be greater or equal to the jdk version you are using inside the container.
+Right now the ports are:
+- Bikenest Service => 5005
+- Booking Service => 5006
+- Gateway => 5007
+- UserMgmt => 5008
+- Payment => 5009
+
+
+**Important: the JDK version you are using on your host machine should be greater or equal to the jdk version you are using inside the container.**
 
 ## Testing
 
-Testing is done by executing `gradlew test` in each project directory or directly executing all tests by running
-this command inside the Backend folder.
-In some cases it might be required that another service is running or else the test will fail. (For example a MySQL server might have to be running to execute integration tests for the Bikenest service)
+- Unit Tests
+  - Unit tests have no external dependencies and can therefore be executed
+  just by calling the gradlew commands.
+  - See `testing-unit.bat` or `testing-unit.sh`
+---  
+- Integration Tests
+  - These are more complicated because they depend on external ressources.
+  Also because auf the Microservice Architecture there are dependencies between the
+    Microservices.
+  - The easiest solution is just starting up all containers using the special
+  `docker-compose-testcontainers.yml` file. There each Microservice and each database expose a port to the outside.
+    Therefore the service under test can still communicate with all of the started Microservices.
+    If, for example the Usermgmt Service is tested, the already started Usermgmt Service won't
+    be shut down. Instead the Testconfiguration (see application.properties in test packages) makes sure
+    that the service under test is started with a different port, than the already running services.
+  - The scripts `testing-integration.bat` and `testing-integration.sh` will do all the work.  
+  Some assumptions were made in that scripts, for example that all docker containers are fully running
+    after 20 seconds.
+---
 
-## CI/CD
+**CI is done using the same principles as described above.**
 
-For unit tests the services can run independently and therefore Github is configured
-to just execute the test task for gradlew with only the unit tests specified.
 
-To execute integration tests, github actions will have to be configured so that the required containers are started up first.
+## General Information
 
-## Get User Data (for Testing)
+This folder contains all Backend Microservice.
 
-It is possible to directly retrieve the Backend Data by opening a CLI for the mysql Docker Container.
-An example for the user database goes like this:
-Go into Docker Desktop and search for the Container"user-db". Enter this container and enter the CLI with the top right button. 
-execute `mysql -p` in the Commandline. 
-Then enter the root password, that is set in the .env file in Backend/. (By default the password is "test")
-Execute  `use user;`, to select the user database.
-Then execute `select * from user`, to show all of the entries for the user table.
+Currently there is a
+- **UserMgmt Microservice** that handles all User specific work (login, account creation,
+  JWT validation)
+- **Booking Microservice** that handles new reservations and the whole locking and
+unlocking process for Bikenests
+- **Payment Microservice**
+- **Bikenest Microservice** that provides information about all available Bikenests
+- **API Gateway** that routes requests to the respective Microservices and implements
+the JWT Validation
+- **Common** Project that contains code that is common for all other projects (Security related stuff like
+  the JWTAuthenticationFilter, that has to be used in each Microservice, API Interfaces, FeignClients for Communication
+  between Microservices, ...)  
+  
+This application is built using gradle. The Backend folder contains a
+root gradle project, that builds all subprojects. 
+The projects are containerized using docker and each project contains two Dockerfiles with
+instructions on how to build the container.
 
+**For more information about the individual projects, see the README.md of the respective folder.**
+
+---
+**Some general Information for Docker:**
+
+Docker Containers run in an isolated environment. You have provide additional instructions to allow communication with the
+host system. This is usually done by specifing port mappings, that map a port on the host system to a port inside the container.
+E. g. you specify the portmapping -p "4503:1234" for a container. If you try to connect to port 4503 on your host system, this
+request will be sent to the port 1234 inside the container environment.
+For communication between containers you have to specify docker networks, that the containers should use. Then the containers can
+communicate with each other using their container name as ip address. (A concrete could be found inside the Usermgmt FeignClient.
+There the address of the Usermgmt Service is specified as http://usermgmt:9003/)
+---
+**Docker and Spring**
+
+Containerizing a Spring Application and a Database is not hard, but allowing them to communicate with each other is not as
+straight forward. Basically as mentioned above they have to be on the same network. Then you configure the `application.properties`
+file of spring with the mysql connection string to the database (using the container name as IP address). Like this:
+
+`spring.datasource.url=jdbc:mysql://mysql-container:3306/dbname`
+
+However, in this project we do not directly configure everything inside the application.properties but instead
+use environment variables there. Therefore we have to set the environment variables for all docker containers.
+This and other tasks can be easily done using docker-compose.
+
+We have three docker compose files for the backend. These files configure the environment variables for each container,
+how to build the containers, the port mappings and networks.
+Just by calling `docker-compose up` it is possible to start all the containers configured in such a way,
+that they correctly work together.
+
+## Inspecting Data
+
+It is possible to access the data directly from the database.
+- Open a CLI for the Database Docker Container that you want to inspect.
+- Type `mysql -p` into the shell
+- Type the root password (=**test** for the development environment)
+- Select the database with **use DATABASE;**
+- Execute SQL Queries
+
+An Example for the User Database:
+- `mysql -p`
+- `test`
+- `use user;`
+- `select * from user;`
