@@ -25,7 +25,11 @@ jobs:
     - name: Build and start all Containers
       working-directory: ${{env.backend}}
       run: docker-compose -f docker-compose-testcontainers.yml up -d --build
-            
+          
+    - name: Execute rights for waiting-script
+      working-directory: ./.github
+      run: chmod +x waiting-script.sh
+      
     # Use custom waiting script
     - name: Wait for Microservices
       working-directory: ./.github
