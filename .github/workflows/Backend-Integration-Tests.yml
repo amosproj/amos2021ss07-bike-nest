@@ -29,16 +29,11 @@ jobs:
     - name: Build Services
       working-directory: ${{env.backend}}
       run: ./gradlew assemble
-    
-    # Build all Containers
-    - name: Build all Containers
-      working-directory: ${{env.backend}}
-      run: docker-compose -f docker-compose-testcontainers.yml build
 
     # Start up all Database Docker Containers.
-    - name: Start all Containers
+    - name: Build and start all Containers
       working-directory: ${{env.backend}}
-      run: docker-compose -f docker-compose-testcontainers.yml -d up
+      run: docker-compose -f docker-compose-testcontainers.yml up -d --build
             
     # Wait for all services to be up
     - run: wait-on http://localhost:9000
