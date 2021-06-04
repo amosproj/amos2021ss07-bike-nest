@@ -36,11 +36,11 @@ jobs:
       run: docker-compose -f docker-compose-testcontainers.yml up -d --build
             
     # Wait for all services to be up
-    - run: wait-on http://localhost:9000
-    - run: wait-on http://localhost:9001
-    - run: wait-on http://localhost:9002
-    - run: wait-on http://localhost:9003
-    - run: wait-on http://localhost:9004
+    - run: wait-on tcp:9000
+    - run: wait-on tcp:9001
+    - run: wait-on tcp:9002
+    - run: wait-on tcp:9003
+    - run: wait-on tcp:9004
         
     # Execute all Integration tests
     - name: API Gateway Integration Tests
