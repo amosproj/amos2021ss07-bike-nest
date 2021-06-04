@@ -1,0 +1,48 @@
+version: "3.8"
+services:
+  booking-db:
+    image: mysql
+    environment:
+     - MYSQL_ROOT_PASSWORD=test
+     - MYSQL_USER=booking
+     - MYSQL_PASSWORD=test
+     - MYSQL_DATABASE=booking
+    networks:
+     - booking-db
+
+  bikenest-db:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=test
+      - MYSQL_USER=bikenest
+      - MYSQL_PASSWORD=test
+      - MYSQL_DATABASE=bikenest
+    networks:
+     - bikenest-db
+
+  user-db:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=test
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=test
+      - MYSQL_DATABASE=user
+    networks:
+      - user-db
+
+  payment-db:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=test
+      - MYSQL_USER=payment
+      - MYSQL_PASSWORD=test
+      - MYSQL_DATABASE=payment
+    networks:
+      - payment-db
+
+networks:
+  payment-db:
+  user-db:
+  booking-db:
+  bikenest-db:
+  services:

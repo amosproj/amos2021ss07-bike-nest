@@ -24,6 +24,7 @@ dependencies {
     implementation 'junit:junit:4.12'
     runtimeOnly 'mysql:mysql-connector-java'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "org.testcontainers:testcontainers:1.15.3"
 }
 
 //Dependency Management required for the common project.
