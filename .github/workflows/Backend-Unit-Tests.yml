@@ -30,6 +30,7 @@ jobs:
       run: ./gradlew :apigateway:test --tests com.bikenest.apigateway.unit.*
 
     - name: UserMGMT Service Unit Tests
+      working-directory: ${{env.backend}}
       run: ./gradlew :service-usermgmt:test --tests com.bikenest.serviceusermgmt.unit.*
 
     - name: Bikenest Service Unit Tests
