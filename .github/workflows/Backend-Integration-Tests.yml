@@ -15,15 +15,6 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
-        
-    # For now use the node js script to wait on the docker containers
-    - name: Setup Node.js environment
-      uses: actions/setup-node@v1
-      with:
-        node-version: 15.x
-    # Install the wait-on script, that can be used to wait until the docker containers are running.
-    - name: Install wait-on script
-      run: npm install -g wait-on
       
     # Build all projects
     - name: Build Services
@@ -35,12 +26,11 @@ jobs:
       working-directory: ${{env.backend}}
       run: docker-compose -f docker-compose-testcontainers.yml up -d --build
             
-    # Wait for all services to be up
-    - run: wait-on tcp:9000
-    - run: wait-on tcp:9001
-    - run: wait-on tcp:9002
-    - run: wait-on tcp:9003
-    - run: wait-on tcp:9004
+    # Use custom waiting script
+    - name: Wait for Microservices
+      working-directory: ./.github
+      run: ./waiting-script.sh
+      shell: bash
         
     # Execute all Integration tests
     - name: API Gateway Integration Tests
