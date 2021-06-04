@@ -3,7 +3,7 @@ name: Backend Integration Tests (Gradle)
 on: [push]
 
 jobs:
-  Backend-Tests:
+  Backend-Integration-Tests:
 
     runs-on: ubuntu-latest
     env:
@@ -33,7 +33,7 @@ jobs:
     # Start up all Database Docker Containers.
     - name: Start all Containers
       working-directory: ${{env.backend}}
-      run: docker compose -f docker-compose-testcontainers.yml --build up
+      run: docker-compose -f docker-compose-testcontainers.yml --build up
             
     # Wait for all services to be up
     - run: wait-on http://localhost:9000
