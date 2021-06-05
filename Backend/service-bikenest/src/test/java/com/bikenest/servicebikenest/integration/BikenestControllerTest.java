@@ -1,14 +1,10 @@
 package com.bikenest.servicebikenest.integration;
 
 import com.bikenest.common.interfaces.bikenest.AddBikenestRequest;
-import com.bikenest.servicebikenest.controllers.BikenestController;
 import com.bikenest.servicebikenest.db.Bikenest;
-import com.bikenest.servicebikenest.db.BikenestRepository;
-import com.bikenest.servicebikenest.db.BikespotRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.annotation.PostConstruct;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -30,22 +27,11 @@ class BikenestControllerTest {
     @LocalServerPort
     int randomServerPort;
 
-    int previousBikenests = 0;
-
     ClientHelper clientHelper = new ClientHelper();
-
-    @Autowired
-    BikenestController bikenestController;
-
-    @Autowired
-    BikenestRepository bikenestRepository;
-    @Autowired
-    BikespotRepository bikespotRepository;
 
     @PostConstruct
     public void initialize() {
         clientHelper.initialize(randomServerPort);
-        this.previousBikenests = 23;
     }
 
     @Test
@@ -80,12 +66,14 @@ class BikenestControllerTest {
         ResponseEntity<List<LinkedHashMap>> allBikenests = clientHelper.getAllBikenests();
 
         Assertions.assertEquals(200, allBikenests.getStatusCodeValue());
-        Assertions.assertEquals(previousBikenests + 2, allBikenests.getBody().size());
+        AtomicInteger bikenestCount = new AtomicInteger();
         allBikenests.getBody().forEach(b -> {
             if(b.get("name").toString().contains("BikenestTest")){
+                bikenestCount.getAndIncrement();
                 Assertions.assertEquals(10, b.get("currentSpots"));
             }
         });
+        Assertions.assertEquals(2, bikenestCount.get());
 
         clientHelper.deleteAllBikenests(this.AdminJWT);
 

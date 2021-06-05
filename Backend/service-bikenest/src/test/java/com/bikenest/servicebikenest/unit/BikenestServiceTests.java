@@ -6,6 +6,7 @@ import com.bikenest.servicebikenest.ServicebikenestApplication;
 import com.bikenest.servicebikenest.db.Bikenest;
 import com.bikenest.servicebikenest.db.BikenestRepository;
 import com.bikenest.servicebikenest.db.Bikespot;
+import com.bikenest.servicebikenest.db.BikespotRepository;
 import com.bikenest.servicebikenest.services.BikenestService;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
@@ -23,6 +24,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -34,81 +36,106 @@ class BikenestServiceTests {
 
     @Mock
     BikenestRepository bikenestRepository;
+    @Mock
+    BikespotRepository bikespotRepository;
+
+    private Bikenest freeSpots = MockHelper.constructBikenestFreeSpots("FreeSpots", 3);
+    private Bikenest reservedSpots = MockHelper.constructBikenestReservedSpots("ReservedSpots", 4);
+    private Bikenest notExistant = new Bikenest("NotExistant", "10.10,10.10", 10, false);
+    private Bikenest invalidBikenest = new Bikenest("Invalid", "aad,3d", 10, false);
+    private Bikenest fullBikenest = MockHelper.constructBikenestNoFreeSpots("NoSpotsFree", 10);
 
     @BeforeEach
-    void setUpMocks(){
+    void setUpMocks() {
         MockitoAnnotations.openMocks(this);
         when(bikenestRepository.save(any())).thenAnswer(i -> i.getArguments()[0]);
-        when(bikenestRepository.findByName("NotExistant")).thenReturn(Optional.empty());
-        when(bikenestRepository.findById(1)).thenReturn(Optional.empty());
-
-        Bikenest bikenestOne = new Bikenest("2SpotFree", "49.34,49.34", 2, false);
-        bikenestOne.setId(2);
-        Set<Bikespot> bikespotSetOne = new HashSet<>();
-        bikespotSetOne.add(new Bikespot(bikenestOne, 1, null, false, false));
-        bikespotSetOne.add(new Bikespot(bikenestOne, 2, null, false, true));
-        bikenestOne.setBikespots(bikespotSetOne);
-
-        Bikenest bikenestTwo = new Bikenest("1SpotFreeInvalid", "49.34,49.34", 2, false);
-        bikenestTwo.setId(3);
-        Set<Bikespot> bikespotSetTwo = new HashSet<>();
-        bikespotSetTwo.add(new Bikespot(bikenestTwo, 1, 1, true, false));
-        bikespotSetTwo.add(new Bikespot(bikenestTwo, 2, null, false, true));
-        bikenestTwo.setBikespots(bikespotSetTwo);
-
-        Bikenest bikenestThree = new Bikenest("1SpotFreeCorrect", "49.34,49.34", 2, false);
-        bikenestThree.setId(4);
-        bikenestThree.setCurrentSpots(1);
-        bikenestThree.setBikespots(bikespotSetTwo);
-
-        when(bikenestRepository.findByName("1SpotFreeInvalid")).thenReturn(Optional.of(bikenestOne));
-        when(bikenestRepository.findById(2)).thenReturn(Optional.of(bikenestOne));
-        when(bikenestRepository.findByName("2SpotFree")).thenReturn(Optional.of(bikenestTwo));
-        when(bikenestRepository.findById(3)).thenReturn(Optional.of(bikenestTwo));
-        when(bikenestRepository.findByName("1SpotFreeCorrect")).thenReturn(Optional.of(bikenestThree));
-        when(bikenestRepository.findById(4)).thenReturn(Optional.of(bikenestThree));
+        when(bikespotRepository.save(any())).thenAnswer(i -> i.getArguments()[0]);
+        when(bikenestRepository.findByName(freeSpots.getName())).thenReturn(Optional.of(freeSpots));
+        when(bikenestRepository.findById(freeSpots.getId())).thenReturn(Optional.of(freeSpots));
+        when(bikenestRepository.findByName(fullBikenest.getName())).thenReturn(Optional.of(fullBikenest));
+        when(bikenestRepository.findById(fullBikenest.getId())).thenReturn(Optional.of(fullBikenest));
+        when(bikenestRepository.findByName(reservedSpots.getName())).thenReturn(Optional.of(reservedSpots));
+        when(bikenestRepository.findById(reservedSpots.getId())).thenReturn(Optional.of(reservedSpots));
+        when(bikenestRepository.findByName(notExistant.getName())).thenReturn(Optional.empty());
+        when(bikenestRepository.findById(notExistant.getId())).thenReturn(Optional.empty());
+        when(bikenestRepository.findByName(invalidBikenest.getName())).thenReturn(Optional.empty());
+        when(bikenestRepository.findById(invalidBikenest.getId())).thenReturn(Optional.empty());
     }
 
     @Test
-    void addFreshBikenest() throws BusinessLogicException {
+    void addingBikenests() throws BusinessLogicException {
         //Add valid Bikenest
-        AddBikenestRequest addBikenestRequest = new AddBikenestRequest(
-                "NotExistant", "49.34,40.32", 10, true);
-
+        AddBikenestRequest addBikenestRequest = new AddBikenestRequest(notExistant.getName(), notExistant.getGpsCoordinates(),
+                notExistant.getMaximumSpots(), notExistant.isChargingAvailable());
         Bikenest returned = bikenestService.addBikenest(addBikenestRequest);
-        Assert.assertEquals(returned.getName(), "NotExistant");
-        Assert.assertEquals(returned.getCurrentSpots().intValue(), 10);
-        Assert.assertEquals(returned.getMaximumSpots().intValue(), 10);
-        Assert.assertEquals(returned.getGpsCoordinates(), "49.34,40.32");
-        Assert.assertEquals(returned.getBikespots().size(), 10);
+        Assert.assertEquals(returned.getName(), notExistant.getName());
+        Assert.assertEquals(returned.getCurrentSpots().intValue(), notExistant.getMaximumSpots().intValue());
+        Assert.assertEquals(returned.getMaximumSpots().intValue(), notExistant.getMaximumSpots().intValue());
+        Assert.assertEquals(returned.getGpsCoordinates(), notExistant.getGpsCoordinates());
+        Assert.assertEquals(returned.getBikespots().size(), notExistant.getMaximumSpots().intValue());
 
         //Add invalid Bikenest (gps coordinates invalid)
-        addBikenestRequest = new AddBikenestRequest();
-        addBikenestRequest.setName("Bikenest");
-        addBikenestRequest.setChargingAvailable(true);
-        addBikenestRequest.setGpsCoordinates("awd,40.3234");
-        addBikenestRequest.setMaximumSpots(10);
-
+        addBikenestRequest = new AddBikenestRequest(invalidBikenest.getName(), invalidBikenest.getGpsCoordinates(),
+                invalidBikenest.getMaximumSpots(), invalidBikenest.isChargingAvailable());
         AddBikenestRequest finalAddBikenestRequest = addBikenestRequest;
         Assertions.assertThatThrownBy(() -> bikenestService.addBikenest(finalAddBikenestRequest))
                 .isInstanceOf(BusinessLogicException.class);
-    }
 
-    @Test
-    void addExistingBikenest(){
-        Bikenest bikenest = new Bikenest();
-        bikenest.setName("Bikenest");
-        when(bikenestRepository.findByName("Bikenest")).thenReturn(Optional.of(bikenest));
-
-        AddBikenestRequest addBikenestRequest = new AddBikenestRequest("Bikenest", "49.34,58.23", 10, false);
-        Assertions.assertThatThrownBy(() -> bikenestService.addBikenest(addBikenestRequest))
+        //Add existing bikenest
+        addBikenestRequest = new AddBikenestRequest(freeSpots.getName(), freeSpots.getGpsCoordinates(), freeSpots.getMaximumSpots(), freeSpots.isChargingAvailable());
+        AddBikenestRequest finalAddBikenestRequest1 = addBikenestRequest;
+        Assertions.assertThatThrownBy(() -> bikenestService.addBikenest(finalAddBikenestRequest1))
                 .isInstanceOf(BusinessLogicException.class);
     }
 
     @Test
-    void getFreeSpots(){
-        Assert.assertEquals(bikenestService.getFreeSpots(2).get().intValue(),2);
-        Assert.assertTrue(bikenestService.getFreeSpots(3).isEmpty());
-        Assert.assertEquals(bikenestService.getFreeSpots(4).get().intValue(),1);
+    void checkExistingBikenest() throws BusinessLogicException {
+        Assert.assertTrue(bikenestService.existsBikenest(freeSpots.getId()));
+        Assert.assertFalse(bikenestService.existsBikenest(notExistant.getId()));
+
+        Assert.assertEquals(freeSpots.getMaximumSpots(), bikenestService.getBikenestInfo(freeSpots.getId()).getCurrentSpots());
+        Assert.assertEquals(reservedSpots.getCurrentSpots(), bikenestService.getBikenestInfo(reservedSpots.getId()).getCurrentSpots());
+    }
+
+    @Test
+    void reserveASpot() {
+        //Reserve for empty bikenest
+        Optional<Integer> spot = bikenestService.reserveSpot(freeSpots.getId(), MockHelper.getUserIdReservation());
+        Assert.assertTrue(spot.isPresent());
+
+        //Reserve for full bikenest
+        spot = bikenestService.reserveSpot(fullBikenest.getId(), MockHelper.getUserIdReservation());
+        Assert.assertTrue(spot.isEmpty());
+
+        //Non existant bikenest
+        spot = bikenestService.reserveSpot(notExistant.getId(), MockHelper.getUserIdReservation());
+        Assert.assertTrue(spot.isEmpty());
+    }
+
+    @Test
+    void freeASpot() {
+        //Non existant bikenest
+        Assert.assertFalse(bikenestService.freeSpot(notExistant.getId(), MockHelper.getUserIdReservation(), 1));
+
+        //Empty bikenest
+        Assert.assertFalse(bikenestService.freeSpot(freeSpots.getId(), MockHelper.getUserIdReservation(), 1));
+
+        //Valid case, user owns that reservation
+        Assert.assertTrue(bikenestService.freeSpot(reservedSpots.getId(), MockHelper.getUserIdReservation(), 1));
+
+        //User does not own the reservation
+        Assert.assertFalse(bikenestService.freeSpot(reservedSpots.getId(), MockHelper.getUserIdNoReservation(), 1));
+
+        //Spot does not exists
+        Assert.assertFalse(bikenestService.freeSpot(freeSpots.getId(), MockHelper.getUserIdReservation(), freeSpots.getMaximumSpots()+1));
+    }
+
+    @Test
+    void getFreeSpots() {
+        Assert.assertEquals(freeSpots.getCurrentSpots().intValue(),
+                bikenestService.getFreeSpots(freeSpots.getId()).get().intValue());
+        Assert.assertTrue(bikenestService.getFreeSpots(notExistant.getId()).isEmpty());
+        Assert.assertEquals(reservedSpots.getCurrentSpots().intValue(),
+                bikenestService.getFreeSpots(reservedSpots.getId()).get().intValue());
     }
 }

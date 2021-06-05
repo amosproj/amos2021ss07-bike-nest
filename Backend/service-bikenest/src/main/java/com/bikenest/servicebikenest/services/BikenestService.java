@@ -79,7 +79,8 @@ public class BikenestService {
 
         // Find the reserved spot and also check if that spot is owned by userId and is reserved
         Optional<Bikespot> bikespot = bikenest.get().getBikespots().stream()
-                .filter(spot -> spot.getSpotNumber().equals(spotId) && spot.getUserId().equals(userId) && spot.getReserved())
+                .filter(spot -> spot.getSpotNumber().equals(spotId) && spot.getUserId() != null
+                        && spot.getUserId().equals(userId) && spot.getReserved())
                 .findFirst();
 
         if(!bikespot.isPresent())
