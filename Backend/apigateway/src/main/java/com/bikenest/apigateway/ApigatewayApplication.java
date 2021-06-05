@@ -29,7 +29,7 @@ public class ApigatewayApplication {
         return builder.routes()
                 .route("bikenest", r -> r.path("/bikenest/**")
                         .filters(f -> f.filter(authenticationFilter))
-                        .uri("http://bikenest:9001"))
+                        .uri("http://" + System.getenv("BIKENEST_SERVICE_HOST") + ":9001"))
                 .route("booking", r -> r.path("/booking/**")
                         .filters(f -> f.filter(authenticationFilter))
                         .uri("http://booking:9002"))
