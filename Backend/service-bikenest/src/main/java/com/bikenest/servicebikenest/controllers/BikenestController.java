@@ -36,7 +36,7 @@ public class BikenestController {
 
     @GetMapping(path = "/all")
     public @ResponseBody
-    ResponseEntity<Iterable<Bikenest>> getAllBikenests() {
+    ResponseEntity<List<Bikenest>> getAllBikenests() {
         // Remove the Bikespot Information before returning this
         List<Bikenest> bikenests = bikenestService.getAllBikenests();
         bikenests.forEach(x -> x.setBikespots(null));
