@@ -1,0 +1,31 @@
+# This is the workflow to automate the Frontend deployment.
+# CURRENTLY NOT WORKING DUE TO MISSING SECRET
+
+name: Publish App via Expo
+on:
+  release:
+    types: [published]
+    
+jobs:
+  publish:
+    name: Install and publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - uses: expo/expo-github-action@v5
+        with:
+          expo-version: 4.x
+          expo-token: ${{ secrets.EXPO_TOKEN }}
+          expo-cache: true
+      - run: yarn install
+      
+      # At the current stage we release to a "staging" channel. 
+      # Later - in production - we should configure which channel releases the app to the public (e.g. PlayStore, AppStore).
+      # So that we really have a continous deployment that pushes to the channel, where users can update their app.
+      - run: expo build:ios -t simulator --release-channel staging
+      
+      # For real release the release "-t app-bundle" is recommended. For now we stay with .apk due do the missing PlayStore Account.
+      - run: expo build:android -t apk --release-channel staging
