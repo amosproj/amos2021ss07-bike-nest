@@ -16,4 +16,4 @@ jobs:
           email: anmeldepost@icloud.com # your heroku email
           api_key: d0c65da2-7bef-4a18-9e40-08bde601c8ea # your  heroku api key
           docker_compose_file: './Backend/docker-compose.yml' # set the path to the folder where the docker-compose file is located
-          heroku_apps: '[{"imagename":"bikenest","appname":"backend-bikenest","apptype":"web"},{"imagename":"booking","appname":"backend-bikenest-booking","apptype":"web"},{"imagename":"gateway","appname":"backend-gateway","apptype":"web"},{"imagename":"usermgmt","appname":"backend-usermgmt","apptype":"web"}]' # List of Docker Image name, Heroku app and Heroku app type
+          heroku_apps: '[{"imagename":"backend_bikenest","appname":"backend-bikenest","apptype":"web"},{"imagename":"backend_booking","appname":"backend-bikenest-booking","apptype":"web"},{"imagename":"backend_gateway","appname":"backend-gateway","apptype":"web"},{"imagename":"backend_usermgmt","appname":"backend-usermgmt","apptype":"web"}]' # List of Docker Image name, Heroku app and Heroku app type
