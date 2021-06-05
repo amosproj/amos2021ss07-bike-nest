@@ -6,6 +6,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Build Services
+        working-directory: ./Backend
+        run: ./gradlew assemble
       - name: Build, Push and Deploy to Heroku #set the whatever name you want to this step
         id: heroku
         uses: snithyanantham/docker-compose-multiple-apps-heroku-deploy@v1.0  # use the latest version of the action
