@@ -1,0 +1,16 @@
+name: 'B Deployment' 
+on: {} 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build, Push and Deploy to Heroku #set the whatever name you want to this step
+        id: heroku
+        uses: snithyanantham/docker-compose-multiple-apps-heroku-deploy@v1.0  # use the latest version of the action
+        with:
+          email: anmeldepost@icloud.com # your heroku email
+          api_key: d0c65da2-7bef-4a18-9e40-08bde601c8ea # your  heroku api key
+          docker_compose_file: './Backend/docker-compose.yml' # set the path to the folder where the docker-compose file is located
+          heroku_apps: '[{"imagename":"backend_bikenest","appname":"backend-bikenest","apptype":"web"},{"imagename":"backend_booking","appname":"backend-bikenest-booking","apptype":"web"},{"imagename":"backend_gateway","appname":"backend-gateway","apptype":"web"},{"imagename":"backend_usermgmt","appname":"backend-usermgmt","apptype":"web"}]' # List of Docker Image name, Heroku app and Heroku app type
