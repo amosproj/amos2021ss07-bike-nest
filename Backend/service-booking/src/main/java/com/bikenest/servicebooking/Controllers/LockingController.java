@@ -41,6 +41,7 @@ public class LockingController {
 
         //TODO: really implement the unlocking, there should also be a return code
         logger.debug("Unlocking the Bikenest. Reservation begins now. Place the Bike inside now and close the door!");
+        logger.debug("**Bikespot starts blinking** (Send request to RaspberryPi)");
         lockService.OpenLock(reservation.getBikenestId(), reservation.getBikespotId());
 
         return ResponseEntity.ok(reservation);
