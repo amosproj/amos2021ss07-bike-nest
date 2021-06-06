@@ -1,0 +1,151 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#fff",
+        "flex": 1,
+        "justifyContent": "center",
+      },
+      Object {
+        "backgroundColor": "transparent",
+      },
+    ]
+  }
+>
+  <View
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#4267B2",
+        "borderRadius": 38,
+        "elevation": 3,
+        "height": 55,
+        "justifyContent": "center",
+        "margin": 9,
+        "opacity": 1,
+        "padding": 18,
+        "width": 328,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "flexDirection": "row",
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "height": 32,
+            "left": 18,
+            "position": "absolute",
+            "top": 0,
+            "width": 32,
+          }
+        }
+      >
+        <Image
+          source={1}
+        />
+      </View>
+      <Text
+        style={
+          Object {
+            "color": "#F2F2F2",
+            "fontSize": 14,
+            "height": "100%",
+            "textAlign": "center",
+            "width": "100%",
+          }
+        }
+      >
+        MIT FACEBOOK ANMELDEN
+      </Text>
+    </View>
+  </View>
+  <View
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#ffffff",
+        "borderRadius": 38,
+        "elevation": 3,
+        "height": 55,
+        "justifyContent": "center",
+        "margin": 9,
+        "opacity": 1,
+        "padding": 18,
+        "width": 328,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "flexDirection": "row",
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "height": 32,
+            "left": 18,
+            "position": "absolute",
+            "top": 0,
+            "width": 32,
+          }
+        }
+      >
+        <Image
+          source={1}
+        />
+      </View>
+      <Text
+        style={
+          Array [
+            Object {
+              "color": "#F2F2F2",
+              "fontSize": 14,
+              "height": "100%",
+              "textAlign": "center",
+              "width": "100%",
+            },
+            Object {
+              "color": "#000000",
+            },
+          ]
+        }
+      >
+        MIT GOOGLE ANMELDEN
+      </Text>
+    </View>
+  </View>
+</View>
+`;
