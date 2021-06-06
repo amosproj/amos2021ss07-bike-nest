@@ -4,10 +4,10 @@ services:
     container_name: booking-db
     image: mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=${BOOKING_DB_ROOTPW}
-      - MYSQL_USER=${BOOKING_DB_USER}
-      - MYSQL_PASSWORD=${BOOKING_DB_PASSWORD}
-      - MYSQL_DATABASE=${BOOKING_DB_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PW}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${BOOKING_DBNAME}
     networks:
      - booking-db
 
@@ -15,10 +15,10 @@ services:
     container_name: bikenest-db
     image: mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=${BIKENEST_DB_ROOTPW}
-      - MYSQL_USER=${BIKENEST_DB_USER}
-      - MYSQL_PASSWORD=${BIKENEST_DB_PASSWORD}
-      - MYSQL_DATABASE=${BIKENEST_DB_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PW}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${BIKENEST_DBNAME}
     networks:
      - bikenest-db
 
@@ -26,10 +26,10 @@ services:
     container_name: user-db
     image: mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=${USER_DB_ROOTPW}
-      - MYSQL_USER=${USER_DB_USER}
-      - MYSQL_PASSWORD=${USER_DB_PASSWORD}
-      - MYSQL_DATABASE=${USER_DB_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PW}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${USER_DBNAME}
     networks:
       - user-db
 
@@ -37,10 +37,10 @@ services:
     container_name: payment-db
     image: mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=${PAYMENT_DB_ROOTPW}
-      - MYSQL_USER=${PAYMENT_DB_USER}
-      - MYSQL_PASSWORD=${PAYMENT_DB_PASSWORD}
-      - MYSQL_DATABASE=${PAYMENT_DB_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PW}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${PAYMENT_DBNAME}
     networks:
       - payment-db
 
@@ -50,11 +50,15 @@ services:
     build: service-bikenest
     restart: always
     environment:
-     - MYSQL_HOST=bikenest-db
-     - MYSQL_PORT=3306
-     - MYSQL_DBNAME=${BIKENEST_DB_DATABASE}
-     - MYSQL_USER=${BIKENEST_DB_USER}
-     - MYSQL_PASSWORD=${BIKENEST_DB_PASSWORD}
+      - BOOKING_SERVICE_HOST=booking
+      - PAYMENT_SERVICE_HOST=payment
+      - USERMGMT_SERVICE_HOST=usermgmt
+      - BIKENEST_SERVICE_HOST=bikenest
+      - BIKENEST_DB_SERVICE_HOST=bikenest-db
+      - MYSQL_PORT=3306
+      - MYSQL_DBNAME=${BIKENEST_DBNAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
     networks:
      - bikenest-db
      - services
@@ -64,11 +68,15 @@ services:
     build: service-booking
     restart: always
     environment:
-     - MYSQL_HOST=booking-db
-     - MYSQL_PORT=3306
-     - MYSQL_DBNAME=${BOOKING_DB_DATABASE}
-     - MYSQL_USER=${BOOKING_DB_USER}
-     - MYSQL_PASSWORD=${BOOKING_DB_PASSWORD}
+      - BOOKING_SERVICE_HOST=booking
+      - PAYMENT_SERVICE_HOST=payment
+      - USERMGMT_SERVICE_HOST=usermgmt
+      - BIKENEST_SERVICE_HOST=bikenest
+      - BOOKING_DB_SERVICE_HOST=booking-db
+      - MYSQL_PORT=3306
+      - MYSQL_DBNAME=${BOOKING_DBNAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
     networks:
      - booking-db
      - services
@@ -77,6 +85,11 @@ services:
     container_name: gateway
     build: apigateway
     restart: always
+    environment:
+      - BOOKING_SERVICE_HOST=booking
+      - PAYMENT_SERVICE_HOST=payment
+      - USERMGMT_SERVICE_HOST=usermgmt
+      - BIKENEST_SERVICE_HOST=bikenest
     ports:
      - "9000:9000"
     networks:
@@ -87,11 +100,15 @@ services:
     build: service-usermgmt
     restart: always
     environment:
-      - MYSQL_HOST=user-db
+      - BOOKING_SERVICE_HOST=booking
+      - PAYMENT_SERVICE_HOST=payment
+      - USERMGMT_SERVICE_HOST=usermgmt
+      - BIKENEST_SERVICE_HOST=bikenest
+      - USERMGMT_DB_SERVICE_HOST=user-db
       - MYSQL_PORT=3306
-      - MYSQL_DBNAME=${USER_DB_DATABASE}
-      - MYSQL_USER=${USER_DB_USER}
-      - MYSQL_PASSWORD=${USER_DB_PASSWORD}
+      - MYSQL_DBNAME=${USER_DBNAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
     networks:
       - user-db
       - services
@@ -101,11 +118,15 @@ services:
     build: service-payment
     restart: always
     environment:
-      - MYSQL_HOST=payment-db
+      - BOOKING_SERVICE_HOST=booking
+      - PAYMENT_SERVICE_HOST=payment
+      - USERMGMT_SERVICE_HOST=usermgmt
+      - BIKENEST_SERVICE_HOST=bikenest
+      - PAYMENT_DB_SERVICE_HOST=payment-db
       - MYSQL_PORT=3306
-      - MYSQL_DBNAME=${PAYMENT_DB_DATABASE}
-      - MYSQL_USER=${PAYMENT_DB_USER}
-      - MYSQL_PASSWORD=${PAYMENT_DB_PASSWORD}
+      - MYSQL_DBNAME=${PAYMENT_DBNAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
       - BT_MERCHANT_ID=${BT_MERCHANT_ID}
       - BT_PUBLIC_KEY=${BT_PUBLIC_KEY}
       - BT_PRIVATE_KEY=${BT_PRIVATE_KEY}
