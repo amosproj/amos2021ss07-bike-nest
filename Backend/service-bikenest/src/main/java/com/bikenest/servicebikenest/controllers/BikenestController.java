@@ -1,9 +1,8 @@
 package com.bikenest.servicebikenest.controllers;
 
-import com.bikenest.common.interfaces.GeneralResponse;
+import com.bikenest.common.exceptions.BusinessLogicException;
 import com.bikenest.common.interfaces.bikenest.AddBikenestRequest;
 import com.bikenest.common.interfaces.bikenest.BikenestInfoRequest;
-import com.bikenest.common.interfaces.bikenest.BikenestInfoResponse;
 import com.bikenest.common.security.UserInformation;
 import com.bikenest.common.security.UserRole;
 import com.bikenest.servicebikenest.db.Bikenest;
@@ -14,8 +13,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/bikenest")
@@ -30,50 +29,35 @@ public class BikenestController {
     /**
      * Adds a new Bikenest with the given Query Parameters.
      */
-    public ResponseEntity<GeneralResponse> addNewBikenest(@RequestBody AddBikenestRequest request) {
-        Optional<Bikenest> bikenest = bikenestService.addBikenest(request);
-
-        if(!bikenest.isPresent()){
-            return ResponseEntity.badRequest().body(
-                    new GeneralResponse(false, "Couldn't add Bikenest.", null));
-        }
-
-        return ResponseEntity.ok(new GeneralResponse(true, null, bikenest.get()));
+    public ResponseEntity<Bikenest> addNewBikenest(@Valid @RequestBody AddBikenestRequest request) throws BusinessLogicException {
+        Bikenest bikenest = bikenestService.addBikenest(request);
+        return ResponseEntity.ok(bikenest);
     }
 
     @GetMapping(path = "/all")
     public @ResponseBody
-    Iterable<Bikenest> getAllBikenests() {
+    ResponseEntity<Iterable<Bikenest>> getAllBikenests() {
         // Remove the Bikespot Information before returning this
         List<Bikenest> bikenests = bikenestService.getAllBikenests();
         bikenests.forEach(x -> x.setBikespots(null));
-        return bikenests;
+        return ResponseEntity.ok(bikenests);
     }
 
-    @GetMapping(path = "/deleteAll")
+    @GetMapping(path = "/deleteall")
     @PreAuthorize("hasRole('ADMIN')")
     public @ResponseBody
-    ResponseEntity<GeneralResponse> deleteAll(@AuthenticationPrincipal UserInformation user) {
+    ResponseEntity<Boolean> deleteAll(@AuthenticationPrincipal UserInformation user) throws BusinessLogicException {
         if (user.getRole() == UserRole.Admin) {
             bikenestService.deleteAllBikenests();
-            return ResponseEntity.ok(new GeneralResponse(true, null, null));
+            return ResponseEntity.ok(true);
+        }else{
+            throw new BusinessLogicException("Sie besitzen nicht die erforderlichen Rechte für diese Operation!");
         }
-        return ResponseEntity.badRequest().body(
-                new GeneralResponse(false, "Admin role for this operation required.", null));
     }
 
-    @PostMapping(path = "/bikenestInfo")
+    @PostMapping(path = "/bikenestinfo")
     public @ResponseBody
-    ResponseEntity<BikenestInfoResponse> getBikenestInfo(@RequestBody BikenestInfoRequest request) {       
-        int id = request.getBikenestID();
-
-        if(bikenestService.existsBikenest(id)){
-            Bikenest bikenestInfo = bikenestService.getBikenestInfo(id).get();
-            return ResponseEntity.ok(
-                new BikenestInfoResponse(bikenestInfo.getName(), "", bikenestInfo.getCurrentSpots(), bikenestInfo.isChargingAvailable()));
-        }
-       
-        return ResponseEntity.badRequest().body(
-            new BikenestInfoResponse("NaN", "NaN", 0, false));
+    ResponseEntity<Bikenest> getBikenestInfo(@Valid @RequestBody BikenestInfoRequest request) throws BusinessLogicException {
+        return ResponseEntity.ok(bikenestService.getBikenestInfo(request.getBikenestID()));
     }
 }

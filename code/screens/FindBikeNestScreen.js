@@ -32,7 +32,7 @@ const MODAL_HEIGHT = height * 0.85;
 const CARD_WIDTH = width * 0.8;
 const spacing_for_card_inset = width * 0.1 - 10;
 
-export default function FindBikeNestScreen({ navigation }) {
+export default function FindBikeNestScreen ({ navigation }) {
   let bikenestService = new BikenestService();
 
   const initMarker = [{
@@ -45,12 +45,10 @@ export default function FindBikeNestScreen({ navigation }) {
     image: require("../assets/bike_nest.png"),
     color: "#FFD700",
     id: 1,
-    chargingOptionAvailable: true,
+    chargingOptionAvailable: true
   }];
 
   // states, each state change re-renders scene
-  // const [location, setLocation] = useState(null);
-  const [reload, setReload] = useState(false);
   const [stateMarkers, setMarkers] = useState(initMarker);
   const [currentMarkerIndex, setCurrentMarkerIndex] = useState(0);
   const [distances, setDistances] = useState([-1]);
@@ -62,8 +60,8 @@ export default function FindBikeNestScreen({ navigation }) {
   const region = {
     latitude: 49.46,
     longitude: 11.07,
-    latitudeDelta: 0.08,
-    longitudeDelta: 0.08
+    latitudeDelta: 0.05,
+    longitudeDelta: 0.05
   };
 
   const getMarkers = async () => {
@@ -77,7 +75,6 @@ export default function FindBikeNestScreen({ navigation }) {
       if (status !== 'granted') {
         Alert.alert('Permission to access location was denied');
       } else {
-        console.log("got location");
       }
     })();
   }, []);
@@ -86,11 +83,10 @@ export default function FindBikeNestScreen({ navigation }) {
     getMarkers();
   }, []);
 
-  const fetchMarkers = async (id) => {
-    const res = await fetch(global.globalIPAddress + "/bikenest/all");
-    // console.log(res);
-    const data = await res.json();
-    return data;
+  const fetchMarkers = async () => {
+    return await bikenestService.getAllBikenests().catch(error => {
+      console.log("Error getting all Bikenests... " + JSON.stringify(error));
+    })
   };
 
   const populateMarkers = (fetchedMarkers) => {
@@ -113,8 +109,9 @@ export default function FindBikeNestScreen({ navigation }) {
   };
 
   const getLocationAsync = async (tempMarkers) => {
+    console.log("Get location async");
+    console.log(tempMarkers);
     let location = await Location.getCurrentPositionAsync({});
-    console.log("location: "+ location);
     let localdistances = [];
     tempMarkers.map((marker, index) => {
       localdistances.push(getDistanceToUser(marker, location));
@@ -123,16 +120,13 @@ export default function FindBikeNestScreen({ navigation }) {
     setMarkers(tempMarkers);
   };
 
-  function getColor(capacity) {
+  function getColor (capacity) {
     let color = "";
     if (capacity < 1) { color = "#CD5C5C" } else
       if (capacity < 4) { color = "#EA8B60" } else
         if (capacity < 7) { color = "#FFD700" } else { color = "#8FBC8F"; }
     return color;
   }
-
-
-
 
   //  asks for user location permission
   // useEffect(() => {
@@ -190,7 +184,7 @@ export default function FindBikeNestScreen({ navigation }) {
 
   useEffect(() => {
     mapAnimation.addListener(({ value }) => {
-      if (/*value % 1 !== 0 && */value !== 0) {
+      if (value !== 0) {
         let index = Math.round(value / (CARD_WIDTH * 1.06));
         if (index >= stateMarkers.length) {
           index = stateMarkers.length - 1;
@@ -231,22 +225,22 @@ export default function FindBikeNestScreen({ navigation }) {
 
   const onCardPress = (index, currentMarkerId) => {
     if (!modalState) {
-      console.log("ungleich modal state")
       bikenestService.getBikenestInfo(currentMarkerId).then((response) => {
-        stateMarkers[index].capacity = response.spotsLeft;
-        stateMarkers[index].chargingOptionAvailable = response.chargingOptionAvailable;
-        stateMarkers[index].address = response.bikenestName;
+        stateMarkers[index].capacity = response.currentSpots;
+        stateMarkers[index].chargingOptionAvailable = response.chargingAvailable;
+        stateMarkers[index].address = response.name;
       }).then(() => setModalState(!modalState));
     }
     else {
-      console.log("else state")
       getMarkers().then(setModalState(!modalState));
     }
   };
 
-  const proceedBooking = () => {
+  const proceedBooking = (index, currentMarkerId) => {
     setModalState(!modalState);
-    navigation.navigate('Booking');
+    navigation.navigate('Booking',  {
+      state: stateMarkers[index], nestID: currentMarkerId
+    })
   };
 
   // currently not used, hides cards at the bottom of screen
@@ -263,7 +257,7 @@ export default function FindBikeNestScreen({ navigation }) {
         style={styles.container}
       // onPress={(e) => onMapPress(e)}
       >
-        {stateMarkers.map((marker, index) => {
+        {stateMarkers.length > 2 && stateMarkers.map((marker, index) => {
           return (
             <MapView.Marker key={index} coordinate={marker.coordinate} onPress={(e) => onMarkerPress(e)}>
               <Animated.View style={[styles.markerWrap]}>
@@ -277,13 +271,20 @@ export default function FindBikeNestScreen({ navigation }) {
           );
         })}
       </MapView>
+      {stateMarkers.length < 2 && (
+        <BikeNest_Modal
+          content={
+            <View style={[mainStyles.modalContentContainer, { backgroundColor: 'rgba(252, 252, 252, 0.7)', width: width * 0.8, height: height * 0.15, justifyContent: 'center' }]}>
+              <Text style={[mainStyles.h2, { justifyContent: 'center' }]}>Lade Bikenests... </Text>
+            </View>}
+        />)}
       <BikeNest_Modal
         isVisible={modalState}
         onRequestClose={() => {
           onCardPress(currentMarkerIndex, stateMarkers[currentMarkerIndex].id);
         }}
         content={
-          <View style={[mainStyles.modalContentContainer, { backgroundColor: stateMarkers[currentMarkerIndex].color, width: 360, height: 280 }]}>
+          <View style={[mainStyles.modalContentContainer, { backgroundColor: stateMarkers[currentMarkerIndex].color, width: width * 0.9, height: height * 0.5 }]}>
             <Text style={mainStyles.h3}>{stateMarkers[currentMarkerIndex].address} </Text>
             <Text style={mainStyles.stdText}>Lade Optionen: <B>{stateMarkers[currentMarkerIndex].chargingOptionAvailable ? "Ja" : "Nein"}</B></Text>
             <Text numberOfLines={1} style={mainStyles.stdText}>Entfernung:<B> {distances[currentMarkerIndex] / 1000} Km</B></Text>
@@ -298,12 +299,11 @@ export default function FindBikeNestScreen({ navigation }) {
               <BikeNest_Button
                 type={ButtonStyle.medium}
                 text="Ich möchte Buchen"
-                onPress={() => proceedBooking()}
+                onPress={() => proceedBooking(currentMarkerIndex, stateMarkers[currentMarkerIndex].id)}
               />
             </View>
           </View>}
-      >
-      </BikeNest_Modal>
+      />
       <Animated.ScrollView
         ref={_scrollView}
         horizontal
@@ -335,7 +335,7 @@ export default function FindBikeNestScreen({ navigation }) {
           { useNativeDriver: true }
         )}
       >
-        {stateMarkers.map((marker, index) => (
+        {stateMarkers.length > 2 && stateMarkers.map((marker, index) => (
           <View style={[styles.card, { backgroundColor: marker.color }]} key={index}>
             <Image
               source={marker.image}
@@ -344,7 +344,7 @@ export default function FindBikeNestScreen({ navigation }) {
             />
             <View style={styles.textContent}>
               <Text numberOfLines={1} style={styles.cardtitle}>{marker.address}</Text>
-              {distances.length > 1 ? <Text>Entfernung:  <B>{distances[index] / 1000} Km </B></Text> : <Text></Text>}
+              {distances.length > 1 ? <Text>Entfernung:  <B>{(distances[index] / 1000).toFixed(2).toLocaleString()} Km </B></Text> : <Text />}
               <Text numberOfLines={1} style={styles.cardDescription}>In diesem Bikenest sind <B>{marker.capacity}</B> Plätze frei</Text>
               <View style={styles.button}>
                 <TouchableOpacity
@@ -358,7 +358,7 @@ export default function FindBikeNestScreen({ navigation }) {
                   <Text style={styles.textSign}>Zur Buchung</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => { Linking.openURL('https://www.google.com/maps/search/?api=1&query=' + stateMarkers[currentMarkerIndex].coordinate.latitude + ',' + stateMarkers[currentMarkerIndex].coordinate.longitude) }}
+                  onPress={() => { Linking.openURL('https://www.google.com/maps/dir//' + stateMarkers[currentMarkerIndex].coordinate.latitude + ',' + stateMarkers[currentMarkerIndex].coordinate.longitude) }}
                   style={[styles.signIn, {
                     borderColor: '#FFF',
                     borderWidth: 1

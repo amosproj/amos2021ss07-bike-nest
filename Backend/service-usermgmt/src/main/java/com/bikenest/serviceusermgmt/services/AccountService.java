@@ -1,5 +1,6 @@
 package com.bikenest.serviceusermgmt.services;
 
+import com.bikenest.common.exceptions.BusinessLogicException;
 import com.bikenest.serviceusermgmt.models.User;
 import com.bikenest.serviceusermgmt.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,38 +13,42 @@ public class AccountService {
     @Autowired
     UserRepository userRepository;
 
-    public boolean existsAccountWithEmail(String email) {
+    private boolean existsAccountWithEmail(String email) {
         return userRepository.existsByEmail(email);
     }
 
-    public Optional<User> loginUser(String email, String password) {
+    public User loginUser(String email, String password) throws BusinessLogicException {
         Optional<User> user = userRepository.findByEmail(email);
-        if (user.isPresent() && user.get().getPassword().equals(password))
-            return user;
-        return Optional.empty();
+        if(user.isEmpty())
+            throw new BusinessLogicException("Es existiert kein Account mit dieser Email Adresse.");
+
+        if (!user.get().getPassword().equals(password))
+            throw new BusinessLogicException("Das Passwort für diese Email ist falsch.");
+
+        return user.get();
     }
 
-    public Optional<User> createAccount(String email, String password, String firstName, String lastName) {
+    public User createAccount(String email, String password, String firstName, String lastName) throws BusinessLogicException {
         if (existsAccountWithEmail(email))
-            return Optional.empty();
+            throw new BusinessLogicException("Ein Account mit dieser Email Adresse existiert bereits!");
 
         User user = new User(firstName, lastName, email, password);
         userRepository.save(user);
 
-        return Optional.of(user);
+        return user;
     }
 
-    public boolean changePassword(String email, String oldPassword, String newPassword) {
-        if (!existsAccountWithEmail(email))
-            return false;
-
+    public User changePassword(String email, String oldPassword, String newPassword) throws BusinessLogicException {
         Optional<User> user = userRepository.findByEmail(email);
 
-        if (user.isPresent() && user.get().getPassword().equals(oldPassword)) {
-            user.get().setPassword(newPassword);
-            userRepository.save(user.get());
-            return true;
+        if(user.isEmpty())
+            throw new BusinessLogicException("Es existiert kein Account mit dieser Email Adresse.");
+
+        User actualUser = user.get();
+        if (!actualUser.getPassword().equals(oldPassword)) {
+            throw new BusinessLogicException("Das alte Passwort ist inkorrekt.");
         }
-        return false;
+        actualUser.setPassword(newPassword);
+        return userRepository.save(actualUser);
     }
 }

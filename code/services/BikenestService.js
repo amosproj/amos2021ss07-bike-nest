@@ -1,54 +1,49 @@
 import global from "../components/GlobalVars";
+import fetchWithTimeout from "./FetchHelper";
 
 export class BikenestService{
 
     BikenestService(){};
 
     /**
+     * Returns a Promise that contains an array of Bikenests.
      * Example usage:
      * bikenestService.getAllBikenests().then(response => {
-     *      if(response.success){
      *          for(x of response.bikenests){
      *              console.log("Bikenest: " + JSON.stringify(x));
      *          }
-     *      }
      *      });
-     * @returns {Promise<{success: boolean, bikenests: any[]} | {success: boolean, error: string}>}
+     * @returns {Promise<any[]>}
      */
     async getAllBikenests(){
-        return fetch(global.globalIPAddress + "/bikenest/all", {
-            method: 'GET',
-            headers: { Accept: 'application/json', 'Content-Type': 'application/json'}
-        })
-            .then((response) => response.json())
-            .then((json) => {
-                console.log("getAllBikenests Response:" + JSON.stringify(json));
-                return {"success": true, "bikenests": json};
-            })
-            .catch((error) => {
-                console.error("getAllBikenests Error:" + error);
-                return {"success": false, "error": error};
-            });
+        return fetchWithTimeout(global.globalIPAddress + "/bikenest/all",
+            {
+                method: 'GET',
+                headers:
+                    {
+                        Accept: 'application/json', 'Content-Type': 'application/json',
+                    }
+            }, 10000);
     }
 
+    /**
+     * Returns a promise that contains a single bikenest.
+     * @param bikenestID
+     * @returns {Promise<*>}
+     */
     async getBikenestInfo(bikenestID){
-        let request = {
+        let body = {
             "bikenestID": bikenestID
         }
 
-        return fetch(global.globalIPAddress + "/bikenest/bikenestInfo", {
-            method: 'POST',
-            body: JSON.stringify(request),
-            headers: { Accept: 'application/json', 'Content-Type': 'application/json'}
-        })
-            .then((response) => response.json())
-            .then((json) => {
-                console.log("getBikenestInfo Response:" + JSON.stringify(json));
-                return json;
-            })
-            .catch((error) => {
-                console.error("getBikenestInfo Error:" + error);
-                return {"bikenestName": "NaN", "address": "NaN", "spotsLeft":"0", "chargingOptionAvailable":"false"};
-            });
+        return fetchWithTimeout(global.globalIPAddress + "/bikenest/bikenestinfo",
+            {
+                method: 'POST',
+                body: JSON.stringify(body),
+                headers:
+                    {
+                        Accept: 'application/json', 'Content-Type': 'application/json',
+                    }
+            }, 10000);
     }
 }
