@@ -80,7 +80,7 @@ services:
     networks:
      - booking-db
      - services
-   
+
   gateway:
     container_name: gateway
     build: apigateway

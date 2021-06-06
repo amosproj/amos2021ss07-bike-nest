@@ -7,6 +7,8 @@ import com.bikenest.common.security.UserInformation;
 import com.bikenest.servicebooking.DB.Reservation;
 import com.bikenest.servicebooking.Services.LockService;
 import com.bikenest.servicebooking.Services.ReservationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,6 +22,8 @@ public class LockingController {
     ReservationService reservationService;
     @Autowired
     LockService lockService;
+
+    Logger logger = LoggerFactory.getLogger(LockingController.class);
 
     /**
      * This Endpoint should be called, when the user is standing infront of the Bikenest and wants to store his Bike.
@@ -36,6 +40,7 @@ public class LockingController {
         reservation = reservationService.startReservation(request.getReservationId());
 
         //TODO: really implement the unlocking, there should also be a return code
+        logger.debug("Unlocking the Bikenest. Reservation begins now. Place the Bike inside now and close the door!");
         lockService.OpenLock(reservation.getBikenestId(), reservation.getBikespotId());
 
         return ResponseEntity.ok(reservation);
@@ -56,6 +61,7 @@ public class LockingController {
         Reservation reservation = reservationService.getReservationVerified(request.getReservationId(), user.getUserId());
         reservation = reservationService.endReservation(reservation.getId());
 
+        logger.debug("You want to take your Bike? The door is open now!");
         lockService.OpenLock(reservation.getBikenestId(), reservation.getBikespotId());
 
         return ResponseEntity.ok(reservation);
@@ -76,6 +82,7 @@ public class LockingController {
         Reservation reservation = reservationService.getReservationVerified(request.getReservationId(), user.getUserId());
 
         if(lockService.BikespotOccupied(reservation.getBikenestId(), reservation.getBikespotId())){
+            logger.debug("You have placed your Bike inside. Closing the door now.");
             lockService.CloseLock(reservation.getBikenestId(), reservation.getBikespotId());
             return ResponseEntity.ok(reservation);
         }else{
@@ -91,7 +98,9 @@ public class LockingController {
         Reservation reservation = reservationService.getReservationVerified(request.getReservationId(),
                 user.getUserId());
 
-        if(!lockService.BikespotOccupied(reservation.getBikenestId(), reservation.getBikespotId())){
+        //TODO: REMOVE || true
+        if(!lockService.BikespotOccupied(reservation.getBikenestId(), reservation.getBikespotId()) || true){
+            logger.debug("You took your bike and the door will be closed now.");
             lockService.CloseLock(reservation.getBikenestId(), reservation.getBikespotId());
             return ResponseEntity.ok(reservation);
         }else{
