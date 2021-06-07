@@ -18,12 +18,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.11'
     compile 'io.jsonwebtoken:jjwt-api:0.11.2'
     runtime 'io.jsonwebtoken:jjwt-impl:0.11.2',
             'io.jsonwebtoken:jjwt-jackson:0.11.2'
     implementation 'junit:junit:4.12'
     runtimeOnly 'mysql:mysql-connector-java'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "org.testcontainers:testcontainers:1.15.3"
 }
 
 //Dependency Management required for the common project.

@@ -47,7 +47,7 @@ public class ReservationService {
         }
 
 
-        Reservation reservation = new Reservation(userId, response.getBikenestId(), response.getSpotId(),
+        Reservation reservation = new Reservation(userId, response.getBikenestId(), response.getSpotNumber(),
                 newReservation.getReservationMinutes(), false, LocalDateTime.now(ZoneId.of("Europe/Berlin")),
                 LocalDateTime.now(ZoneId.of("Europe/Berlin")).plusMinutes(RESERVATION_MINUTES));
 
@@ -70,8 +70,7 @@ public class ReservationService {
         }
 
         actualReservation.setActualStart(LocalDateTime.now(ZoneId.of("Europe/Berlin")));
-        reservationRepository.save(reservation.get());
-        return reservation.get();
+        return reservationRepository.save(reservation.get());
     }
 
     public Reservation endReservation(Integer id) throws BusinessLogicException {
@@ -88,13 +87,8 @@ public class ReservationService {
             throw new BusinessLogicException("Sie haben ihr Fahrrad schon aus dem Bikenest abgeholt!");
         }
 
-        if(!bikenestClient.freeSpot(new FreeSpotRequest(actualReservation.getBikenestId(), actualReservation.getBikespotId(),
-                actualReservation.getUserId()))){
-            throw new BusinessLogicException("Der Platz konnte nicht im Server freigegeben werden!");
-        }
         actualReservation.setActualEnd(LocalDateTime.now(ZoneId.of("Europe/Berlin")));
-        reservationRepository.save(reservation.get());
-        return reservation.get();
+        return reservationRepository.save(reservation.get());
     }
 
     public Reservation cancelReservation(int reservationId, int userId) throws BusinessLogicException {
@@ -111,8 +105,11 @@ public class ReservationService {
             throw new BusinessLogicException("Ihre Reservierung ist bereits storniert worden!");
         }
         actualReservation.setCancelled(true);
-        reservationRepository.save(actualReservation);
-        return actualReservation;
+        return reservationRepository.save(actualReservation);
+    }
+
+    public boolean freeReservedSpot(int bikenestId, int bikespotNumber, int userId){
+        return bikenestClient.freeSpot(new FreeSpotRequest(bikenestId, bikespotNumber, userId));
     }
 
     /**

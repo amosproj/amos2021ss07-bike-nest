@@ -36,7 +36,7 @@ public class BikenestController {
 
     @GetMapping(path = "/all")
     public @ResponseBody
-    ResponseEntity<Iterable<Bikenest>> getAllBikenests() {
+    ResponseEntity<List<Bikenest>> getAllBikenests() {
         // Remove the Bikespot Information before returning this
         List<Bikenest> bikenests = bikenestService.getAllBikenests();
         bikenests.forEach(x -> x.setBikespots(null));
@@ -58,6 +58,6 @@ public class BikenestController {
     @PostMapping(path = "/bikenestinfo")
     public @ResponseBody
     ResponseEntity<Bikenest> getBikenestInfo(@Valid @RequestBody BikenestInfoRequest request) throws BusinessLogicException {
-        return ResponseEntity.ok(bikenestService.getBikenestInfo(request.getBikenestID()));
+        return ResponseEntity.ok(bikenestService.getBikenest(request.getBikenestID()));
     }
 }

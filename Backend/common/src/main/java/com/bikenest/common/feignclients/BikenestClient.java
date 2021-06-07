@@ -3,6 +3,8 @@ package com.bikenest.common.feignclients;
 import com.bikenest.common.interfaces.bikenest.FreeSpotRequest;
 import com.bikenest.common.interfaces.bikenest.ReserveSpotRequest;
 import com.bikenest.common.interfaces.bikenest.ReserveSpotResponse;
+import com.bikenest.common.interfaces.booking.GetBikespotRequest;
+import com.bikenest.common.interfaces.booking.GetBikespotResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@FeignClient(url="http://bikenest:9001/", name="BikenestClient")
+@FeignClient(url="${client.bikenest.url}", name="BikenestClient")
 public interface BikenestClient {
 
     @RequestMapping(method = RequestMethod.POST, value = "/bikenest/service/bikenestexists",
@@ -40,4 +42,11 @@ public interface BikenestClient {
             headers = {"Authorization=SERVICE"})
     @ResponseBody
     boolean hasFreeSpots(@RequestBody Integer bikenestId);
+
+    @RequestMapping(method = RequestMethod.POST, value = "/bikenest/service/getbikespot",
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE},
+            headers = {"Authorization=SERVICE"})
+    @ResponseBody
+    GetBikespotResponse getBikespot(@RequestBody GetBikespotRequest bikenestId);
 }

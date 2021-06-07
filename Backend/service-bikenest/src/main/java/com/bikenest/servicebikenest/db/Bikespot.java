@@ -20,6 +20,14 @@ public class Bikespot {
     @JoinColumn(name="bikenest_id")
     private Bikenest bikenest;
 
+    public Bikespot(Bikenest bikenest, Integer spotNumber, Integer userId, Boolean reserved, Boolean leftSide){
+        this.spotNumber = spotNumber;
+        this.userId = userId;
+        this.reserved = reserved;
+        this.leftSide = leftSide;
+        this.bikenest = bikenest;
+    }
+
     public Bikespot(){}
 
     public Integer getId() {
