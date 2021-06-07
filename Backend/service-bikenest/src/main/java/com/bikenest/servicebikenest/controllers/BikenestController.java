@@ -58,6 +58,6 @@ public class BikenestController {
     @PostMapping(path = "/bikenestinfo")
     public @ResponseBody
     ResponseEntity<Bikenest> getBikenestInfo(@Valid @RequestBody BikenestInfoRequest request) throws BusinessLogicException {
-        return ResponseEntity.ok(bikenestService.getBikenestInfo(request.getBikenestID()));
+        return ResponseEntity.ok(bikenestService.getBikenest(request.getBikenestID()));
     }
 }

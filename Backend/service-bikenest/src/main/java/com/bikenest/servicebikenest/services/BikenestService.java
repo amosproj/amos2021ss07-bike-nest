@@ -175,7 +175,7 @@ public class BikenestService {
         return Optional.of(actualBikenest.getCurrentSpots());
     }
 
-    public Bikenest getBikenestInfo(Integer bikenestId) throws BusinessLogicException {
+    public Bikenest getBikenest(Integer bikenestId) throws BusinessLogicException {
         Optional<Bikenest> bikenest = bikenestRepository.findById(bikenestId);
 
         if(bikenest.isEmpty())

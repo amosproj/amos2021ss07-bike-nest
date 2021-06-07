@@ -5,7 +5,6 @@ import com.bikenest.common.interfaces.bikenest.AddBikenestRequest;
 import com.bikenest.servicebikenest.ServicebikenestApplication;
 import com.bikenest.servicebikenest.db.Bikenest;
 import com.bikenest.servicebikenest.db.BikenestRepository;
-import com.bikenest.servicebikenest.db.Bikespot;
 import com.bikenest.servicebikenest.db.BikespotRepository;
 import com.bikenest.servicebikenest.services.BikenestService;
 import org.assertj.core.api.Assertions;
@@ -19,9 +18,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.notNull;
@@ -93,8 +90,8 @@ class BikenestServiceTests {
         Assert.assertTrue(bikenestService.existsBikenest(freeSpots.getId()));
         Assert.assertFalse(bikenestService.existsBikenest(notExistant.getId()));
 
-        Assert.assertEquals(freeSpots.getMaximumSpots(), bikenestService.getBikenestInfo(freeSpots.getId()).getCurrentSpots());
-        Assert.assertEquals(reservedSpots.getCurrentSpots(), bikenestService.getBikenestInfo(reservedSpots.getId()).getCurrentSpots());
+        Assert.assertEquals(freeSpots.getMaximumSpots(), bikenestService.getBikenest(freeSpots.getId()).getCurrentSpots());
+        Assert.assertEquals(reservedSpots.getCurrentSpots(), bikenestService.getBikenest(reservedSpots.getId()).getCurrentSpots());
     }
 
     @Test

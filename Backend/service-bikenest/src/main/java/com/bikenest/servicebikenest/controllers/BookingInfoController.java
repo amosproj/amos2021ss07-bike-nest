@@ -1,8 +1,13 @@
 package com.bikenest.servicebikenest.controllers;
 
+import com.bikenest.common.exceptions.BusinessLogicException;
 import com.bikenest.common.interfaces.bikenest.FreeSpotRequest;
 import com.bikenest.common.interfaces.bikenest.ReserveSpotRequest;
 import com.bikenest.common.interfaces.bikenest.ReserveSpotResponse;
+import com.bikenest.common.interfaces.booking.GetBikespotRequest;
+import com.bikenest.common.interfaces.booking.GetBikespotResponse;
+import com.bikenest.servicebikenest.db.Bikenest;
+import com.bikenest.servicebikenest.db.Bikespot;
 import com.bikenest.servicebikenest.services.BikenestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -54,6 +59,24 @@ public class BookingInfoController {
             return true;
         }
         return false;
+    }
+
+    @PostMapping(path="/getbikespot")
+    @PreAuthorize("hasRole('SERVICE')")
+    public GetBikespotResponse getBikespot(@RequestBody GetBikespotRequest request) throws BusinessLogicException {
+        Bikenest bikenest = bikenestService.getBikenest(request.getBikenestId());
+        Optional<Bikespot> spot = bikenest.getBikespots().stream()
+                .filter(bikespot -> bikespot.getSpotNumber().equals(request.getBikespotId()))
+                .findFirst();
+
+        if(spot.isPresent()){
+            Bikespot actualSpot = spot.get();
+            return new GetBikespotResponse(bikenest.getId(), actualSpot.getSpotNumber(), actualSpot.getUserId(),
+                    actualSpot.getLeftSide(), actualSpot.getReserved());
+        }else{
+            throw new BusinessLogicException("Dieser Bikespot existiert nicht im Bikenest,");
+        }
+
     }
 
 }

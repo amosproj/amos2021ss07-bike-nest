@@ -70,8 +70,7 @@ public class ReservationService {
         }
 
         actualReservation.setActualStart(LocalDateTime.now(ZoneId.of("Europe/Berlin")));
-        reservationRepository.save(reservation.get());
-        return reservation.get();
+        return reservationRepository.save(reservation.get());
     }
 
     public Reservation endReservation(Integer id) throws BusinessLogicException {
@@ -93,8 +92,7 @@ public class ReservationService {
             throw new BusinessLogicException("Der Platz konnte nicht im Server freigegeben werden!");
         }
         actualReservation.setActualEnd(LocalDateTime.now(ZoneId.of("Europe/Berlin")));
-        reservationRepository.save(reservation.get());
-        return reservation.get();
+        return reservationRepository.save(reservation.get());
     }
 
     public Reservation cancelReservation(int reservationId, int userId) throws BusinessLogicException {
@@ -111,8 +109,7 @@ public class ReservationService {
             throw new BusinessLogicException("Ihre Reservierung ist bereits storniert worden!");
         }
         actualReservation.setCancelled(true);
-        reservationRepository.save(actualReservation);
-        return actualReservation;
+        return reservationRepository.save(actualReservation);
     }
 
     /**
