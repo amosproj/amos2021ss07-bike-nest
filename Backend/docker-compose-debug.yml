@@ -1,5 +1,6 @@
 version: "3"
 services:
+  # Definition of the databases, all use the same credentials because we are debugging in a dev environment only anyways...
   booking-db:
     container_name: booking-db
     image: mysql
@@ -44,15 +45,19 @@ services:
     networks:
       - payment-db
 
-
+  # Definition of the microservices, every service will be accesible by their port (in production only the api gateway will be accesible)
+  # The 500X ports are used for debugging
   bikenest:
     container_name: bikenest
-    build: service-bikenest
+    build:
+      context: service-bikenest
+      dockerfile: Dockerfile_debug
     restart: always
     ports:
       - "5005:5005"
       - "9001:9001"
     environment:
+      - logging.level.org.springframework=DEBUG
       - BOOKING_SERVICE_HOST=booking
       - PAYMENT_SERVICE_HOST=payment
       - USERMGMT_SERVICE_HOST=usermgmt
@@ -68,12 +73,15 @@ services:
 
   booking:
     container_name: booking
-    build: service-booking
+    build:
+      context: service-booking
+      dockerfile: Dockerfile_debug
     restart: always
     ports:
       - "5006:5006"
       - "9002:9002"
     environment:
+      - logging.level.org.springframework=DEBUG
       - BOOKING_SERVICE_HOST=booking
       - PAYMENT_SERVICE_HOST=payment
       - USERMGMT_SERVICE_HOST=usermgmt
@@ -89,9 +97,12 @@ services:
 
   gateway:
     container_name: gateway
-    build: apigateway
+    build:
+      context: apigateway
+      dockerfile: Dockerfile_debug
     restart: always
     environment:
+      - logging.level.org.springframework=DEBUG
       - BOOKING_SERVICE_HOST=booking
       - PAYMENT_SERVICE_HOST=payment
       - USERMGMT_SERVICE_HOST=usermgmt
@@ -104,12 +115,15 @@ services:
 
   usermgmt:
     container_name: usermgmt
-    build: service-usermgmt
+    build:
+      context: service-usermgmt
+      dockerfile: Dockerfile_debug
     restart: always
     ports:
       - "5008:5008"
       - "9003:9003"
     environment:
+      - logging.level.org.springframework=DEBUG
       - BOOKING_SERVICE_HOST=booking
       - PAYMENT_SERVICE_HOST=payment
       - USERMGMT_SERVICE_HOST=usermgmt
@@ -125,12 +139,15 @@ services:
 
   payment:
     container_name: payment
-    build: service-payment
+    build:
+      context: service-payment
+      dockerfile: Dockerfile_debug
     restart: always
     ports:
       - "5009:5009"
       - "9004:9004"
     environment:
+      - logging.level.org.springframework=DEBUG
       - BOOKING_SERVICE_HOST=booking
       - PAYMENT_SERVICE_HOST=payment
       - USERMGMT_SERVICE_HOST=usermgmt
