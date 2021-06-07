@@ -19,7 +19,11 @@ public class LockService {
 
     public void OpenLock(Integer userId, Integer bikenestId, Integer bikespotId) throws BusinessLogicException {
         GetBikespotResponse response = bikenestClient.getBikespot(new GetBikespotRequest(bikenestId, bikespotId));
-        if(!response.getUserId().equals(userId)){
+        if(!response.getExists()){
+            throw new BusinessLogicException("Der Bikespot scheint nicht zu existieren!");
+        }
+
+        if(response.getUserId() == null || !response.getUserId().equals(userId)){
             throw new BusinessLogicException("Dieser Bikespot gehört zu einem anderen User!");
         }
         if(!response.getReserved()){
@@ -27,15 +31,19 @@ public class LockService {
         }
         if(!response.getLeftSide()){
             //TODO: Open the left gate
-            logger.debug("Opening the left Gate for userId:" + userId + ", bikenestId:" + bikenestId + "bikespotId:" + bikespotId);
+            logger.info("Opening the left Gate for userId:" + userId + ", bikenestId:" + bikenestId + ", bikespotNumber:" + bikespotId);
         }else{
-            logger.debug("Opening the right Gate for userId:" + userId + ", bikenestId:" + bikenestId + "bikespotId:" + bikespotId);
+            logger.info("Opening the right Gate for userId:" + userId + ", bikenestId:" + bikenestId + ", bikespotNumber:" + bikespotId);
         }
     }
 
     public void CloseLock(Integer userId, Integer bikenestId, Integer bikespotId) throws BusinessLogicException {
         GetBikespotResponse response = bikenestClient.getBikespot(new GetBikespotRequest(bikenestId, bikespotId));
-        if(!response.getUserId().equals(userId)){
+        if(!response.getExists()){
+            throw new BusinessLogicException("Der Bikespot scheint nicht zu existieren!");
+        }
+
+        if(response.getUserId() == null || !response.getUserId().equals(userId)){
             throw new BusinessLogicException("Dieser Bikespot gehört zu einem anderen User!");
         }
         if(!response.getReserved()){
@@ -43,9 +51,9 @@ public class LockService {
         }
         if(!response.getLeftSide()){
             //TODO: Close the left gate
-            logger.debug("Closing the left Gate for userId:" + userId + ", bikenestId:" + bikenestId + "bikespotId:" + bikespotId);
+            logger.info("Closing the left Gate for userId:" + userId + ", bikenestId:" + bikenestId + ", bikespotNumber:" + bikespotId);
         }else{
-            logger.debug("Closing the right Gate for userId:" + userId + ", bikenestId:" + bikenestId + "bikespotId:" + bikespotId);
+            logger.info("Closing the right Gate for userId:" + userId + ", bikenestId:" + bikenestId + ", bikespotNumber:" + bikespotId);
         }
     }
 

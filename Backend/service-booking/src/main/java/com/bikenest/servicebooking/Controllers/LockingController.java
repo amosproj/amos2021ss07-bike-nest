@@ -41,9 +41,9 @@ public class LockingController {
         reservation = reservationService.startReservation(request.getReservationId());
 
         //TODO: really implement the unlocking, there should also be a return code
-        logger.debug("Unlocking the Bikenest. Reservation begins now. Place the Bike inside now and close the door!");
-        logger.debug("**Bikespot starts blinking** (Send request to RaspberryPi)");
-        lockService.OpenLock(user.getUserId(), reservation.getBikenestId(), reservation.getBikespotId());
+        logger.info("Unlocking the Bikenest. Reservation begins now. Place the Bike inside now and close the door!");
+        logger.info("**Bikespot starts blinking** (Send request to RaspberryPi)");
+        lockService.OpenLock(user.getUserId(), reservation.getBikenestId(), reservation.getBikespotNumber());
 
         return ResponseEntity.ok(reservation);
     }
@@ -61,10 +61,9 @@ public class LockingController {
                                                           @RequestBody EndUnlockRequest request) throws BusinessLogicException {
         //TODO: Check if the reservation is actually started and don't end it elsewise
         Reservation reservation = reservationService.getReservationVerified(request.getReservationId(), user.getUserId());
-        reservation = reservationService.endReservation(reservation.getId());
 
-        logger.debug("You want to take your Bike? The door is open now!");
-        lockService.OpenLock(user.getUserId(), reservation.getBikenestId(), reservation.getBikespotId());
+        logger.info("You want to take your Bike? The door is open now!");
+        lockService.OpenLock(user.getUserId(), reservation.getBikenestId(), reservation.getBikespotNumber());
 
         return ResponseEntity.ok(reservation);
     }
@@ -83,9 +82,9 @@ public class LockingController {
                                                             @RequestBody StartUnlockRequest request) throws BusinessLogicException {
         Reservation reservation = reservationService.getReservationVerified(request.getReservationId(), user.getUserId());
 
-        if(lockService.BikespotOccupied(reservation.getBikenestId(), reservation.getBikespotId())){
-            logger.debug("You have placed your Bike inside. Closing the door now.");
-            lockService.CloseLock(user.getUserId(), reservation.getBikenestId(), reservation.getBikespotId());
+        if(lockService.BikespotOccupied(reservation.getBikenestId(), reservation.getBikespotNumber())){
+            logger.info("You have placed your Bike inside. Closing the door now.");
+            lockService.CloseLock(user.getUserId(), reservation.getBikenestId(), reservation.getBikespotNumber());
             return ResponseEntity.ok(reservation);
         }else{
             throw new BusinessLogicException("Du hast dein Fahrrad noch nicht korrekt auf dem Platz abgestellt." +
@@ -99,11 +98,15 @@ public class LockingController {
                                                      @RequestBody StartUnlockRequest request) throws BusinessLogicException {
         Reservation reservation = reservationService.getReservationVerified(request.getReservationId(),
                 user.getUserId());
+        reservation = reservationService.endReservation(reservation.getId());
 
         //TODO: REMOVE || true
-        if(!lockService.BikespotOccupied(reservation.getBikenestId(), reservation.getBikespotId()) || true){
-            logger.debug("You took your bike and the door will be closed now.");
-            lockService.CloseLock(user.getUserId(), reservation.getBikenestId(), reservation.getBikespotId());
+        if(!lockService.BikespotOccupied(reservation.getBikenestId(), reservation.getBikespotNumber()) || true){
+            logger.info("You took your bike and the door will be closed now.");
+            lockService.CloseLock(user.getUserId(), reservation.getBikenestId(), reservation.getBikespotNumber());
+            if(!reservationService.freeReservedSpot(reservation.getBikenestId(), reservation.getBikespotNumber(), user.getUserId())){
+                throw new BusinessLogicException("Konnte den reservierten Spot nicht freigeben.");
+            }
             return ResponseEntity.ok(reservation);
         }else{
             throw new BusinessLogicException("Du hast dein Fahrrad nicht vom Bikespot entfernt." +

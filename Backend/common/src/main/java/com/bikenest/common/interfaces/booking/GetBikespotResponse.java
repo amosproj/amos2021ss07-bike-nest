@@ -1,6 +1,7 @@
 package com.bikenest.common.interfaces.booking;
 
 public class GetBikespotResponse {
+    private Boolean exists; // Does the request bikespot even exist?
     private Integer bikenestId;
     private Integer bikespotNumber;
     private Integer userId;
@@ -9,8 +10,9 @@ public class GetBikespotResponse {
 
     public GetBikespotResponse(){}
 
-    public GetBikespotResponse(Integer bikenestId, Integer bikespotNumber, Integer userId,
+    public GetBikespotResponse(Boolean exists, Integer bikenestId, Integer bikespotNumber, Integer userId,
                                Boolean leftSide, Boolean reserved){
+        this.exists = exists;
         this.bikenestId = bikenestId;
         this.bikespotNumber = bikespotNumber;
         this.userId = userId;
@@ -56,5 +58,13 @@ public class GetBikespotResponse {
 
     public void setReserved(Boolean reserved) {
         this.reserved = reserved;
+    }
+
+    public Boolean getExists() {
+        return exists;
+    }
+
+    public void setExists(Boolean exists) {
+        this.exists = exists;
     }
 }

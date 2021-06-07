@@ -2,12 +2,12 @@ package com.bikenest.common.interfaces.bikenest;
 
 public class FreeSpotRequest {
     private Integer bikenestId;
-    private Integer spotId;
+    private Integer spotNumber;
     private Integer userId;
 
-    public FreeSpotRequest(Integer bikenestId, Integer spotId, Integer userId){
+    public FreeSpotRequest(Integer bikenestId, Integer spotNumber, Integer userId){
         this.bikenestId = bikenestId;
-        this.spotId = spotId;
+        this.spotNumber = spotNumber;
         this.userId = userId;
     }
     public FreeSpotRequest(){}
@@ -20,13 +20,6 @@ public class FreeSpotRequest {
         this.bikenestId = bikenestId;
     }
 
-    public Integer getSpotId() {
-        return spotId;
-    }
-
-    public void setSpotId(Integer spotId) {
-        this.spotId = spotId;
-    }
 
     public Integer getUserId() {
         return userId;
@@ -34,5 +27,13 @@ public class FreeSpotRequest {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Integer getSpotNumber() {
+        return spotNumber;
+    }
+
+    public void setSpotNumber(Integer spotNumber) {
+        this.spotNumber = spotNumber;
     }
 }

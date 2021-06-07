@@ -28,7 +28,7 @@ export default function ReservationSuccessScreen({ route, navigation }) {
 
     bookingService.getAllReservations().then(reservations => {
         //TODO set spot number where reservation not expired
-        setSpotNumber(reservations[0].bikespotId);
+        setSpotNumber(reservations[0].bikespotNumber);
     }).catch(error => {
         console.error("Error retrieving Bookings: " + JSON.stringify(error));
     });

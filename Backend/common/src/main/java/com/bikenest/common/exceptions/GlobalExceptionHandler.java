@@ -43,7 +43,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<GeneralExceptionResponse> handleBusinessLogicExceptions(HttpServletRequest request, BusinessLogicException ex){
         logger.error("BusinessLogicException:: URL=" + request.getRequestURL());
         logger.error("Message:: " + ex.getMessage());
-        logger.error("StackTrace:: " + ex.getStackTrace());
+        logger.error("StackTrace:: " + ex.getStackTrace().toString());
         return ResponseEntity.unprocessableEntity().body(new GeneralExceptionResponse(ex.getMessage()));
     }
 
@@ -59,7 +59,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<GeneralExceptionResponse> handleOtherExceptions(HttpServletRequest request, Exception ex){
         logger.error("Unknown error::" + ex.getMessage());
-        logger.error("Stacktrace::" + ex.getStackTrace());
+        logger.error("Stacktrace::" + ex.getStackTrace().toString());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 new GeneralExceptionResponse("Ein unbekannter Fehler ist im Server aufgetreten."));
     }

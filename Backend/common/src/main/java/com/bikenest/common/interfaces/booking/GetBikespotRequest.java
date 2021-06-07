@@ -2,14 +2,14 @@ package com.bikenest.common.interfaces.booking;
 
 public class GetBikespotRequest {
     private Integer bikenestId;
-    private Integer bikespotId;
+    private Integer bikespotNumber;
 
     public GetBikespotRequest(){
     }
 
-    public GetBikespotRequest(Integer bikenestId, Integer bikespotId){
+    public GetBikespotRequest(Integer bikenestId, Integer bikespotNumber){
         this.bikenestId = bikenestId;
-        this.bikespotId = bikespotId;
+        this.bikespotNumber = bikespotNumber;
     }
 
     public Integer getBikenestId() {
@@ -20,11 +20,11 @@ public class GetBikespotRequest {
         this.bikenestId = bikenestId;
     }
 
-    public Integer getBikespotId() {
-        return bikespotId;
+    public Integer getBikespotNumber() {
+        return bikespotNumber;
     }
 
-    public void setBikespotId(Integer bikespotId) {
-        this.bikespotId = bikespotId;
+    public void setBikespotNumber(Integer bikespotNumber) {
+        this.bikespotNumber = bikespotNumber;
     }
 }

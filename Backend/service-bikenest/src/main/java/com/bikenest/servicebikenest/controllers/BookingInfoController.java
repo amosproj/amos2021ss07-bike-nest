@@ -20,7 +20,7 @@ import java.util.Optional;
 
 /**
  * This Controller provides functionality that will be used by the Booking Microservice.
- * You can reserve concrete spots for
+ * These Controller endpoints should not throw errors, so that they are easier consumable by the other microservices.
  */
 @RestController
 @RequestMapping(path = "/bikenest/service")
@@ -48,7 +48,7 @@ public class BookingInfoController {
     @PostMapping(path="/freespot")
     @PreAuthorize("hasRole('SERVICE')")
     public boolean freeSpot(@RequestBody FreeSpotRequest request){
-        return bikenestService.freeSpot(request.getBikenestId(), request.getUserId(), request.getSpotId());
+        return bikenestService.freeSpot(request.getBikenestId(), request.getUserId(), request.getSpotNumber());
     }
 
     @PostMapping(path="/hasfreespots")
@@ -63,18 +63,23 @@ public class BookingInfoController {
 
     @PostMapping(path="/getbikespot")
     @PreAuthorize("hasRole('SERVICE')")
-    public GetBikespotResponse getBikespot(@RequestBody GetBikespotRequest request) throws BusinessLogicException {
-        Bikenest bikenest = bikenestService.getBikenest(request.getBikenestId());
+    public GetBikespotResponse getBikespot(@RequestBody GetBikespotRequest request) {
+        Bikenest bikenest = null;
+        try {
+            bikenest = bikenestService.getBikenest(request.getBikenestId());
+        } catch (BusinessLogicException e) {
+            return new GetBikespotResponse(true,null, null, null, null, null);
+        }
         Optional<Bikespot> spot = bikenest.getBikespots().stream()
-                .filter(bikespot -> bikespot.getSpotNumber().equals(request.getBikespotId()))
+                .filter(bikespot -> bikespot.getSpotNumber().equals(request.getBikespotNumber()))
                 .findFirst();
 
         if(spot.isPresent()){
             Bikespot actualSpot = spot.get();
-            return new GetBikespotResponse(bikenest.getId(), actualSpot.getSpotNumber(), actualSpot.getUserId(),
+            return new GetBikespotResponse(true, bikenest.getId(), actualSpot.getSpotNumber(), actualSpot.getUserId(),
                     actualSpot.getLeftSide(), actualSpot.getReserved());
         }else{
-            throw new BusinessLogicException("Dieser Bikespot existiert nicht im Bikenest,");
+            return new GetBikespotResponse(true,null, null, null, null, null);
         }
 
     }
