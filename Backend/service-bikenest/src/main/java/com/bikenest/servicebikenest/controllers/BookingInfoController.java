@@ -1,8 +1,13 @@
 package com.bikenest.servicebikenest.controllers;
 
+import com.bikenest.common.exceptions.BusinessLogicException;
 import com.bikenest.common.interfaces.bikenest.FreeSpotRequest;
 import com.bikenest.common.interfaces.bikenest.ReserveSpotRequest;
 import com.bikenest.common.interfaces.bikenest.ReserveSpotResponse;
+import com.bikenest.common.interfaces.booking.GetBikespotRequest;
+import com.bikenest.common.interfaces.booking.GetBikespotResponse;
+import com.bikenest.servicebikenest.db.Bikenest;
+import com.bikenest.servicebikenest.db.Bikespot;
 import com.bikenest.servicebikenest.services.BikenestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,7 +20,7 @@ import java.util.Optional;
 
 /**
  * This Controller provides functionality that will be used by the Booking Microservice.
- * You can reserve concrete spots for
+ * These Controller endpoints should not throw errors, so that they are easier consumable by the other microservices.
  */
 @RestController
 @RequestMapping(path = "/bikenest/service")
@@ -43,7 +48,7 @@ public class BookingInfoController {
     @PostMapping(path="/freespot")
     @PreAuthorize("hasRole('SERVICE')")
     public boolean freeSpot(@RequestBody FreeSpotRequest request){
-        return bikenestService.freeSpot(request.getBikenestId(), request.getUserId(), request.getSpotId());
+        return bikenestService.freeSpot(request.getBikenestId(), request.getUserId(), request.getSpotNumber());
     }
 
     @PostMapping(path="/hasfreespots")
@@ -54,6 +59,29 @@ public class BookingInfoController {
             return true;
         }
         return false;
+    }
+
+    @PostMapping(path="/getbikespot")
+    @PreAuthorize("hasRole('SERVICE')")
+    public GetBikespotResponse getBikespot(@RequestBody GetBikespotRequest request) {
+        Bikenest bikenest = null;
+        try {
+            bikenest = bikenestService.getBikenest(request.getBikenestId());
+        } catch (BusinessLogicException e) {
+            return new GetBikespotResponse(true,null, null, null, null, null);
+        }
+        Optional<Bikespot> spot = bikenest.getBikespots().stream()
+                .filter(bikespot -> bikespot.getSpotNumber().equals(request.getBikespotNumber()))
+                .findFirst();
+
+        if(spot.isPresent()){
+            Bikespot actualSpot = spot.get();
+            return new GetBikespotResponse(true, bikenest.getId(), actualSpot.getSpotNumber(), actualSpot.getUserId(),
+                    actualSpot.getLeftSide(), actualSpot.getReserved());
+        }else{
+            return new GetBikespotResponse(true,null, null, null, null, null);
+        }
+
     }
 
 }

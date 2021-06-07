@@ -1,7 +1,10 @@
 package com.bikenest.apigateway;
 
 import com.bikenest.common.feignclients.UsermgmtClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
@@ -20,6 +23,23 @@ public class ApigatewayApplication {
     @Autowired
     AuthenticationFilter authenticationFilter;
 
+    /**
+     * These fields are set by the application.properties file while the application.properties takes it from
+     * the present Environment variables. This is required for Kubernetes because Discorvery of other Services works
+     * that way (If the Gateway Service can access the bikenest service, there will be a environment variable
+     * BIKENEST_SERVICE_HOST available, that stores the IP address of the bikenest service.
+     * For local development we use docker compose, so this also has to be compatible with this whole setup. Therefore
+     * the environment variables have to be set accordingly in the docker-compose file.
+     */
+    @Value("${client.bikenest.url}")
+    private String bikenestServiceUrl;
+    @Value("${client.booking.url}")
+    private String bookingServiceUrl;
+    @Value("${client.usermgmt.url}")
+    private String userServiceUrl;
+    @Value("${client.payment.url}")
+    private String paymentServiceUrl;
+
     public static void main(String[] args) {
         SpringApplication.run(ApigatewayApplication.class, args);
     }
@@ -29,16 +49,16 @@ public class ApigatewayApplication {
         return builder.routes()
                 .route("bikenest", r -> r.path("/bikenest/**")
                         .filters(f -> f.filter(authenticationFilter))
-                        .uri("http://bikenest:9001"))
+                        .uri(bikenestServiceUrl))
                 .route("booking", r -> r.path("/booking/**")
                         .filters(f -> f.filter(authenticationFilter))
-                        .uri("http://booking:9002"))
+                        .uri(bookingServiceUrl))
                 .route("usermanagement", r -> r.path("/usermanagement/**")
                         .filters(f -> f.filter(authenticationFilter))
-                        .uri("http://usermgmt:9003"))
+                        .uri(userServiceUrl))
                 .route("payment", r -> r.path("/payment/**")
                         .filters(f -> f.filter(authenticationFilter))
-                        .uri("http://payment:9004"))
+                        .uri(paymentServiceUrl))
                 .build();
     }
 }

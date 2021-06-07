@@ -3,12 +3,12 @@ package com.bikenest.common.interfaces.bikenest;
 public class ReserveSpotResponse {
     private boolean success;
     private Integer bikenestId;
-    private Integer spotId;
+    private Integer spotNumber;
 
-    public ReserveSpotResponse(boolean success, Integer bikenestId, Integer spotId){
+    public ReserveSpotResponse(boolean success, Integer bikenestId, Integer spotNumber){
         this.success = success;
         this.bikenestId = bikenestId;
-        this.spotId = spotId;
+        this.spotNumber = spotNumber;
     }
 
     public ReserveSpotResponse(){}
@@ -29,11 +29,11 @@ public class ReserveSpotResponse {
         this.bikenestId = bikenestId;
     }
 
-    public Integer getSpotId() {
-        return spotId;
+    public Integer getSpotNumber() {
+        return spotNumber;
     }
 
-    public void setSpotId(Integer spotId) {
-        this.spotId = spotId;
+    public void setSpotNumber(Integer spotNumber) {
+        this.spotNumber = spotNumber;
     }
 }

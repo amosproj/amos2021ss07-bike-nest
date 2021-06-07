@@ -79,7 +79,8 @@ public class BikenestService {
 
         // Find the reserved spot and also check if that spot is owned by userId and is reserved
         Optional<Bikespot> bikespot = bikenest.get().getBikespots().stream()
-                .filter(spot -> spot.getSpotNumber().equals(spotId) && spot.getUserId().equals(userId) && spot.getReserved())
+                .filter(spot -> spot.getSpotNumber().equals(spotId) && spot.getUserId() != null
+                        && spot.getUserId().equals(userId) && spot.getReserved())
                 .findFirst();
 
         if(!bikespot.isPresent())
@@ -122,6 +123,19 @@ public class BikenestService {
         if(bikenestRepository.findByName(request.getName()).isPresent())
             throw new BusinessLogicException("Ein Bikenest mit diesem Namen existiert bereits!");
 
+        //Check the GPS Coordinates format
+        request.setGpsCoordinates(request.getGpsCoordinates().trim().replace(" ", ""));
+        try{
+            String[] splitted = request.getGpsCoordinates().trim().split(",");
+            if(splitted.length != 2){
+                throw new BusinessLogicException("Die angegebenen GPS Koordinaten müssen durch ein Komma getrennt werden.");
+            }
+            Float.parseFloat(splitted[0]);
+            Float.parseFloat(splitted[1]);
+        }catch(Exception ex){
+            throw new BusinessLogicException("Die GPS Koordinaten besitzen nicht das richtige Gleitkommazahlformat.");
+        }
+
         Bikenest bikenest = new Bikenest(request.getName(), request.getGpsCoordinates(), request.getMaximumSpots(),
                 request.isChargingAvailable());
 
@@ -161,7 +175,7 @@ public class BikenestService {
         return Optional.of(actualBikenest.getCurrentSpots());
     }
 
-    public Bikenest getBikenestInfo(Integer bikenestId) throws BusinessLogicException {
+    public Bikenest getBikenest(Integer bikenestId) throws BusinessLogicException {
         Optional<Bikenest> bikenest = bikenestRepository.findById(bikenestId);
 
         if(bikenest.isEmpty())

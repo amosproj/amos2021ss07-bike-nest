@@ -1,6 +1,5 @@
 version: "3"
 services:
-  # Definition of the databases, all use the same credentials because we are debugging in a dev environment only anyways...
   booking-db:
     container_name: booking-db
     image: mysql
@@ -9,8 +8,11 @@ services:
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASSWORD}
       - MYSQL_DATABASE=${BOOKING_DBNAME}
+      - MYSQL_TCP_PORT=4203
+    ports:
+      - "4203:4203"
     networks:
-      - booking-db
+      - host
 
   bikenest-db:
     container_name: bikenest-db
@@ -20,8 +22,11 @@ services:
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASSWORD}
       - MYSQL_DATABASE=${BIKENEST_DBNAME}
+      - MYSQL_TCP_PORT=4204
+    ports:
+      - "4204:4204"
     networks:
-      - bikenest-db
+      - host
 
   user-db:
     container_name: user-db
@@ -31,8 +36,11 @@ services:
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASSWORD}
       - MYSQL_DATABASE=${USER_DBNAME}
+      - MYSQL_TCP_PORT=4202
+    ports:
+      - "4202:4202"
     networks:
-      - user-db
+      - host
 
   payment-db:
     container_name: payment-db
@@ -42,11 +50,12 @@ services:
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASSWORD}
       - MYSQL_DATABASE=${PAYMENT_DBNAME}
+      - MYSQL_TCP_PORT=4201
+    ports:
+      - "4201:4201"
     networks:
-      - payment-db
+      - host
 
-  # Definition of the microservices, every service will be accesible by their port (in production only the api gateway will be accesible)
-  # The 500X ports are used for debugging
   bikenest:
     container_name: bikenest
     build:
@@ -57,19 +66,17 @@ services:
       - "5005:5005"
       - "9001:9001"
     environment:
-      - logging.level.org.springframework=DEBUG
       - BOOKING_SERVICE_HOST=booking
       - PAYMENT_SERVICE_HOST=payment
       - USERMGMT_SERVICE_HOST=usermgmt
       - BIKENEST_SERVICE_HOST=bikenest
       - BIKENEST_DB_SERVICE_HOST=bikenest-db
-      - MYSQL_PORT=3306
+      - MYSQL_PORT=4204
       - MYSQL_DBNAME=${BIKENEST_DBNAME}
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASSWORD}
     networks:
-      - bikenest-db
-      - services
+      - host
 
   booking:
     container_name: booking
@@ -81,19 +88,17 @@ services:
       - "5006:5006"
       - "9002:9002"
     environment:
-      - logging.level.org.springframework=DEBUG
       - BOOKING_SERVICE_HOST=booking
       - PAYMENT_SERVICE_HOST=payment
       - USERMGMT_SERVICE_HOST=usermgmt
       - BIKENEST_SERVICE_HOST=bikenest
       - BOOKING_DB_SERVICE_HOST=booking-db
-      - MYSQL_PORT=3306
+      - MYSQL_PORT=4203
       - MYSQL_DBNAME=${BOOKING_DBNAME}
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASSWORD}
     networks:
-      - booking-db
-      - services
+      - host
 
   gateway:
     container_name: gateway
@@ -102,7 +107,6 @@ services:
       dockerfile: Dockerfile_debug
     restart: always
     environment:
-      - logging.level.org.springframework=DEBUG
       - BOOKING_SERVICE_HOST=booking
       - PAYMENT_SERVICE_HOST=payment
       - USERMGMT_SERVICE_HOST=usermgmt
@@ -111,7 +115,7 @@ services:
       - "9000:9000"
       - "5007:5007"
     networks:
-      - services
+      - host
 
   usermgmt:
     container_name: usermgmt
@@ -119,23 +123,21 @@ services:
       context: service-usermgmt
       dockerfile: Dockerfile_debug
     restart: always
-    ports:
-      - "5008:5008"
-      - "9003:9003"
     environment:
-      - logging.level.org.springframework=DEBUG
       - BOOKING_SERVICE_HOST=booking
       - PAYMENT_SERVICE_HOST=payment
       - USERMGMT_SERVICE_HOST=usermgmt
       - BIKENEST_SERVICE_HOST=bikenest
       - USERMGMT_DB_SERVICE_HOST=user-db
-      - MYSQL_PORT=3306
+      - MYSQL_PORT=4202
       - MYSQL_DBNAME=${USER_DBNAME}
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "5008:5008"
+      - "9003:9003"
     networks:
-      - user-db
-      - services
+      - host
 
   payment:
     container_name: payment
@@ -143,30 +145,23 @@ services:
       context: service-payment
       dockerfile: Dockerfile_debug
     restart: always
-    ports:
-      - "5009:5009"
-      - "9004:9004"
     environment:
-      - logging.level.org.springframework=DEBUG
       - BOOKING_SERVICE_HOST=booking
       - PAYMENT_SERVICE_HOST=payment
       - USERMGMT_SERVICE_HOST=usermgmt
       - BIKENEST_SERVICE_HOST=bikenest
       - PAYMENT_DB_SERVICE_HOST=payment-db
-      - MYSQL_PORT=3306
+      - MYSQL_PORT=4201
       - MYSQL_DBNAME=${PAYMENT_DBNAME}
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASSWORD}
       - BT_MERCHANT_ID=${BT_MERCHANT_ID}
       - BT_PUBLIC_KEY=${BT_PUBLIC_KEY}
       - BT_PRIVATE_KEY=${BT_PRIVATE_KEY}
+    ports:
+      - "5009:5009"
+      - "9004:9004"
     networks:
-      - services
-      - payment-db
-
+      - host
 networks:
-  payment-db:
-  booking-db:
-  bikenest-db:
-  user-db:
-  services:
+  host:
