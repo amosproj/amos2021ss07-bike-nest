@@ -33,35 +33,17 @@ exports[`renders correctly 1`] = `
       }
     }
   >
-    <View
-      accessible={true}
-      focusable={true}
-      onClick={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
+    <Text
+      numberOfLines={1}
       style={
         Object {
-          "flex": 1,
-          "opacity": 1,
+          "color": "#fff",
+          "fontSize": 20,
         }
       }
     >
-      <Text
-        numberOfLines={1}
-        style={
-          Object {
-            "color": "#fff",
-            "fontSize": 20,
-          }
-        }
-      >
-        Warte auf Scan ...
-      </Text>
-    </View>
+      Warte auf Scan ...
+    </Text>
     <View
       accessible={true}
       focusable={true}
@@ -89,7 +71,7 @@ exports[`renders correctly 1`] = `
           }
         }
       >
-        Erneut scannen
+        Zurück
       </Text>
     </View>
   </View>
