@@ -3,10 +3,11 @@ import * as SecureStore from 'expo-secure-store';
 export default class GlobalVars {
         static #accessTokenKey = "secureToken";
 
-        static get globalIPAddress() { return "http://192.168.178.20:9000" };
+        static get globalIPAddress() { return "http://192.168.2.129:9000" };
 
         static async saveAuthenticationToken(token) {
                 await SecureStore.setItemAsync(GlobalVars.#accessTokenKey, token);
+                console.log("New JWT stored.");
         }
 
         static async getAuthenticationToken() {
@@ -16,6 +17,7 @@ export default class GlobalVars {
 
         static async deleteAuthenticationToken() {
                 await SecureStore.deleteItemAsync(GlobalVars.#accessTokenKey);
+                console.log("JWT deleted.");
         }
 
         static async authenticationTokenExists() {
