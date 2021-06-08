@@ -53,6 +53,12 @@ export class UserService {
             }}, 10000).then(json => json.jwt);
     }
 
+    /**
+     * Returns a boolean that indicates if the password change was successful or not.
+     * @param oldPassword
+     * @param newPassword
+     * @returns {Promise<{boolean}>}
+     */
     async changePassword(oldPassword, newPassword) {
         let request = {
             "oldPassword": oldPassword,
