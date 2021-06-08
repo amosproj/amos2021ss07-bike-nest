@@ -11,39 +11,39 @@ export function CreateAccountVia3rdParty() {
     const navigation = useNavigation();
     const MY_SECURE_AUTH_STATE_KEY = 'MySecureAuthStateKey';
 
-    async function getValueFor(key) {
-        let result = await SecureStore.getItemAsync(key);
-        if (result) {
-            alert("🔐 Here's your value 🔐 \n" + result);
-        } else {
-            alert('No values stored under that key.');
-        }
-    }
+    // async function getValueFor(key) {
+    //     let result = await SecureStore.getItemAsync(key);
+    //     if (result) {
+    //         alert("🔐 Here's your value 🔐 \n" + result);
+    //     } else {
+    //         alert('No values stored under that key.');
+    //     }
+    // }
 
-    const [request, response, promptAsync] = Google.useAuthRequest({
-        expoClientId: '1066777740971-sa5hjlbu6ucmequmlumjo5mresuh11n4.apps.googleusercontent.com',
-        iosClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
-        androidClientId: "1066777740971-p4f0ja4gl7sc8h1ingn9lo2gorc3qjts.apps.googleusercontent.com",
-        webClientId: '1066777740971-sa5hjlbu6ucmequmlumjo5mresuh11n4.apps.googleusercontent.com',
-    });
+    // const [request, response, promptAsync] = Google.useAuthRequest({
+    //     expoClientId: '1066777740971-sa5hjlbu6ucmequmlumjo5mresuh11n4.apps.googleusercontent.com',
+    //     iosClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
+    //     androidClientId: "1066777740971-p4f0ja4gl7sc8h1ingn9lo2gorc3qjts.apps.googleusercontent.com",
+    //     webClientId: '1066777740971-sa5hjlbu6ucmequmlumjo5mresuh11n4.apps.googleusercontent.com',
+    // });
 
-    React.useEffect(() => {
-        if (response?.type === 'success') {
-            const { authentication } = response;
+    // React.useEffect(() => {
+    //     if (response?.type === 'success') {
+    //         const { authentication } = response;
 
-            const auth = response.params;
-            const storageValue = JSON.stringify(auth);
+    //         const auth = response.params;
+    //         const storageValue = JSON.stringify(auth);
 
-            if (Platform.OS !== 'web') {
-                // Securely store the auth on your device
-                SecureStore.setItemAsync(MY_SECURE_AUTH_STATE_KEY, storageValue);
-            }
-            navigation.navigate("FindBikeNest");
-        }
-        else {
-            console.log(response?.type);
-        }
-    }, [response]);
+    //         if (Platform.OS !== 'web') {
+    //             // Securely store the auth on your device
+    //             SecureStore.setItemAsync(MY_SECURE_AUTH_STATE_KEY, storageValue);
+    //         }
+    //         navigation.navigate("FindBikeNest");
+    //     }
+    //     else {
+    //         console.log(response?.type);
+    //     }
+    // }, [response]);
 
     return (
         <View style={[mainStyles.container, { backgroundColor: 'transparent' }]}>
@@ -65,7 +65,13 @@ export function CreateAccountVia3rdParty() {
                 iconPath={require('../assets/google_button_logo.png')}
                 overrideButtonColor={colors.UI_BaseGrey_5}
                 overrideTextColor={colors.UI_BaseGrey_0}
-                onPress={() => promptAsync()}
+                //onPress={() => promptAsync()}
+                onPress={() => Alert.alert("Nice!",
+                    "Du hast erfolgreich einen Account erstellt.",
+                    [
+                        { text: "OK", onPress: () => navigation.navigate("FindBikeNest") }
+                    ]
+                )}
             />
         </View>
     );
