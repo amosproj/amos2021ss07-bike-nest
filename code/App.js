@@ -14,10 +14,9 @@ import PaymentConfirmationScreen from './screens/PaymentConfirmationScreen';
 import ReservationSuccessScreen from './screens/ReservationSuccessScreen';
 import LockSpotScreen from './screens/LockSpotScreen';
 import LoadingScreen from './screens/LoadingScreen';
+import QrReaderScreen from './screens/QrReaderScreen';
 
-
-export default function App() {
-
+export default function App () {
   return (
     <NavigationContainer>
       <AppNavigator.Navigator screenOptions={{ headerShown: false }}>
@@ -34,6 +33,7 @@ export default function App() {
         <AppNavigator.Screen name='ReservationSuccess' component={ReservationSuccessScreen} />
         <AppNavigator.Screen name='PaymentConfirmation' component={PaymentConfirmationScreen} />
         <AppNavigator.Screen name='FindBikeNest' component={FindBikeNestScreen} />
+        <AppNavigator.Screen name='QrReaderScreen' component={QrReaderScreen} />
       </AppNavigator.Navigator>
     </NavigationContainer>
   );
