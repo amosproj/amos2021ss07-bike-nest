@@ -1,10 +1,11 @@
 # This is the workflow to automate the Frontend deployment.
 # CURRENTLY NOT WORKING DUE TO MISSING SECRET
 
-name: Publish App via Expo
-on:
-  release:
-    types: [published]
+name: Publish App via Ex
+
+on: [push]
+  #release:
+   # types: [published]
     
 jobs:
   publish:
