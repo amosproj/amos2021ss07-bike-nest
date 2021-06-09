@@ -27,13 +27,20 @@ export default function EditPassword() {
             return;
         }
         userService.changePassword(oldPassword, newPassword1).then((response) => {
-            console.log(JSON.stringify(response));
-            if (response.success === true) {
+            if (response) {
                 setModalHeadline("Yuhu!");
                 setModalText("Dein Passwort wurde erfolgreich geändert.");
             } else {
                 setModalHeadline("Oh-oh!");
                 setModalText("Da ist leider etwas scheif gelaufen. Versuche es bitte erneut.");
+            }
+        }).catch(error =>{
+            if(error.display){
+                setModalHeadline("Oh-oh!");
+                setModalText(error.message);
+            }else{
+                setModalHeadline("Oh-oh!");
+                setModalText("Ein unbekannter Fehler ist aufgetreten.");
             }
         });
         setModalVisible(true);

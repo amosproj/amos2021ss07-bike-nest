@@ -1,0 +1,306 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#fff",
+        "flex": 1,
+        "justifyContent": "center",
+      },
+      Object {
+        "backgroundColor": "transparent",
+      },
+    ]
+  }
+>
+  <Modal
+    animationType="slide"
+    hardwareAccelerated={false}
+    onRequestClose={[Function]}
+    transparent={true}
+    visible={false}
+  >
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "backgroundColor": "#00000090",
+          "flex": 1,
+          "flexDirection": "column",
+          "justifyContent": "center",
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "#fff",
+            "borderRadius": 15,
+            "elevation": 3,
+            "height": 184,
+            "justifyContent": "space-between",
+            "padding": 18,
+            "width": 288,
+          }
+        }
+      >
+        <Text
+          style={
+            Object {
+              "fontSize": 18,
+              "fontWeight": "300",
+            }
+          }
+        >
+          
+        </Text>
+        <Text
+          style={
+            Object {
+              "fontSize": 14,
+            }
+          }
+        >
+          
+        </Text>
+        <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "#F28D35",
+              "borderRadius": 38,
+              "elevation": 3,
+              "height": 55,
+              "justifyContent": "center",
+              "margin": 9,
+              "opacity": 1,
+              "padding": 18,
+              "width": 128,
+            }
+          }
+        >
+          <View
+            style={
+              Object {
+                "alignItems": "center",
+                "flexDirection": "row",
+              }
+            }
+          >
+            <Text
+              style={
+                Object {
+                  "color": "#F2F2F2",
+                  "fontSize": 14,
+                  "height": "100%",
+                  "textAlign": "center",
+                  "width": "100%",
+                }
+              }
+            >
+              Ok
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  </Modal>
+  <TextInput
+    allowFontScaling={true}
+    onChangeText={[Function]}
+    placeholder="Vorname"
+    rejectResponderTermination={true}
+    style={
+      Object {
+        "backgroundColor": "#F2F2F2",
+        "borderRadius": 15,
+        "color": "#333333",
+        "height": 55,
+        "margin": 9,
+        "paddingLeft": 12,
+        "width": 328,
+      }
+    }
+    underlineColorAndroid="transparent"
+    value=""
+  />
+  <TextInput
+    allowFontScaling={true}
+    onChangeText={[Function]}
+    placeholder="Name"
+    rejectResponderTermination={true}
+    style={
+      Object {
+        "backgroundColor": "#F2F2F2",
+        "borderRadius": 15,
+        "color": "#333333",
+        "height": 55,
+        "margin": 9,
+        "paddingLeft": 12,
+        "width": 328,
+      }
+    }
+    underlineColorAndroid="transparent"
+    value=""
+  />
+  <TextInput
+    allowFontScaling={true}
+    onChangeText={[Function]}
+    placeholder="Email"
+    rejectResponderTermination={true}
+    style={
+      Object {
+        "backgroundColor": "#F2F2F2",
+        "borderRadius": 15,
+        "color": "#333333",
+        "height": 55,
+        "margin": 9,
+        "paddingLeft": 12,
+        "width": 328,
+      }
+    }
+    underlineColorAndroid="transparent"
+    value=""
+  />
+  <TextInput
+    allowFontScaling={true}
+    onChangeText={[Function]}
+    placeholder="Passwort"
+    rejectResponderTermination={true}
+    secureTextEntry={true}
+    style={
+      Object {
+        "backgroundColor": "#F2F2F2",
+        "borderRadius": 15,
+        "color": "#333333",
+        "height": 55,
+        "margin": 9,
+        "paddingLeft": 12,
+        "width": 328,
+      }
+    }
+    underlineColorAndroid="transparent"
+    value=""
+  />
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "justifyContent": "center",
+        "marginBottom": 20,
+      }
+    }
+  >
+    <Text
+      onPress={[Function]}
+      style={
+        Object {
+          "margin": 8,
+        }
+      }
+    >
+      Datenschutzrichtlinien gelesen
+    </Text>
+    <View
+      accessibilityRole="checkbox"
+      accessibilityState={
+        Object {
+          "checked": false,
+        }
+      }
+      accessible={true}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "margin": 5,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "opacity": 1,
+          "padding": 10,
+        }
+      }
+      testID="checkbox"
+    >
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "flexDirection": "row",
+          }
+        }
+      >
+        <Text />
+      </View>
+    </View>
+  </View>
+  <View
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#F28D35",
+        "borderRadius": 38,
+        "elevation": 3,
+        "height": 55,
+        "justifyContent": "center",
+        "margin": 9,
+        "opacity": 1,
+        "padding": 18,
+        "width": 328,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "flexDirection": "row",
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "color": "#F2F2F2",
+            "fontSize": 14,
+            "height": "100%",
+            "textAlign": "center",
+            "width": "100%",
+          }
+        }
+      >
+        Los geht's!
+      </Text>
+    </View>
+  </View>
+</View>
+`;

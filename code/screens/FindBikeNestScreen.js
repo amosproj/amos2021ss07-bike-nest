@@ -109,8 +109,6 @@ export default function FindBikeNestScreen ({ navigation }) {
   };
 
   const getLocationAsync = async (tempMarkers) => {
-    console.log("Get location async");
-    console.log(tempMarkers);
     let location = await Location.getCurrentPositionAsync({});
     let localdistances = [];
     tempMarkers.map((marker, index) => {
@@ -293,12 +291,12 @@ export default function FindBikeNestScreen ({ navigation }) {
             <View style={styles.button}>
               <BikeNest_Button
                 type={ButtonStyle.small}
-                text="Zurück"
+                text='Zurück'
                 onPress={() => onCardPress(currentMarkerIndex, stateMarkers[currentMarkerIndex].id)}
               />
               <BikeNest_Button
                 type={ButtonStyle.medium}
-                text="Ich möchte Buchen"
+                text='Ich möchte Buchen'
                 onPress={() => proceedBooking(currentMarkerIndex, stateMarkers[currentMarkerIndex].id)}
               />
             </View>

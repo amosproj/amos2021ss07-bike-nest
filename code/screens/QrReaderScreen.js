@@ -1,7 +1,9 @@
+//////////
+// This screen is placed in HistoryScreen.js
+//////////
 import React, { useEffect, useState } from 'react';
 import {
   Alert,
-  Linking,
   Dimensions,
   LayoutAnimation,
   Text,
@@ -11,11 +13,95 @@ import {
   TouchableOpacity
 } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import { BookingService } from '../services/BookingService';
+import moment from "moment";
 
 export default function QrReaderScreen ({ navigation }) {
   const [hasCameraPermission, setPermission] = useState(false);
   const [lastScannedUrl, setlastScannedUrl] = useState('Warte auf Scan ...');
   const [scanned, setScanned] = useState(false);
+  let bookingService = new BookingService();
+
+  // Logic of authorization checking
+  const checkBooking = (userBikenestSpot) => {
+    bookingService.getAllReservations().then(reservations => {
+      let proceedWithUnlock = false;
+
+      // check if reservation exists
+      if (reservations.length < 1) {
+        Alert.alert(
+          'no reservation',
+          'Keine Buchung vorhanden! Bitte Buchen Sie einen Platz im Bikenest.',
+          [
+            {
+              text: 'Zur Karte',
+              onPress: () => navigation.navigate('FindBikeNest')
+            }
+          ],
+          { cancellable: false }
+        );
+        return;
+      }
+      let lastRes = reservations[reservations.length - 1];
+
+      // check if user at right location
+      if (userBikenestSpot !== lastRes['bikenestId']) {
+        Alert.alert(
+          'wrong nest',
+          'Sie sind am falschen Bikenest Bikenest. Ihr Reservierter Platz befindet sich an Bikenest Nummer: ' + lastRes['bikenestId'],
+          [
+            {
+              text: 'Zur Karte',
+              onPress: () => navigation.navigate('FindBikeNest')
+            }
+          ],
+          { cancellable: false }
+        );
+        return;
+      }
+
+      // check if user is allowed to enter and redirect to unlock screen
+      if (checkActualFields(lastRes)) {
+        console.log('fieldcheck passed');
+        proceedWithUnlock = true;
+      } else if (compareDates(lastRes['reservationEnd'])) {
+        console.log('datecheck passed');
+        proceedWithUnlock = true;
+      }
+      if (proceedWithUnlock) {
+        navigation.navigate('Lock');
+      }
+    }).catch(error => {
+      console.error('Error with pulling reservations: ' + JSON.stringify(error));
+    });
+  };
+
+  const checkActualFields = (res) => {
+    let checkPassed = false;
+
+    let actualStart = res['actualStart'];
+    let actualEnd = res['actualEnd'];
+    if (actualEnd === null && actualStart !== null) {
+      checkPassed = true;
+    }
+    return checkPassed;
+  };
+
+  const compareDates = (dateString) => {
+    let checkPassed = false;
+
+    let today = moment().format();
+    // today = today.toLocaleString('de-DE', { timeZone: 'Europe/Berlin' });
+    let endDateOfBooking = moment(dateString).format();
+
+    console.log(today);
+    console.log(endDateOfBooking);
+
+    if (today < endDateOfBooking) {
+      checkPassed = true;
+    }
+    return checkPassed;
+  };
 
   useEffect(() => {
     (async () => {
@@ -30,34 +116,39 @@ export default function QrReaderScreen ({ navigation }) {
     })();
   }, []);
 
-  const handleBarCodeRead = ({ type, data }) => {
-    console.log('barcode red');
+  // gets called on scan
+  const handleBarCodeRead = async ({ type, data }) => {
     if (data !== lastScannedUrl) {
       LayoutAnimation.spring();
       setlastScannedUrl(data);
       setScanned(true);
+      data = JSON.parse(data);
+      checkBooking(data['spot']);
     }
   };
 
-  const handlePressUrl = () => {
-    console.log('handling press');
-    Alert.alert(
-      'URL öffnen?',
-      lastScannedUrl,
-      [
-        {
-          text: 'Ja',
-          onPress: () => Linking.openURL(lastScannedUrl)
-        },
-        { text: 'Nein', onPress: () => {} }
-      ],
-      { cancellable: false }
-    );
-  };
+  // gets called on url press
+  // const handlePressUrl = () => {
+  //   Alert.alert(
+  //     'URL öffnen?',
+  //     lastScannedUrl,
+  //     [
+  //       {
+  //         text: 'Ja',
+  //         onPress: () => Linking.openURL(lastScannedUrl)
+  //       },
+  //       { text: 'Nein', onPress: () => {} }
+  //     ],
+  //     { cancellable: false }
+  //   );
+  // };
 
+  // gets called on cancel
   const handlePressCancel = () => {
-    setlastScannedUrl('Warte auf Scan ...');
+    console.log('Zurück pressed');
     setScanned(false);
+    setlastScannedUrl('Warte auf Scan ...');
+    // navigation.navigate('QrReaderScreen');
   };
 
   const maybeRenderUrl = () => {
@@ -67,15 +158,14 @@ export default function QrReaderScreen ({ navigation }) {
 
     return (
       <View style={styles.bottomBar}>
-        <TouchableOpacity style={styles.url} onPress={handlePressUrl}>
-          <Text numberOfLines={1} style={styles.urlText}>
-            {lastScannedUrl}
-          </Text>
-        </TouchableOpacity>
+        <Text numberOfLines={1} style={styles.urlText}>
+          {lastScannedUrl}
+        </Text>
+
         <TouchableOpacity
           style={styles.cancelButton}
           onPress={handlePressCancel}>
-          <Text style={styles.cancelButtonText}>Erneut scannen</Text>
+          <Text style={styles.cancelButtonText}>Zurück</Text>
         </TouchableOpacity>
       </View>
     );
