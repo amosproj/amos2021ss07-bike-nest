@@ -1,0 +1,448 @@
+apiVersion: v1
+items:
+
+  ### Services for Conncetions
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: gateway
+    spec:
+      selector:
+        service: gateway
+      ports:
+        - name: "9000"
+          port: 9000
+          targetPort: 9000
+      type: LoadBalancer
+
+
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: bikenest-db
+    spec:
+      selector:
+        service: bikenest-db
+      ports:
+        - name: "3306"
+          port: 3306
+          targetPort: 3306
+
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: booking-db
+    spec:
+      selector:
+        service: booking-db
+      ports:
+        - name: "3306"
+          port: 3306
+          targetPort: 3306
+
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: usermgmt-db
+    spec:
+      selector:
+        service: user-db
+      ports:
+        - name: "3306"
+          port: 3306
+          targetPort: 3306
+
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: payment-db
+    spec:
+      selector:
+        service: payment-db
+      ports:
+        - name: "3306"
+          port: 3306
+          targetPort: 3306
+
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: bikenest
+    spec:
+      selector:
+        service: bikenest
+      ports:
+        - name: "9001"
+          port: 9001
+          targetPort: 9001
+
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: booking
+    spec:
+      selector:
+        service: booking
+      ports:
+        - name: "9002"
+          port: 9002
+          targetPort: 9002
+
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: usermgmt
+    spec:
+      selector:
+        service: usermgmt
+      ports:
+        - name: "9003"
+          port: 9003
+          targetPort: 9003
+
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: payment
+    spec:
+      selector:
+        service: payment
+      ports:
+        - name: "9004"
+          port: 9004
+          targetPort: 9004
+  ### Deployments
+
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      labels:
+        service: gateway
+      name: gateway
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          service: gateway
+      strategy: {}
+      template:
+        metadata:
+          labels:
+            service: gateway
+        spec:
+          containers:
+            - image: bikenest/backend:gateway
+              imagePullPolicy: IfNotPresent
+              name: gateway
+              ports:
+                - containerPort: 9000
+              resources: {}
+          imagePullSecrets:
+            - name: dockercredentials
+          restartPolicy: Always
+          serviceAccountName: ""
+          volumes: null
+    status: {}
+
+
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      labels:
+        service: bikenest-db
+      name: bikenest-db
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          service: bikenest-db
+      strategy: {}
+      template:
+        metadata:
+          labels:
+            service: bikenest-db
+        spec:
+          containers:
+            - env:
+                - name: MYSQL_DATABASE
+                  value: bikenest
+                - name: MYSQL_PASSWORD
+                  value: test
+                - name: MYSQL_ROOT_PASSWORD
+                  value: test
+                - name: MYSQL_USER
+                  value: bikenestservice
+              image: mysql
+              imagePullPolicy: ""
+              name: bikenest-db
+              resources: {}
+          restartPolicy: Always
+          serviceAccountName: ""
+          volumes: null
+    status: {}
+
+
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      labels:
+        service: booking-db
+      name: booking-db
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          service: booking-db
+      strategy: {}
+      template:
+        metadata:
+          labels:
+            service: booking-db
+        spec:
+          containers:
+            - env:
+                - name: MYSQL_DATABASE
+                  value: booking
+                - name: MYSQL_PASSWORD
+                  value: test
+                - name: MYSQL_ROOT_PASSWORD
+                  value: test
+                - name: MYSQL_USER
+                  value: booking
+              image: mysql
+              imagePullPolicy: ""
+              name: booking-db
+              resources: {}
+          restartPolicy: Always
+          serviceAccountName: ""
+          volumes: null
+    status: {}
+
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      labels:
+        service: usermgmt-db
+      name: usermgmt-db
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          service: usermgmt-db
+      strategy: {}
+      template:
+        metadata:
+          labels:
+            service: usermgmt-db
+        spec:
+          containers:
+            - env:
+                - name: MYSQL_DATABASE
+                  value: usermgmt
+                - name: MYSQL_PASSWORD
+                  value: test
+                - name: MYSQL_ROOT_PASSWORD
+                  value: test
+                - name: MYSQL_USER
+                  value: user
+              image: mysql
+              imagePullPolicy: ""
+              name: usermgmt-db
+              resources: {}
+          restartPolicy: Always
+          serviceAccountName: ""
+          volumes: null
+    status: {}
+
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      labels:
+        service: payment-db
+      name: payment-db
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          service: payment-db
+      strategy: {}
+      template:
+        metadata:
+          labels:
+            service: payment-db
+        spec:
+          containers:
+            - env:
+                - name: MYSQL_DATABASE
+                  value: payment
+                - name: MYSQL_PASSWORD
+                  value: test
+                - name: MYSQL_ROOT_PASSWORD
+                  value: test
+                - name: MYSQL_USER
+                  value: payment
+              image: mysql
+              imagePullPolicy: ""
+              name: payment-db
+              resources: {}
+          restartPolicy: Always
+          serviceAccountName: ""
+          volumes: null
+    status: {}
+
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      labels:
+        service: bikenest
+      name: bikenest
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          service: bikenest
+      strategy: {}
+      template:
+        metadata:
+          labels:
+            service: bikenest
+        spec:
+          containers:
+            - env:
+                - name: MYSQL_DBNAME
+                  value: bikenest
+                - name: MYSQL_PASSWORD
+                  value: test
+                - name: MYSQL_PORT
+                  value: "3306"
+                - name: MYSQL_USER
+                  value: root
+              image: bikenest/backend:service-bikenest
+              imagePullPolicy: IfNotPresent
+              name: bikenest
+              resources: {}
+          imagePullSecrets:
+            - name: dockercredentials
+          restartPolicy: Always
+          serviceAccountName: ""
+          volumes: null
+    status: {}
+
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      labels:
+        service: booking
+      name: booking
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          service: booking
+      strategy: {}
+      template:
+        metadata:
+          labels:
+            service: booking
+        spec:
+          containers:
+            - env:
+                - name: MYSQL_DBNAME
+                  value: booking
+                - name: MYSQL_PASSWORD
+                  value: test
+                - name: MYSQL_PORT
+                  value: "3306"
+                - name: MYSQL_USER
+                  value: booking
+              image: bikenest/backend:service-booking
+              imagePullPolicy: IfNotPresent
+              name: booking
+              resources: {}
+          imagePullSecrets:
+            - name: dockercredentials
+          restartPolicy: Always
+          serviceAccountName: ""
+          volumes: null
+    status: {}
+
+
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      labels:
+        service: usermgmt
+      name: usermgmt
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          service: usermgmt
+      strategy: {}
+      template:
+        metadata:
+          labels:
+            service: usermgmt
+        spec:
+          containers:
+            - env:
+                - name: MYSQL_DBNAME
+                  value: usermgmt
+                - name: MYSQL_PASSWORD
+                  value: test
+                - name: MYSQL_PORT
+                  value: "3306"
+                - name: MYSQL_USER
+                  value: user
+              image: bikenest/backend:service-usermgmt
+              imagePullPolicy: IfNotPresent
+              name: usermgmt
+              resources: {}
+          imagePullSecrets:
+            - name: dockercredentials
+          restartPolicy: Always
+          serviceAccountName: ""
+          volumes: null
+    status: {}
+
+
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      labels:
+        service: payment
+      name: payment
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          service: payment
+      strategy: {}
+      template:
+        metadata:
+          labels:
+            service: payment
+        spec:
+          containers:
+            - env:
+                - name: MYSQL_DBNAME
+                  value: payment
+                - name: MYSQL_PASSWORD
+                  value: test
+                - name: MYSQL_PORT
+                  value: "3306"
+                - name: MYSQL_USER
+                  value: payment
+              image: bikenest/backend:service-payment
+              imagePullPolicy: IfNotPresent
+              name: payment
+              resources: {}
+          imagePullSecrets:
+            - name: dockercredentials
+          restartPolicy: Always
+          serviceAccountName: ""
+          volumes: null
+    status: {}
+
+kind: List
+metadata: {}
