@@ -81,6 +81,31 @@ Right now the ports are:
 **CI is done using the same principles as described above.**
 
 
+## Deployment
+
+To deploy the Backend Microservices, all of the Docker Containers have to be loaded into a Docker Container Registry.
+For this we use [DockerHub](https://hub.docker.com/). The basic commands to push a single container image would be:
+- `docker login -u %DOCKER_USERNAME -p %DOCKER_PASSWORD`
+- `docker build --tag bikenest/backend:gateway ./apigateway/`, Note: In this case, bikenest is the Docker username, backend is
+the name of the Docker repository and gateway is the tagname. This string will also be used inside the Kubernetes configuration file to actually
+  pull the image from the DockerHub.
+- `docker push bikenest/backend:gateway`
+- For convenience there is the `dockerhub-push.bat` Script, that will build and push all of the containers to the docker-hub.
+
+To use these images for the Kubernetes deployment we first have to configure the login credentials to the docker hub, because
+the used repository is private. If you use a public repository, this step will not be necessary.
+- `kubectl create secret docker-registry dockercredentials -docker-server=docker.io
+  --docker-username=bikenest
+  --docker-password=%PASSWORD%
+  --docker-email=%EMAIL%`
+  
+This secret (**dockercredentials**) can be used inside the kubernetes configuration YAML file, so that the kubernetes cluster
+can pull the images from the private container repository.
+To then start the Backend using kubernetes, execute
+
+- `kubectl apply -f kubernetes-production.yml`
+
+
 ## General Information
 
 This folder contains all Backend Microservice.

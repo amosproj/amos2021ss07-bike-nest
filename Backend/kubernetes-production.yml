@@ -46,7 +46,7 @@ items:
       name: usermgmt-db
     spec:
       selector:
-        service: user-db
+        service: usermgmt-db
       ports:
         - name: "3306"
           port: 3306
@@ -208,7 +208,7 @@ items:
                 - name: MYSQL_ROOT_PASSWORD
                   value: test
                 - name: MYSQL_USER
-                  value: booking
+                  value: bookingservice
               image: mysql
               imagePullPolicy: ""
               name: booking-db
@@ -244,7 +244,7 @@ items:
                 - name: MYSQL_ROOT_PASSWORD
                   value: test
                 - name: MYSQL_USER
-                  value: user
+                  value: usermgmtservice
               image: mysql
               imagePullPolicy: ""
               name: usermgmt-db
@@ -280,7 +280,7 @@ items:
                 - name: MYSQL_ROOT_PASSWORD
                   value: test
                 - name: MYSQL_USER
-                  value: payment
+                  value: paymentservice
               image: mysql
               imagePullPolicy: ""
               name: payment-db
@@ -316,7 +316,7 @@ items:
                 - name: MYSQL_PORT
                   value: "3306"
                 - name: MYSQL_USER
-                  value: root
+                  value: bikenestservice
               image: bikenest/backend:service-bikenest
               imagePullPolicy: IfNotPresent
               name: bikenest
@@ -354,7 +354,7 @@ items:
                 - name: MYSQL_PORT
                   value: "3306"
                 - name: MYSQL_USER
-                  value: booking
+                  value: bookingservice
               image: bikenest/backend:service-booking
               imagePullPolicy: IfNotPresent
               name: booking
@@ -393,7 +393,7 @@ items:
                 - name: MYSQL_PORT
                   value: "3306"
                 - name: MYSQL_USER
-                  value: user
+                  value: usermgmtservice
               image: bikenest/backend:service-usermgmt
               imagePullPolicy: IfNotPresent
               name: usermgmt
@@ -432,7 +432,7 @@ items:
                 - name: MYSQL_PORT
                   value: "3306"
                 - name: MYSQL_USER
-                  value: payment
+                  value: paymentservice
               image: bikenest/backend:service-payment
               imagePullPolicy: IfNotPresent
               name: payment
