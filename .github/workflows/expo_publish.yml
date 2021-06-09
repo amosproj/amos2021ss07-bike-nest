@@ -20,7 +20,7 @@ jobs:
         with:
           expo-version: 4.x
           expo-token: ${{ secrets.EXPO_TOKEN }}
-          expo-cache: true
+          #expo-cache: true
       - run: yarn install
       
       # At the current stage we release to a "staging" channel. 
