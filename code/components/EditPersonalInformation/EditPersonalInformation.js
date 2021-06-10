@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pressable, Text, View, TextInput, StyleSheet } from 'react-native';
 import { styles } from "./styles";
 import { UserService } from '../../services/UserService';
 import BikeNest_Modal from '../BikeNest_Modal';
 import global from '../GlobalVars';
+import JwtDecoder from '../JwtDecoder';
 
 export default function EditPersonalInformation() {
     let userService = new UserService();
@@ -15,17 +16,28 @@ export default function EditPersonalInformation() {
     const [modalVisible, setModalVisible] = useState(false);
     const [modalText, setModalText] = useState("");
     const [modalHeadline, setModalHeadline] = useState("");
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (loading) {
+            global.getAuthenticationToken().then((jwt) => {
+                let decodedJwt = JwtDecoder.decode(jwt);
+                setFirstName(decodedJwt.FirstName);
+                setLastName(decodedJwt.LastName);
+                setEmail(decodedJwt.sub);
+                setLoading(false);
+            })
+        }
+    })
+
 
     let saveData = () => {
         userService.changePersonalInformation(firstName, lastName, email, password).then((jwt) => {
-            console.log("okay 1");
             global.saveAuthenticationToken(jwt).then(() => {
-                console.log("okay 2");
                 setModalHeadline("Hurra!");
                 setModalText("Deine Informationen wurden erfolgreich geändert.");
             });
         }).catch(error => {
-            console.log("fehler");
             if (error.display) {
                 setModalHeadline("Oops!");
                 setModalText(error.message);
@@ -53,7 +65,9 @@ export default function EditPersonalInformation() {
             :
             <View style={{ justifyContent: 'center' }}><Text style={styles.specialText}>{text}</Text></View>
 
-
+    if (loading) {
+        return null;
+    }
     return (
         <View style={styles.container}>
             <BikeNest_Modal
