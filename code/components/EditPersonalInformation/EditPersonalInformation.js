@@ -3,6 +3,7 @@ import { Pressable, Text, View, TextInput, StyleSheet } from 'react-native';
 import { styles } from "./styles";
 import { UserService } from '../../services/UserService';
 import BikeNest_Modal from '../BikeNest_Modal';
+import global from '../GlobalVars';
 
 export default function EditPersonalInformation() {
     let userService = new UserService();
@@ -17,8 +18,9 @@ export default function EditPersonalInformation() {
 
     let saveData = () => {
         userService.changePersonalInformation(firstName, lastName, email, password).then((jwt) => {
+            console.log("okay 1");
             global.saveAuthenticationToken(jwt).then(() => {
-                console.log("okay");
+                console.log("okay 2");
                 setModalHeadline("Hurra!");
                 setModalText("Deine Informationen wurden erfolgreich geändert.");
             });
