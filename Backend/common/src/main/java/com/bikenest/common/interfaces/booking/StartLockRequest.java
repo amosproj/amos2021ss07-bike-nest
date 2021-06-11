@@ -1,10 +1,11 @@
 package com.bikenest.common.interfaces.booking;
 
-public class EndUnlockRequest {
+public class StartLockRequest {
     private Integer bookingId;
     private String qrCode;
 
-    public EndUnlockRequest(){}
+    public StartLockRequest(){}
+
 
     public String getQrCode() {
         return qrCode;

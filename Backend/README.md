@@ -92,6 +92,9 @@ the name of the Docker repository and gateway is the tagname. This string will a
 - `docker push bikenest/backend:gateway`
 - For convenience there is the `dockerhub-push.bat` Script, that will build and push all of the containers to the docker-hub.
 
+Now the task is to start up the containers in a kubernetes cluster. For simplicity we just installed minikube on an
+AWS EC2 Instance, because other ways would not be for free.
+
 To use these images for the Kubernetes deployment we first have to configure the login credentials to the docker hub, because
 the used repository is private. If you use a public repository, this step will not be necessary.
 - `kubectl create secret docker-registry dockercredentials -docker-server=docker.io

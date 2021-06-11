@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(path = "/booking")
+@RequestMapping(path = "/booking/reservation")
 public class ReservationController {
 
     @Autowired
@@ -24,13 +24,13 @@ public class ReservationController {
 
     @GetMapping("/all")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<Iterable<Reservation>> GetAllReservations(@AuthenticationPrincipal UserInformation user) throws BusinessLogicException {
+    public ResponseEntity<Iterable<Reservation>> getAllReservations(@AuthenticationPrincipal UserInformation user) throws BusinessLogicException {
         if (user.getRole() == UserRole.Admin) {
             return ResponseEntity.ok(reservationService.getAllReservations());
         } else if (user.getRole() == UserRole.User) {
             return ResponseEntity.ok(reservationService.getAllReservationByUserId(user.getUserId()));
         } else {
-            throw new BusinessLogicException("Du hast die Funktion nicht die erforderlichen Rechte.");
+            throw new BusinessLogicException("Du hast für diese Funktion nicht die erforderlichen Rechte.");
         }
     }
 
