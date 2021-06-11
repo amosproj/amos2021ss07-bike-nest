@@ -51,4 +51,20 @@ public class AccountService {
         actualUser.setPassword(newPassword);
         return userRepository.save(actualUser);
     }
+
+    public User changePersonalInformation(String password, String firstName, String lastName, String newEmail, String oldEmail) throws BusinessLogicException {
+        Optional<User> user = userRepository.findByEmail(oldEmail);
+
+        if(user.isEmpty())
+            throw new BusinessLogicException("Es existiert kein Account mit der Email Adresse: " + oldEmail);
+
+        User actualUser = user.get();
+        if (!actualUser.getPassword().equals(password)) {
+            throw new BusinessLogicException("Passwort ist inkorrekt.");
+        }
+        actualUser.setName(firstName);
+        actualUser.setLastname(lastName);
+        actualUser.setEmail(newEmail);
+        return userRepository.save(actualUser);
+    }
 }
