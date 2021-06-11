@@ -33,62 +33,49 @@ public class ReservationService {
         return reservationRepository.findAllByUserId(userId);
     }
 
-    public Reservation createReservation(Integer userId, CreateReservationRequest newReservation) throws BusinessLogicException {
-        if (!bikenestClient.existsBikenest(newReservation.getBikenestId())){
+    public Reservation createReservation(Integer userId, CreateReservationRequest reservationRequest) throws BusinessLogicException {
+        if (!bikenestClient.existsBikenest(reservationRequest.getBikenestId())){
             throw new BusinessLogicException("Das gewählte Bikenest existiert nicht!");
         }
-        if (!bikenestClient.hasFreeSpots(newReservation.getBikenestId())){
+        if (!bikenestClient.hasFreeSpots(reservationRequest.getBikenestId())){
             throw new BusinessLogicException("Im gewählten Bikenest ist kein Platz mehr frei!");
         }
 
-        ReserveSpotResponse response = bikenestClient.reserveSpot(new ReserveSpotRequest(newReservation.getBikenestId(), userId));
+        ReserveSpotResponse response = bikenestClient.reserveSpot(new ReserveSpotRequest(reservationRequest.getBikenestId(), userId));
         if(!response.isSuccess()){
             throw new BusinessLogicException("Es konnte kein Platz reserviert werden!");
         }
 
 
         Reservation reservation = new Reservation(userId, response.getBikenestId(), response.getSpotNumber(),
-                newReservation.getReservationMinutes(), false, LocalDateTime.now(ZoneId.of("Europe/Berlin")),
+                reservationRequest.getReservationMinutes(), false, LocalDateTime.now(ZoneId.of("Europe/Berlin")),
                 LocalDateTime.now(ZoneId.of("Europe/Berlin")).plusMinutes(RESERVATION_MINUTES));
 
 
         return reservationRepository.save(reservation);
     }
 
-    public Reservation startReservation(Integer id) throws BusinessLogicException {
-        Optional<Reservation> reservation = reservationRepository.findById(id);
-        // Error if the Reservation with given id does not exist
-        if(!reservation.isPresent()){
-            throw new BusinessLogicException("Ihre Reservierung existiert nicht!");
+    /**
+     * Called to update the Reservation
+     * @param reservationId
+     * @return
+     */
+    public Reservation beginBooking(int userId, int reservationId) throws BusinessLogicException {
+        Reservation reservation = getReservationVerified(reservationId, userId);
+        if(reservation.getReservationEnd().compareTo(LocalDateTime.now()) < 0){
+            throw new BusinessLogicException("Diese Reservierung ist nicht mehr gültig.");
         }
 
-        Reservation actualReservation = reservation.get();
-
-        //Error if the ActualStart has already been set
-        if(actualReservation.getActualStart() != null){
-            throw new BusinessLogicException("Sie haben ihr Fahrrad schon im Bikenest abgestellt!");
+        if(reservation.getReservationStart().compareTo(LocalDateTime.now()) > 0){
+            throw new BusinessLogicException("Diese Reservierung ist noch nicht gültig.");
         }
 
-        actualReservation.setActualStart(LocalDateTime.now(ZoneId.of("Europe/Berlin")));
-        return reservationRepository.save(reservation.get());
-    }
-
-    public Reservation endReservation(Integer id) throws BusinessLogicException {
-        Optional<Reservation> reservation = reservationRepository.findById(id);
-        // Error if the Reservation with given id does not exist
-        if(!reservation.isPresent()){
-            throw new BusinessLogicException("Ihre Reservierung existiert nicht!");
+        if(reservation.isCancelled()){
+            throw new BusinessLogicException("Diese Reservierung wurde bereits storniert.");
         }
 
-        Reservation actualReservation = reservation.get();
-
-        //Error if the ActualStartDateTime has already been set
-        if(actualReservation.getActualEnd() != null){
-            throw new BusinessLogicException("Sie haben ihr Fahrrad schon aus dem Bikenest abgeholt!");
-        }
-
-        actualReservation.setActualEnd(LocalDateTime.now(ZoneId.of("Europe/Berlin")));
-        return reservationRepository.save(reservation.get());
+        reservation.setUsed(true);
+        return reservationRepository.save(reservation);
     }
 
     public Reservation cancelReservation(int reservationId, int userId) throws BusinessLogicException {
@@ -108,9 +95,6 @@ public class ReservationService {
         return reservationRepository.save(actualReservation);
     }
 
-    public boolean freeReservedSpot(int bikenestId, int bikespotNumber, int userId){
-        return bikenestClient.freeSpot(new FreeSpotRequest(bikenestId, bikespotNumber, userId));
-    }
 
     /**
      * This method only returns a Reservation, if the given user owns that Reservation. In all other cases
