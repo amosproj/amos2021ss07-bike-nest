@@ -8,7 +8,7 @@ export class ReservationService {
      * @returns {Promise<any[]>}
      */
     async getAllReservations() {
-        return fetchWithTimeout(global.globalIPAddress + "/reservation/all",
+        return fetchWithTimeout(global.globalIPAddress + "/booking/reservation/all",
             {
                 method: 'GET',
                 headers:
@@ -42,7 +42,7 @@ export class ReservationService {
             "reservationMinutes": reservationMinutes
         };
 
-        return fetchWithTimeout(global.globalIPAddress + "/reservation/add",
+        return fetchWithTimeout(global.globalIPAddress + "/booking/reservation/add",
             {
                 method: 'POST',
                 body: JSON.stringify(body),
