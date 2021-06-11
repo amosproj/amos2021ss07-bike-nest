@@ -3,6 +3,7 @@ package com.bikenest.serviceusermgmt;
 import com.bikenest.common.exceptions.BusinessLogicException;
 import com.bikenest.common.interfaces.BooleanResponse;
 import com.bikenest.common.interfaces.usermgmt.ChangePasswordRequest;
+import com.bikenest.common.interfaces.usermgmt.ChangePersonalInformationRequest;
 import com.bikenest.common.interfaces.usermgmt.JWTResponse;
 import com.bikenest.common.interfaces.usermgmt.SigninRequest;
 import com.bikenest.common.interfaces.usermgmt.SignupRequest;
@@ -74,6 +75,23 @@ public class UserController {
                 user.getEmail(), changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
 
         return ResponseEntity.ok(new BooleanResponse(true));
+    }
+
+    @PostMapping(path="/changePersonalInformation")
+    public ResponseEntity<JWTResponse> changePersonalInformation(@AuthenticationPrincipal UserInformation user,
+                                                          @Valid @RequestBody ChangePersonalInformationRequest changePersonalInformationRequest) throws BusinessLogicException {
+        User newUser = accountService.changePersonalInformation( 
+            changePersonalInformationRequest.getPassword(), 
+            changePersonalInformationRequest.getFirstName(),
+            changePersonalInformationRequest.getLastName(),
+            changePersonalInformationRequest.getEmail(),
+            user.getEmail());
+            System.out.println("Old Email: " + user.getEmail());
+
+        String jwt = jwtService.buildJwtFromUser(newUser);
+
+        return ResponseEntity.ok(new JWTResponse(jwt));
+        //return ResponseEntity.ok(new BooleanResponse(true));
     }
 }
 
