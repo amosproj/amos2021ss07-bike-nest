@@ -8,7 +8,7 @@ export class LockService {
      * Returns a JSON with the content of a Reservation (see Backend).
      * @param reservationId
      * @param qrCode
-     * @returns {Promise<Reservation>}
+     * @returns {Promise<Booking>}
      */
     async startUnlock(reservationId, qrCode) {
         let body = {"reservationId": reservationId, "qrCode": qrCode};
@@ -24,8 +24,8 @@ export class LockService {
             }, 10000);
     }
 
-    async startLock(reservationId) {
-        let body = {"reservationId": reservationId};
+    async startLock(bookingId) {
+        let body = {"booking": bookingId};
 
         return fetchWithTimeout(global.globalIPAddress + "/booking/lock/startlock",
             {
@@ -38,8 +38,8 @@ export class LockService {
             }, 10000);
     }
 
-    async endUnlock(reservationId, qrCode) {
-        let body = {"reservationId": reservationId, "qrCode": qrCode};
+    async endUnlock(bookingId, qrCode) {
+        let body = {"bookingId": bookingId, "qrCode": qrCode};
 
         return fetchWithTimeout(global.globalIPAddress + "/booking/lock/endunlock",
             {
@@ -52,8 +52,8 @@ export class LockService {
             }, 10000);
     }
 
-    async endLock(reservationId){
-        let body = {"reservationId": reservationId};
+    async endLock(bookingId){
+        let body = {"bookingId": bookingId};
 
         return fetchWithTimeout(global.globalIPAddress + "/booking/lock/endlock",
             {
