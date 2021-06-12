@@ -104,17 +104,11 @@ export default function HistoryScreen({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.containerRow}>
-          <TouchableOpacity onPress={() => navigation.navigate("Lock")} style={mainStyles.buttonMedium}>
+          <TouchableOpacity onPress={() => navigation.navigate("Unlock")} style={mainStyles.buttonMedium}>
             {/* <SimpleLineIcons name="lock-open" size={10} color="black" style={styles.icon} /> */}
             <Text style={mainStyles.buttonText}> Max Muster's bike </Text>
             <Text style={mainStyles.buttonText}> locked on spot X </Text>
           </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => navigation.navigate("QrReaderScreen")} style={mainStyles.buttonSmall}>
-            <Text style={mainStyles.buttonText}>QR Scanner</Text>
-          </TouchableOpacity>
-        </View>
 
         <TouchableOpacity onPress={() => tryGETBooking(this)} style={styles.buttonHistory}>
           <Text style={styles.buttonHistoryText}> Frühere Reservierungen und Zahlungen </Text>
