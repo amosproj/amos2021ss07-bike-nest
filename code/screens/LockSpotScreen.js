@@ -12,7 +12,7 @@ import { colors } from 'react-native-elements';
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
-export default function LockSpotScreen ({ navigation }) {
+export default function LockSpotScreen ({ navigation, delivered }) {
     return(
 
         <SafeAreaView style={mainStyles.container}>

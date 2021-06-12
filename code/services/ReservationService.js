@@ -28,7 +28,7 @@ export class ReservationService {
                     {
                         Accept: 'application/json', 'Content-Type': 'application/json',
                     }
-            }, timeout)
+            }, 10000)
     }
 
     /**
