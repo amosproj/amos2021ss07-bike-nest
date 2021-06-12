@@ -1,16 +1,13 @@
 package com.bikenest.servicebooking.Controllers;
 
 import com.bikenest.common.exceptions.BusinessLogicException;
-import com.bikenest.common.feignclients.BikenestClient;
-import com.bikenest.common.interfaces.booking.EndUnlockRequest;
-import com.bikenest.common.interfaces.booking.StartLockRequest;
-import com.bikenest.common.interfaces.booking.StartUnlockRequest;
+import com.bikenest.common.interfaces.booking.TakeUnlockRequest;
+import com.bikenest.common.interfaces.booking.LockRequest;
+import com.bikenest.common.interfaces.booking.DeliverUnlockRequest;
 import com.bikenest.common.security.UserInformation;
 import com.bikenest.servicebooking.DB.Booking;
-import com.bikenest.servicebooking.DB.Reservation;
 import com.bikenest.servicebooking.Services.BookingService;
 import com.bikenest.servicebooking.Services.LockService;
-import com.bikenest.servicebooking.Services.ReservationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +33,13 @@ public class LockingController {
      * @param request
      * @return
      */
-    @PostMapping(value = "/startunlock")
+    @PostMapping(value = "/deliverunlock")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<Booking> startUnlock(@AuthenticationPrincipal UserInformation user,
-                                               @RequestBody StartUnlockRequest request) throws BusinessLogicException {
-        Booking booking = bookingService.createBooking(user.getUserId(), request.getReservationId());
+    public ResponseEntity<Booking> deliverAndUnlock(@AuthenticationPrincipal UserInformation user,
+                                               @RequestBody DeliverUnlockRequest request) throws BusinessLogicException {
+
+
+        Booking booking = bookingService.createBooking(user.getUserId(), request.getReservationId(), request.getQrCode());
 
         //TODO: really implement the unlocking, there should also be a return code
         logger.info("Unlocking the Bikenest. Reservation begins now. Place the Bike inside now and close the door!");
@@ -57,11 +56,15 @@ public class LockingController {
      * @param request
      * @return
      */
-    @PostMapping(value = "/endunlock")
+    @PostMapping(value = "/takeUnlock")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<Booking> endUnlock(@AuthenticationPrincipal UserInformation user,
-                                                          @RequestBody EndUnlockRequest request) throws BusinessLogicException {
+    public ResponseEntity<Booking> takeAndUnlock(@AuthenticationPrincipal UserInformation user,
+                                                          @RequestBody TakeUnlockRequest request) throws BusinessLogicException {
         Booking booking = bookingService.getVerifiedBooking(user.getUserId(), request.getBookingId());
+
+        if(!bookingService.checkBikenestId(booking.getBikenestId(), request.getQrCode())){
+            throw new BusinessLogicException("Ihre Buchung ist nicht für dieses Bikenest!");
+        }
 
         logger.info("You want to take your Bike? The door is open now!");
         lockService.OpenLock(user.getUserId(), booking.getBikenestId(), booking.getBikespotNumber());
@@ -77,10 +80,10 @@ public class LockingController {
      * @param request
      * @return
      */
-    @PostMapping(value = "/startlock")
+    @PostMapping(value = "/deliverLock")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<Booking> startLock(@AuthenticationPrincipal UserInformation user,
-                                                            @RequestBody StartLockRequest request) throws BusinessLogicException {
+    public ResponseEntity<Booking> deliverAndLock(@AuthenticationPrincipal UserInformation user,
+                                                            @RequestBody LockRequest request) throws BusinessLogicException {
         Booking booking = bookingService.getVerifiedBooking(user.getUserId(), request.getBookingId());
 
         if(lockService.BikespotOccupied(booking.getBikenestId(), booking.getBikespotNumber())){
@@ -95,10 +98,10 @@ public class LockingController {
         }
     }
 
-    @PostMapping(value = "/endlock")
+    @PostMapping(value = "/takeLock")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<Booking> endLock(@AuthenticationPrincipal UserInformation user,
-                                                     @RequestBody EndUnlockRequest request) throws BusinessLogicException {
+    public ResponseEntity<Booking> takeAndLock(@AuthenticationPrincipal UserInformation user,
+                                                     @RequestBody LockRequest request) throws BusinessLogicException {
         Booking booking = bookingService.getVerifiedBooking(user.getUserId(), request.getBookingId());
         //TODO: REMOVE || true
         if(!lockService.BikespotOccupied(booking.getBikenestId(), booking.getBikespotNumber()) || true){

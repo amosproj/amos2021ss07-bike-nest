@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,11 +26,11 @@ public class ReservationService {
     @Autowired
     BikenestClient bikenestClient;
 
-    public Iterable<Reservation> getAllReservations(){
+    public List<Reservation> getAllReservations(){
         return reservationRepository.findAll();
     }
 
-    public Iterable<Reservation> getAllReservationByUserId(Integer userId){
+    public List<Reservation> getAllReservationByUserId(Integer userId){
         return reservationRepository.findAllByUserId(userId);
     }
 

@@ -5,6 +5,7 @@ import com.bikenest.common.interfaces.bikenest.ReserveSpotRequest;
 import com.bikenest.common.interfaces.bikenest.ReserveSpotResponse;
 import com.bikenest.common.interfaces.booking.GetBikespotRequest;
 import com.bikenest.common.interfaces.booking.GetBikespotResponse;
+import com.bikenest.common.interfaces.booking.QRCodeRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,4 +50,11 @@ public interface BikenestClient {
             headers = {"Authorization=SERVICE"})
     @ResponseBody
     GetBikespotResponse getBikespot(@RequestBody GetBikespotRequest bikenestId);
+
+    @RequestMapping(method = RequestMethod.POST, value = "/bikenest/service/getBikenestIdByQr",
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE},
+            headers = {"Authorization=SERVICE"})
+    @ResponseBody
+    Integer getBikenestIdByQr(@RequestBody QRCodeRequest request);
 }
