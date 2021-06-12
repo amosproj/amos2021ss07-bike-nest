@@ -43,15 +43,15 @@ public class ClientHelper {
     }
 
     public ResponseEntity<Bikenest> addBikenest(AddBikenestRequest addBikenestRequest, String jwt){
-        return this.testRestTemplate.postForEntity("/bikenest/add", getHttpEntity(addBikenestRequest, jwt), Bikenest.class);
+        return this.testRestTemplate.postForEntity("/api/service-bikenest/bikenest/add", getHttpEntity(addBikenestRequest, jwt), Bikenest.class);
     }
 
     public ResponseEntity<List<LinkedHashMap>> getAllBikenests(){
         Class<List<LinkedHashMap>> c = (Class<List<LinkedHashMap>>)(Class<?>)List.class;
-        return this.testRestTemplate.getForEntity("/bikenest/all", c);
+        return this.testRestTemplate.getForEntity("/api/service-bikenest/bikenest/all", c);
     }
 
     public ResponseEntity<Boolean> deleteAllBikenests(String jwt){
-        return this.testRestTemplate.exchange("/bikenest/deleteall", HttpMethod.GET, getHttpEntity(null, jwt), Boolean.class);
+        return this.testRestTemplate.exchange("/api/service-bikenest/bikenest/deleteall", HttpMethod.GET, getHttpEntity(null, jwt), Boolean.class);
     }
 }
