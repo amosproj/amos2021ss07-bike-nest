@@ -25,7 +25,7 @@ export class LockService {
     }
 
     async deliverLock(bookingId) {
-        let body = {"booking": bookingId};
+        let body = {"bookingId": bookingId};
 
         return fetchWithTimeout(global.globalIPAddress + "/api/service-booking/lock/deliverLock",
             {

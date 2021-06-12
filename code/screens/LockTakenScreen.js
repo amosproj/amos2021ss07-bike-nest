@@ -38,7 +38,7 @@ export default function LockTakenScreen ({ route, navigation }) {
 
                 <TouchableOpacity onPress={() => lockBikenest()} style={styles.Icon}>
                     <SimpleLineIcons name="lock-open" size={24} color="black" />
-                    <Text style={mainStyles.h3}> Unlock </Text>
+                    <Text style={mainStyles.h3}> Bikenest schließen! </Text>
                 </TouchableOpacity>
 
 
