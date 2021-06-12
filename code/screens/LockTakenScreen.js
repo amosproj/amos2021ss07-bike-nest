@@ -4,15 +4,26 @@ import gotospot from "../assets/gotospot.png";
 import {SimpleLineIcons} from "@expo/vector-icons";
 import BikeNest_NavigationFooter from "../components/BikeNest_NavigationFooter";
 import React from "react";
+import {LockService} from "../services/LockService";
 
-export default function LockSpotScreen ({ route, navigation }) {
+export default function LockTakenScreen ({ route, navigation }) {
+    let lockService = new LockService();
     let bookingId = route.params.bookingId;
+    let spotNumber = route.params.spotNumber;
+
+    let lockBikenest = () => {
+        lockService.takeLock(bookingId).then(booking => {
+            navigation.navigate("History");
+        }).catch(error => {
+            if(error.display){
+                alert(error.message);
+            }
+        })
+    };
 
     return(
 
         <SafeAreaView style={mainStyles.container}>
-
-
 
             <View style={styles.lockContainer}>
                 <Text style={mainStyles.h1}> Hol dein Bike!</Text>
@@ -20,15 +31,12 @@ export default function LockSpotScreen ({ route, navigation }) {
                 <Image style={styles.ImageContainer} source={gotospot}></Image>
 
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                    <Text style={{fontSize: 20}}>Go to spot X </Text>
-                    <Text style={{fontSize: 20}}> and open with the button {"\n"}</Text>
+                    <Text style={{fontSize: 20}}>Dein Bike ist am Spot {spotNumber}. </Text>
+                    <Text style={{fontSize: 20}}>Hol es ab und schließe danach das Bikenest indem du den Knopf drückst.</Text>
                 </View>
 
 
-                <TouchableOpacity onPress={() =>  Alert.alert("Your bike is secure!","Leave the BikeNest and don´t forget to lock the door.",
-                    [
-                        { text: "Ok", onPress: () => navigation.navigate("History") }
-                    ])} style={styles.Icon}>
+                <TouchableOpacity onPress={() => lockBikenest()} style={styles.Icon}>
                     <SimpleLineIcons name="lock-open" size={24} color="black" />
                     <Text style={mainStyles.h3}> Unlock </Text>
                 </TouchableOpacity>

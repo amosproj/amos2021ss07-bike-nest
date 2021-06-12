@@ -66,8 +66,8 @@ export default function QrReaderScreen({navigation}) {
 
     // gets called on scan
     const handleBarCodeRead = async ({type, data}) => {
+        console.log("Barcode Detected: " + data);
         await setScanned(true);
-        console.log(data);
         reservationService.getReservationsByQr(data)
             .then(reservations => {
                     for (let ind in reservations) {
@@ -109,9 +109,11 @@ export default function QrReaderScreen({navigation}) {
             }
         ).then(result => {
                 if (result.delivered) {
-                    navigation.navigate("LockDelivered", {bookingId: result.booking.id});
+                    navigation.navigate("LockDelivered",
+                        {bookingId: result.booking.id, spotNumber: result.booking.bikespotNumber});
                 } else {
-                    navigation.navigate("LockTaken", {bookingId: result.booking.id});
+                    navigation.navigate("LockTaken",
+                        {bookingId: result.booking.id, spotNumber: result.booking.bikespotNumber});
                 }
             }
         ).catch(error => {
