@@ -13,6 +13,13 @@ var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
 export default function LockScreen({ navigation }) {
+
+    //TODO: The Backend assumes, that there will not be more than one reservation/booking for each bikenest
+    //Therefore the first found reservation/booking for the scanned bikenest will be used to open the cage
+    let pressScanQr = () => {
+
+    }
+
     return(
 
         <SafeAreaView style={mainStyles.container}>
@@ -34,9 +41,8 @@ export default function LockScreen({ navigation }) {
 
             
             <View style={styles.storeText}>
-                <Text style={mainStyles.h1}> Main Door </Text>
-                <Text style={mainStyles.h2}>Open the door </Text>
-                <Text style={mainStyles.h2}> with the button below {"\n"}</Text>
+                <Text style={mainStyles.h1}>Bikenest öffnen</Text>
+                <Text style={mainStyles.h2}>Scannen sie den QR Code am Bikenest, um die Tür zu öffnen.</Text>
             </View>
 
             
@@ -50,7 +56,7 @@ export default function LockScreen({ navigation }) {
 
             <TouchableOpacity onPress={() => navigation.navigate("LockSpot")} style={styles.Icon}>
                 <SimpleLineIcons name="lock-open" size={24} color="black" />
-                <Text style={mainStyles.h3}> Unlock </Text>
+                <Text style={mainStyles.h3}> Scan QR</Text>
             </TouchableOpacity> 
 
            

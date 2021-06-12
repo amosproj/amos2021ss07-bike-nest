@@ -26,7 +26,7 @@ import java.util.Optional;
  * These Controller endpoints should not throw errors, so that they are easier consumable by the other microservices.
  */
 @RestController
-@RequestMapping(path = "/bikenest/service")
+@RequestMapping(path = "/service")
 public class BookingInfoController {
 
     @Autowired

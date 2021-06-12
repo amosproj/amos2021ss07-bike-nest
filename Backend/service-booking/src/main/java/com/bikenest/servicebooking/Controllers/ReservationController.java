@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(path = "/booking/reservation")
+@RequestMapping(path = "/reservation")
 public class ReservationController {
 
     @Autowired
@@ -43,7 +43,7 @@ public class ReservationController {
 
     @PostMapping("/forBikenest")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<Iterable<Reservation>> getAllReservations(@AuthenticationPrincipal UserInformation user,
+    public ResponseEntity<Iterable<Reservation>> getAllReservationsByQr(@AuthenticationPrincipal UserInformation user,
                                                                     @RequestBody QRCodeRequest request) throws BusinessLogicException {
         try {
             Integer bikenestId = bikenestClient.getBikenestIdByQr(request);

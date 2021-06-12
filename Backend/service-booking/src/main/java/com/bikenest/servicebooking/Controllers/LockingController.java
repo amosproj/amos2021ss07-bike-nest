@@ -17,7 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path="/booking/lock")
+@RequestMapping(path="/lock")
 public class LockingController {
     @Autowired
     BookingService bookingService;

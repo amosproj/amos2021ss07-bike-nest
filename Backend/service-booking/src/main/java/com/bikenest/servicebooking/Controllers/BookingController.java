@@ -30,7 +30,7 @@ public class BookingController {
     @Autowired
     BikenestClient bikenestClient;
 
-    @PostMapping(name = "/all")
+    @PostMapping(value = "/all")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<List<Booking>> getAllBookings(@AuthenticationPrincipal UserInformation user) throws BusinessLogicException {
         if(user.getRole() == UserRole.User){
@@ -41,9 +41,9 @@ public class BookingController {
         throw new BusinessLogicException("Du hast für diese Funktion nicht die erforderlichen Rechte!");
     }
 
-    @PostMapping(name = "/forBikenest")
+    @PostMapping(value = "/forBikenest")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<List<Booking>> getAllBookingsForBikenest(@AuthenticationPrincipal UserInformation user,
+    public ResponseEntity<List<Booking>> getAllBookingsByQr(@AuthenticationPrincipal UserInformation user,
                                                                    @Valid @RequestBody QRCodeRequest request) throws BusinessLogicException {
         try{
             Integer bikenestId = bikenestClient.getBikenestIdByQr(request);

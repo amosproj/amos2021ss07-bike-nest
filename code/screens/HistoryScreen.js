@@ -10,12 +10,14 @@ import { mainStyles } from "../styles/MainStyles";
 import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
 import { BookingService } from "../services/BookingService";
 import { BikenestService } from '../services/BikenestService';
+import {ReservationService} from "../services/ReservationService";
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
 export default function HistoryScreen({ navigation }) {
   let bookingService = new BookingService();
+  let reservationService = new ReservationService();
   let bikenestService = new BikenestService();
 
   const [bikenestIDs, setBikenestIDs] = useState();
@@ -23,7 +25,7 @@ export default function HistoryScreen({ navigation }) {
   let tryGETBooking = () => {
     console.log('start pulling reservation info');
 
-    bookingService.getAllReservations().then(reservations => {
+    reservationService.getAllReservations().then(reservations => {
       alert(JSON.stringify(reservations));
       // This wont work, because reservations is an array of bikenests
       //setBikenestIDs(reservations.bikenestId);

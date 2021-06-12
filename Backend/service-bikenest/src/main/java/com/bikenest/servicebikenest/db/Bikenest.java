@@ -1,12 +1,14 @@
 package com.bikenest.servicebikenest.db;
 
 import com.bikenest.common.helper.RandomStringHelper;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.Set;
 import java.util.UUID;
 
 @Entity
+@JsonIgnoreProperties({ "qrCode"})
 public class Bikenest {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
