@@ -1,7 +1,12 @@
 package com.bikenest.common.interfaces.booking;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class DeliverUnlockRequest {
+    @NotNull
     private Integer reservationId;
+    @NotBlank
     private String qrCode;
 
     public DeliverUnlockRequest(){}

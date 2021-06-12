@@ -10,7 +10,7 @@ export class LockService {
      * @param qrCode
      * @returns {Promise<Booking>}
      */
-    async startUnlock(reservationId, qrCode) {
+    async deliverUnlock(reservationId, qrCode) {
         let body = {"reservationId": reservationId, "qrCode": qrCode};
 
         return fetchWithTimeout(global.globalIPAddress + "/api/service-booking/lock/deliverUnlock",
@@ -24,7 +24,7 @@ export class LockService {
             }, 10000);
     }
 
-    async startLock(bookingId) {
+    async deliverLock(bookingId) {
         let body = {"booking": bookingId};
 
         return fetchWithTimeout(global.globalIPAddress + "/api/service-booking/lock/deliverLock",
@@ -38,7 +38,7 @@ export class LockService {
             }, 10000);
     }
 
-    async endUnlock(bookingId, qrCode) {
+    async takeUnlock(bookingId, qrCode) {
         let body = {"bookingId": bookingId, "qrCode": qrCode};
 
         return fetchWithTimeout(global.globalIPAddress + "/api/service-booking/lock/takeUnlock",
@@ -52,7 +52,7 @@ export class LockService {
             }, 10000);
     }
 
-    async endLock(bookingId){
+    async takeLock(bookingId){
         let body = {"bookingId": bookingId};
 
         return fetchWithTimeout(global.globalIPAddress + "/api/service-booking/lock/takeLock",

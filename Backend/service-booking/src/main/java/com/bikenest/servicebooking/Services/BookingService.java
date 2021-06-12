@@ -49,11 +49,11 @@ public class BookingService {
             throw new BusinessLogicException("Sie besitzen keine Reservierung für dieses Bikenest!");
         }
 
-        if(reservation.getReservationEnd().compareTo(LocalDateTime.now()) < 0){
+        if(reservation.getReservationEnd().compareTo(DateTimeHelper.getCurrentBerlinTime()) < 0){
             throw new BusinessLogicException("Diese Reservierung ist nicht mehr gültig.");
         }
 
-        if(reservation.getReservationStart().compareTo(LocalDateTime.now()) > 0){
+        if(reservation.getReservationStart().compareTo(DateTimeHelper.getCurrentBerlinTime()) > 0){
             throw new BusinessLogicException("Diese Reservierung ist noch nicht gültig.");
         }
 

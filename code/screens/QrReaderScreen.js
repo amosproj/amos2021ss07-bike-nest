@@ -16,6 +16,7 @@ import {BarCodeScanner} from 'expo-barcode-scanner';
 import {BookingService} from '../services/BookingService';
 import moment from "moment";
 import {ReservationService} from "../services/ReservationService";
+import {LockService} from "../services/LockService";
 
 /**
  * Starts the QrReaderScreen that is used to open a Bikenest.
@@ -31,6 +32,7 @@ export default function QrReaderScreen({navigation}) {
     const [scanned, setScanned] = useState(false);
     let bookingService = new BookingService();
     let reservationService = new ReservationService();
+    let lockService = new LockService();
 
     //TODO: The Backend assumes, that there will not be more than one reservation/booking for each bikenest
     //Therefore the first found reservation/booking for the scanned bikenest will be used to open the cage
@@ -68,49 +70,56 @@ export default function QrReaderScreen({navigation}) {
         console.log(data);
         reservationService.getReservationsByQr(data)
             .then(reservations => {
-                for(let ind in reservations){
-                    let res = reservations[ind];
-                    console.log(JSON.stringify(res))
-                    if(!compareDates(res.reservationStart) && compareDates(res.reservationEnd) && !res.used
-                        && !res.cancelled){
-                        //Unlock the Bikenest to deliver the bike
-                        console.log("Doing unlock call for reservation now!");
-
-                        navigation.navigate("LockDelivered");
-                        return;
+                    for (let ind in reservations) {
+                        let res = reservations[ind];
+                        console.log(JSON.stringify(res))
+                        if (!compareDates(res.reservationStart) && compareDates(res.reservationEnd) && !res.used
+                            && !res.cancelled) {
+                            //Unlock the Bikenest to deliver the bike
+                            console.log("Found a valid Reservation!");
+                            return res;
+                        }
                     }
                 }
-
-                //If no reservation matches, check bookings
-                bookingService.getBookingsByQr(data)
-                    .then(bookings => {
-                        for(let ind in bookings){
-                            let booking = bookings[ind];
-                            if(booking.deliveredBike !== null && booking.tookBike === null){
-                                //Unlock the Bikenest to take the bike
-                                console.log("doin unlock call for booking now!");
-
-                                navigation.navigate("LockTaken");
-                                return;
+            ).then(reservation => {
+                if (reservation) {
+                    return lockService.deliverUnlock(reservation.id, data).then(booking => {
+                            return {booking: booking, delivered: true};
+                        }
+                    );
+                } else {
+                    return bookingService.getBookingsByQr(data)
+                        .then(bookings => {
+                            for (let ind in bookings) {
+                                let booking = bookings[ind];
+                                if (booking.deliveredBike !== null && booking.tookBike === null) {
+                                    //Unlock the Bikenest to take the bike
+                                    console.log("Found a valid booking!");
+                                    return booking;
+                                }
                             }
-                        }
-
-                        alert("Sie haben für dieses Bikenest keine Reservierung / kein Fahrrad abgestellt.");
-                        navigation.navigate("FindBikeNest");
-                    })
-                    .catch(error => {
-                        if (error.display) {
-                            alert(error.message);
-                            navigation.navigate('FindBikeNest');
-                        }
-                    })
-            })
-            .catch(error => {
-                if (error.display) {
-                    alert(error.message);
-                    navigation.navigate('FindBikeNest');
+                            throw {display: true, message: "Du hast weder eine valide Reservierung, noch hast du ein Fahrrad in diesem Bikenest abgestellt."}
+                        }).then(booking => {
+                            return lockService.takeUnlock(booking.id, data).then(result => {
+                                return {booking: result, delivered: false};
+                                }
+                            );
+                        });
                 }
-            })
+            }
+        ).then(result => {
+                if (result.delivered) {
+                    navigation.navigate("LockDelivered", {bookingId: result.booking.id});
+                } else {
+                    navigation.navigate("LockTaken", {bookingId: result.booking.id});
+                }
+            }
+        ).catch(error => {
+            if (error.display) {
+                alert(error.message);
+                navigation.navigate('FindBikeNest');
+            }
+        })
     };
 
     // gets called on url press
@@ -216,7 +225,7 @@ const styles = StyleSheet.create(
         urlText: {
             color: '#fff',
             fontSize: 20,
-            margin:20
+            margin: 20
         },
         cancelButton: {
             marginLeft: 10,

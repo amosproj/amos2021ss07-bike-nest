@@ -5,7 +5,9 @@ import {SimpleLineIcons} from "@expo/vector-icons";
 import BikeNest_NavigationFooter from "../components/BikeNest_NavigationFooter";
 import React from "react";
 
-export default function LockSpotScreen ({ navigation }) {
+export default function LockSpotScreen ({ route, navigation }) {
+    let bookingId = route.params.bookingId;
+
     return(
 
         <SafeAreaView style={mainStyles.container}>
@@ -13,7 +15,7 @@ export default function LockSpotScreen ({ navigation }) {
 
 
             <View style={styles.lockContainer}>
-                <Text style={mainStyles.h1}> Great you are in!</Text>
+                <Text style={mainStyles.h1}> Stell dein Bike ab!</Text>
 
                 <Image style={styles.ImageContainer} source={gotospot}></Image>
 
