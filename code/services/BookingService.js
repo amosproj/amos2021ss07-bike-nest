@@ -8,7 +8,7 @@ export class BookingService {
      * @returns {Promise<any[]>}
      */
     async getAllBookings() {
-        return fetchWithTimeout(global.globalIPAddress + "/booking/all",
+        return fetchWithTimeout(global.globalIPAddress + "/api/service-booking/booking/all",
             {
                 method: 'GET',
                 headers:
@@ -16,5 +16,18 @@ export class BookingService {
                         Accept: 'application/json', 'Content-Type': 'application/json',
                     }
             }, 10000);
+    }
+
+    async getBookingsByQr(qrCode){
+        let request = {"qrCode": qrCode};
+        return fetchWithTimeout(global.globalIPAddress + "/api/service-booking/booking/forBikenest",
+            {
+                method: 'POST',
+                body: JSON.stringify(request),
+                headers:
+                    {
+                        Accept: 'application/json', 'Content-Type': 'application/json',
+                    }
+            }, 10000)
     }
 }

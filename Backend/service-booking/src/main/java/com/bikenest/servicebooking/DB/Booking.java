@@ -1,6 +1,7 @@
 package com.bikenest.servicebooking.DB;
 
 import com.bikenest.common.helper.DateTimeHelper;
+import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -21,6 +22,9 @@ public class Booking {
     private boolean paid;
     @Basic
     @Temporal(TemporalType.TIMESTAMP)
+    private Date bookingCreated;
+    @Basic
+    @Temporal(TemporalType.TIMESTAMP)
     private Date deliveredBike;
     @Basic
     @Temporal(TemporalType.TIMESTAMP)
@@ -36,6 +40,7 @@ public class Booking {
         this.bikespotNumber = bikespotNumber;
         this.reservationMinutes = reservationMinutes;
         this.paid = paid;
+        this.bookingCreated = DateTimeHelper.localDateTimeToDate(DateTimeHelper.getCurrentBerlinTime());
         this.deliveredBike = null;
         this.tookBike = null;
     }
@@ -117,5 +122,13 @@ public class Booking {
 
     public void setTookBike(LocalDateTime tookBike) {
         this.tookBike = DateTimeHelper.localDateTimeToDate(tookBike);
+    }
+
+    public LocalDateTime getBookingCreated() {
+        return DateTimeHelper.dateToLocalDateTime(bookingCreated);
+    }
+
+    public void setBookingCreated(LocalDateTime bookingCreated) {
+        this.bookingCreated = DateTimeHelper.localDateTimeToDate(bookingCreated);
     }
 }

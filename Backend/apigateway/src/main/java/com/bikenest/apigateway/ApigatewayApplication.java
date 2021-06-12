@@ -47,16 +47,16 @@ public class ApigatewayApplication {
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route("bikenest", r -> r.path("/bikenest/**")
+                .route("bikenest", r -> r.path("/api/service-bikenest/**")
                         .filters(f -> f.filter(authenticationFilter))
                         .uri(bikenestServiceUrl))
-                .route("booking", r -> r.path("/booking/**")
+                .route("booking", r -> r.path("/api/service-booking/**")
                         .filters(f -> f.filter(authenticationFilter))
                         .uri(bookingServiceUrl))
-                .route("usermanagement", r -> r.path("/usermanagement/**")
+                .route("usermanagement", r -> r.path("/api/service-usermgmt/**")
                         .filters(f -> f.filter(authenticationFilter))
                         .uri(userServiceUrl))
-                .route("payment", r -> r.path("/payment/**")
+                .route("payment", r -> r.path("/api/service-payment/**")
                         .filters(f -> f.filter(authenticationFilter))
                         .uri(paymentServiceUrl))
                 .build();

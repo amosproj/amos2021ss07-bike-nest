@@ -4,6 +4,7 @@ import com.bikenest.common.exceptions.BusinessLogicException;
 import com.bikenest.common.feignclients.BikenestClient;
 import com.bikenest.common.helper.DateTimeHelper;
 import com.bikenest.common.interfaces.bikenest.FreeSpotRequest;
+import com.bikenest.common.interfaces.booking.QRCodeRequest;
 import com.bikenest.servicebooking.DB.Booking;
 import com.bikenest.servicebooking.DB.BookingRepository;
 import com.bikenest.servicebooking.DB.Reservation;
@@ -32,7 +33,7 @@ public class BookingService {
         return bookingRepository.findAllByUserId(userId);
     }
 
-    public Booking createBooking(int userId, int reservationId) throws BusinessLogicException {
+    public Booking createBooking(int userId, int reservationId, String qrCode) throws BusinessLogicException {
         Optional<Reservation> optionalReservation = reservationRepository.findById(reservationId);
         if(optionalReservation.isEmpty()){
             throw new BusinessLogicException("Diese Reservierung existiert nicht!");
@@ -43,11 +44,16 @@ public class BookingService {
 
         Reservation reservation = optionalReservation.get();
 
-        if(reservation.getReservationEnd().compareTo(LocalDateTime.now()) < 0){
+        //Check if the reservation is for the Bikenest with the given QrCode
+        if(!checkBikenestId(reservation.getBikenestId(), qrCode)){
+            throw new BusinessLogicException("Sie besitzen keine Reservierung für dieses Bikenest!");
+        }
+
+        if(reservation.getReservationEnd().compareTo(DateTimeHelper.getCurrentBerlinTime()) < 0){
             throw new BusinessLogicException("Diese Reservierung ist nicht mehr gültig.");
         }
 
-        if(reservation.getReservationStart().compareTo(LocalDateTime.now()) > 0){
+        if(reservation.getReservationStart().compareTo(DateTimeHelper.getCurrentBerlinTime()) > 0){
             throw new BusinessLogicException("Diese Reservierung ist noch nicht gültig.");
         }
 
@@ -102,5 +108,16 @@ public class BookingService {
 
     public boolean freeReservedSpot(int bikenestId, int bikespotNumber, int userId){
         return bikenestClient.freeSpot(new FreeSpotRequest(bikenestId, bikespotNumber, userId));
+    }
+
+    public boolean checkBikenestId(int bikenestId, String qrCode){
+        Integer id = null;
+        try{
+            id = bikenestClient.getBikenestIdByQr(new QRCodeRequest(qrCode));
+        }catch (Exception ex){}
+        if(id == null || !id.equals(bikenestId)){
+            return false;
+        }
+        return true;
     }
 }

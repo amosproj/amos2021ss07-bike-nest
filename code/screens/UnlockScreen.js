@@ -12,12 +12,9 @@ import { colors } from 'react-native-elements';
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
-export default function LockScreen({ navigation }) {
+export default function UnlockScreen({ navigation }) {
     return(
-
         <SafeAreaView style={mainStyles.container}>
-        
-
 
         <View style={styles.lockContainer}>
             
@@ -34,13 +31,9 @@ export default function LockScreen({ navigation }) {
 
             
             <View style={styles.storeText}>
-                <Text style={mainStyles.h1}> Main Door </Text>
-                <Text style={mainStyles.h2}>Open the door </Text>
-                <Text style={mainStyles.h2}> with the button below {"\n"}</Text>
+                <Text style={mainStyles.h1}>Bikenest öffnen</Text>
+                <Text style={mainStyles.h2}>Scannen sie den QR Code am Bikenest, um die Tür zu öffnen.</Text>
             </View>
-
-            
-        
             
             {/* <TouchableOpacity style={styles.Icon}>
                 <SimpleLineIcons name="lock" size={24} color="black" />
@@ -48,9 +41,9 @@ export default function LockScreen({ navigation }) {
             </TouchableOpacity> */}
             
 
-            <TouchableOpacity onPress={() => navigation.navigate("LockSpot")} style={styles.Icon}>
+            <TouchableOpacity onPress={() => navigation.navigate("QrReaderScreen")} style={styles.Icon}>
                 <SimpleLineIcons name="lock-open" size={24} color="black" />
-                <Text style={mainStyles.h3}> Unlock </Text>
+                <Text style={mainStyles.h3}> Scan QR</Text>
             </TouchableOpacity> 
 
            

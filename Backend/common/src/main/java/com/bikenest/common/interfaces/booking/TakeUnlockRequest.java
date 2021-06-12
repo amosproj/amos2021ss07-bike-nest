@@ -1,10 +1,15 @@
 package com.bikenest.common.interfaces.booking;
 
-public class EndUnlockRequest {
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+public class TakeUnlockRequest {
+    @NotNull
     private Integer bookingId;
+    @NotBlank
     private String qrCode;
 
-    public EndUnlockRequest(){}
+    public TakeUnlockRequest(){}
 
     public String getQrCode() {
         return qrCode;

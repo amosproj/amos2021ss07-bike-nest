@@ -29,7 +29,7 @@ export class UserService {
             "email": email,
             "password": password
         };
-        return fetchWithTimeout(global.globalIPAddress + "/usermanagement/signin", {
+        return fetchWithTimeout(global.globalIPAddress + "/api/service-usermgmt/signin", {
             method: 'POST',
             body: JSON.stringify(request),
             headers: { Accept: 'application/json', 'Content-Type': 'application/json' }
@@ -44,7 +44,7 @@ export class UserService {
             "password": password
         };
 
-        return fetchWithTimeout(global.globalIPAddress + "/usermanagement/signup", {
+        return fetchWithTimeout(global.globalIPAddress + "/api/service-usermgmt/signup", {
             method: 'POST',
             body: JSON.stringify(request),
             headers: {
@@ -66,7 +66,7 @@ export class UserService {
             "newPassword": newPassword,
         };
 
-        return fetchWithTimeout(global.globalIPAddress + "/usermanagement/changePassword", {
+        return fetchWithTimeout(global.globalIPAddress + "/api/service-usermgmt/changePassword", {
             method: 'POST',
             body: JSON.stringify(request),
             headers: {
@@ -92,7 +92,7 @@ export class UserService {
             "password": password,
         };
 
-        return fetchWithTimeout(global.globalIPAddress + "/usermanagement/changePersonalInformation", {
+        return fetchWithTimeout(global.globalIPAddress + "/api/service-usermgmt/changePersonalInformation", {
             method: 'POST',
             body: JSON.stringify(request),
             headers: {

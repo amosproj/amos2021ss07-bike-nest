@@ -30,7 +30,7 @@ import java.security.Key;
  * Provides Endpoints for Signing in and Signing up
  */
 @RestController
-@RequestMapping(path = "/usermanagement")
+@RequestMapping(path = "/")
 public class UserController {
     private Key SECRET_KEY = Keys.hmacShaKeyFor("NdRgUkXp2s5v8yzB?D(G+KbPeShVmYq3".getBytes());
 
