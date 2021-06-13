@@ -10,12 +10,13 @@ import {ScrollView} from 'react-native';
 import BikeNest_Modal from '../components/BikeNest_Modal';
 import global from '../components/GlobalVars';
 import moment from "moment";
+import {ReservationService} from "../services/ReservationService";
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
 export default function PaymentScreen({route, navigation}) {
-    let bookingService = new BookingService();
+    let reservationService = new ReservationService();
     const [promocode, setPromoCode] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
     const [modalText, setModalText] = useState("");
@@ -31,12 +32,11 @@ export default function PaymentScreen({route, navigation}) {
 
     let tryCreateBooking = (bikenestId) => {
 
-        bookingService.createReservation(bikenestId, 30)
+        reservationService.createReservation(bikenestId, 30)
             .then(reservation => {
-                //TODO: Can't we just use the information from the returned reservation object for forwarding?
-                console.log("Success with create reservation.");
-                //Forward to Reservation Success
-                navigation.navigate("ReservationSuccess", {state: bikenest, name: bikenestName});
+                //Forward to Reservation Success also providing the bikenest, and the bikespot Number
+                navigation.navigate("ReservationSuccess", {state: bikenest, name: bikenestName,
+                    bikespotNumber: reservation.bikespotNumber});
             }).catch(error => {
             if (error.display) {
                 setModalHeadline("Sorry!");

@@ -1,48 +1,97 @@
-import React, {useState} from 'react';
-import {Pressable, Text, View, TextInput, StyleSheet} from 'react-native';
-import {UserDataService} from "../../services/UserData";
-import {styles} from "./styles";
+import React, { useEffect, useState } from 'react';
+import { Pressable, Text, View, TextInput, StyleSheet } from 'react-native';
+import { styles } from "./styles";
+import { UserService } from '../../services/UserService';
+import BikeNest_Modal from '../BikeNest_Modal';
+import global from '../GlobalVars';
+import JwtDecoder from '../JwtDecoder';
 
 export default function EditPersonalInformation() {
-    let userdata = new UserDataService();
-    const [firstName, setFirstName] = useState(userdata.GetFirstName())
-    const [lastName, setLastName] = useState(userdata.GetLastName())
-    const [email, setEmail] = useState(userdata.GetEmail())
+    let userService = new UserService();
+    const [firstName, setFirstName] = useState("")
+    const [lastName, setLastName] = useState("")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
     const [isEditing, setIsEditing] = useState(false)
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalText, setModalText] = useState("");
+    const [modalHeadline, setModalHeadline] = useState("");
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (loading) {
+            global.getAuthenticationToken().then((jwt) => {
+                let decodedJwt = JwtDecoder.decode(jwt);
+                setFirstName(decodedJwt.FirstName);
+                setLastName(decodedJwt.LastName);
+                setEmail(decodedJwt.sub);
+                setLoading(false);
+            })
+        }
+    })
+
 
     let saveData = () => {
-        let finalResult = [userdata.UpdateFirstName(firstName),
-            userdata.UpdateLastName(lastName), userdata.UpdateEmail(email)].every(x => x);
+        userService.changePersonalInformation(firstName, lastName, email, password).then((jwt) => {
+            global.saveAuthenticationToken(jwt).then(() => {
+                setModalHeadline("Hurra!");
+                setModalText("Deine Informationen wurden erfolgreich geändert.");
+            });
+        }).catch(error => {
+            if (error.display) {
+                setModalHeadline("Oops!");
+                setModalText(error.message);
+            } else {
+                setModalHeadline("Oops!")
+                setModalText("Da ist wohl etwas schief gelaufen. Bitte versuche es noch einmal.");
+            }
+        })
 
+        setModalVisible(true);
         setIsEditing(false);
-        return finalResult ? "Successful updated all User Data!" : "Error updating User Data!";
     };
 
+
     let cancel = () => {
-        setFirstName(userdata.GetFirstName());
-        setLastName(userdata.GetLastName());
-        setEmail(userdata.GetEmail());
+        setFirstName("");
+        setLastName("");
+        setEmail("");
         setIsEditing(false);
     }
 
     let EditOrShow = (text, setter) =>
         isEditing ?
-            <TextInput style={styles.inputField} onChangeText={setter} value={text}/>
+            <TextInput style={styles.inputField} onChangeText={setter} value={text} />
             :
-            <View style={{justifyContent: 'center'}}><Text style={styles.specialText}>{text}</Text></View>
+            <View style={{ justifyContent: 'center' }}><Text style={styles.specialText}>{text}</Text></View>
 
-
+    if (loading) {
+        return null;
+    }
     return (
         <View style={styles.container}>
+            <BikeNest_Modal
+                modalHeadLine={modalHeadline}
+                modalText={modalText}
+                isVisible={modalVisible}
+                onPress={() => {
+                    setModalVisible(!modalVisible);
+                }}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}
+            />
+            <Text style={styles.stdText}>Nachname:</Text>
+            {EditOrShow(lastName, setLastName)}
 
-                    <Text style={styles.stdText}>Last Name:</Text>
-                    {EditOrShow(lastName, setLastName)}
+            <Text style={styles.stdText}>Vorname:</Text>
+            {EditOrShow(firstName, setFirstName)}
 
-                    <Text style={styles.stdText}>First Name:</Text>
-                    {EditOrShow(firstName, setFirstName)}
+            <Text style={styles.stdText}>Email:</Text>
+            {EditOrShow(email, setEmail)}
 
-                    <Text style={styles.stdText}>Email Address:</Text>
-                    {EditOrShow(email,setEmail)}
+            <Text style={styles.stdText}>Passwort:</Text>
+            {EditOrShow(password, setPassword)}
 
             {isEditing ?
                 <View>

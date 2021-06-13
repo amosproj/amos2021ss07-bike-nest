@@ -16,7 +16,7 @@ export class BikenestService{
      * @returns {Promise<any[]>}
      */
     async getAllBikenests(){
-        return fetchWithTimeout(global.globalIPAddress + "/bikenest/all",
+        return fetchWithTimeout(global.globalIPAddress + "/api/service-bikenest/bikenest/all",
             {
                 method: 'GET',
                 headers:
@@ -36,7 +36,7 @@ export class BikenestService{
             "bikenestID": bikenestID
         }
 
-        return fetchWithTimeout(global.globalIPAddress + "/bikenest/bikenestinfo",
+        return fetchWithTimeout(global.globalIPAddress + "/api/service-bikenest/bikenest/bikenestinfo",
             {
                 method: 'POST',
                 body: JSON.stringify(body),

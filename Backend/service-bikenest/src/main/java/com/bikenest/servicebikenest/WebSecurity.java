@@ -23,8 +23,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
         http.cors().and()
                 .authorizeRequests()
-                .antMatchers("/bikenest/add", "/bikenest/deleteall")
-                .authenticated()
+                .antMatchers("/bikenest/add").authenticated()
+                .antMatchers("/bikenest/deleteall").authenticated()
                 .anyRequest().permitAll()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)

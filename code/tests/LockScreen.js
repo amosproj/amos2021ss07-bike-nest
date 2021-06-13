@@ -1,10 +1,10 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import LockScreen from '../screens/LockScreen';
+import UnlockScreen from '../screens/UnlockScreen';
 
 it('renders correctly', () => {
     const tree = renderer
-        .create(<LockScreen />)
+        .create(<UnlockScreen />)
         .toJSON();
     expect(tree).toMatchSnapshot();
 });

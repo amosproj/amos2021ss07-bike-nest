@@ -4,11 +4,11 @@ import fetchWithTimeout from "./FetchHelper";
 export class BookingService {
 
     /**
-     * Gets all reservations that belong to the logged in user.
+     * Gets all bookings that belong to the logged in user.
      * @returns {Promise<any[]>}
      */
-    async getAllReservations() {
-        return fetchWithTimeout(global.globalIPAddress + "/booking/all",
+    async getAllBookings() {
+        return fetchWithTimeout(global.globalIPAddress + "/api/service-booking/booking/all",
             {
                 method: 'GET',
                 headers:
@@ -18,38 +18,16 @@ export class BookingService {
             }, 10000);
     }
 
-    /**
-     * Returns a Promise that contains the created reservation if the request was successful.
-     *
-     *  Use this function like this:
-     *  bookingService.createReservation(1, 30)
-     *  .then(reservation => {
-     *      console.log(reservation);
-     *  }).catch(error => {
-     *      if(error.display){
-     *          //display error.message
-     *      }else{
-     *          //display a generic error message
-     *      }
-     *  }
-     * @param bikenestId {number}
-     * @param reservationMinutes {number}
-     * @returns {Promise<Reservation>}
-     */
-    async createReservation(bikenestId, reservationMinutes) {
-        let body = {
-            "bikenestId": bikenestId,
-            "reservationMinutes": reservationMinutes
-        };
-
-        return fetchWithTimeout(global.globalIPAddress + "/booking/add",
+    async getBookingsByQr(qrCode){
+        let request = {"qrCode": qrCode};
+        return fetchWithTimeout(global.globalIPAddress + "/api/service-booking/booking/forBikenest",
             {
                 method: 'POST',
-                body: JSON.stringify(body),
+                body: JSON.stringify(request),
                 headers:
                     {
                         Accept: 'application/json', 'Content-Type': 'application/json',
                     }
-            }, 10000);
+            }, 10000)
     }
 }

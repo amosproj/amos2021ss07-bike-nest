@@ -10,12 +10,14 @@ import { mainStyles } from "../styles/MainStyles";
 import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
 import { BookingService } from "../services/BookingService";
 import { BikenestService } from '../services/BikenestService';
+import {ReservationService} from "../services/ReservationService";
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
 export default function HistoryScreen({ navigation }) {
   let bookingService = new BookingService();
+  let reservationService = new ReservationService();
   let bikenestService = new BikenestService();
 
   const [bikenestIDs, setBikenestIDs] = useState();
@@ -23,7 +25,7 @@ export default function HistoryScreen({ navigation }) {
   let tryGETBooking = () => {
     console.log('start pulling reservation info');
 
-    bookingService.getAllReservations().then(reservations => {
+    reservationService.getAllReservations().then(reservations => {
       alert(JSON.stringify(reservations));
       // This wont work, because reservations is an array of bikenests
       //setBikenestIDs(reservations.bikenestId);
@@ -102,17 +104,11 @@ export default function HistoryScreen({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.containerRow}>
-          <TouchableOpacity onPress={() => navigation.navigate("Lock")} style={mainStyles.buttonMedium}>
+          <TouchableOpacity onPress={() => navigation.navigate("Unlock")} style={mainStyles.buttonMedium}>
             {/* <SimpleLineIcons name="lock-open" size={10} color="black" style={styles.icon} /> */}
             <Text style={mainStyles.buttonText}> Max Muster's bike </Text>
             <Text style={mainStyles.buttonText}> locked on spot X </Text>
           </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => navigation.navigate("QrReaderScreen")} style={mainStyles.buttonSmall}>
-            <Text style={mainStyles.buttonText}>QR Scanner</Text>
-          </TouchableOpacity>
-        </View>
 
         <TouchableOpacity onPress={() => tryGETBooking(this)} style={styles.buttonHistory}>
           <Text style={styles.buttonHistoryText}> Frühere Reservierungen und Zahlungen </Text>

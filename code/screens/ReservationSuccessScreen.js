@@ -14,26 +14,12 @@ var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
 export default function ReservationSuccessScreen({ route, navigation }) {
-  let bookingService = new BookingService();
-
   let bikenest = route.params.state;
+  let bikespotNumber = route.params.bikespotNumber;
   let bikenestName = route.params.name;
 
   let nestAdresse = bikenestName;
 
-  const [spotNum, setSpotNumber] = useState(0);
-
-  let tryGETBooking = () => {
-    console.log('start pulling reservation info');
-
-    bookingService.getAllReservations().then(reservations => {
-        //TODO set spot number where reservation not expired
-        setSpotNumber(reservations[0].bikespotNumber);
-    }).catch(error => {
-        console.error("Error retrieving Bookings: " + JSON.stringify(error));
-    });
-}
-tryGETBooking();
 
   return (
     <View style={mainStyles.container}>
@@ -62,7 +48,7 @@ tryGETBooking();
           <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start', padding: 30}}>
             <Text style={{fontSize: 16, color: '#000000'}}>Vielen Dank für deine Reservierung! </Text>
             <Text style={{fontSize: 16, color: '#000000'}}>Begib dich zu folgendem BIKE NEST um dein Fahrrad abzustellen: {"\n"}</Text>
-            <Text style={{fontWeight: 'bold', fontSize: 16, color: '#000000'}}>BIKE NEST {"\n"}{nestAdresse} {"\n"}Spot Nummer {spotNum}</Text>
+            <Text style={{fontWeight: 'bold', fontSize: 16, color: '#000000'}}>BIKE NEST {"\n"}{nestAdresse} {"\n"}Spot Nummer {bikespotNumber}</Text>
           </View>
         </TouchableOpacity>
         <View style={styles.reserved}>

@@ -29,11 +29,11 @@ export class UserService {
             "email": email,
             "password": password
         };
-        return fetchWithTimeout(global.globalIPAddress + "/usermanagement/signin", {
-                method: 'POST',
-                body: JSON.stringify(request),
-                headers: { Accept: 'application/json', 'Content-Type': 'application/json' }
-            }, 10000).then(json => json.jwt);
+        return fetchWithTimeout(global.globalIPAddress + "/api/service-usermgmt/signin", {
+            method: 'POST',
+            body: JSON.stringify(request),
+            headers: { Accept: 'application/json', 'Content-Type': 'application/json' }
+        }, 10000).then(json => json.jwt);
     }
 
     async registerUser(email, password, firstName, lastName) {
@@ -44,13 +44,14 @@ export class UserService {
             "password": password
         };
 
-        return fetchWithTimeout(global.globalIPAddress + "/usermanagement/signup", {
+        return fetchWithTimeout(global.globalIPAddress + "/api/service-usermgmt/signup", {
             method: 'POST',
             body: JSON.stringify(request),
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
-            }}, 10000).then(json => json.jwt);
+            }
+        }, 10000).then(json => json.jwt);
     }
 
     /**
@@ -65,7 +66,7 @@ export class UserService {
             "newPassword": newPassword,
         };
 
-        return fetchWithTimeout(global.globalIPAddress + "/usermanagement/changePassword", {
+        return fetchWithTimeout(global.globalIPAddress + "/api/service-usermgmt/changePassword", {
             method: 'POST',
             body: JSON.stringify(request),
             headers: {
@@ -73,6 +74,32 @@ export class UserService {
                 'Content-Type': 'application/json'
             }
         }, 10000).then(json => json.success);
+    }
+
+    /**
+    * Returns a boolean that indicates if the password change was successful or not.
+    * @param firstName
+    * @param lastName
+    * @param email
+    * @param password
+    * @returns {Promise<string>} This Promise will contain the JWT String that is sent back (if request is successful).
+    */
+    async changePersonalInformation(firstName, lastName, email, password) {
+        let request = {
+            "firstName": firstName,
+            "lastName": lastName,
+            "email": email,
+            "password": password,
+        };
+
+        return fetchWithTimeout(global.globalIPAddress + "/api/service-usermgmt/changePersonalInformation", {
+            method: 'POST',
+            body: JSON.stringify(request),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }, 10000).then(json => json.jwt);
     }
 
     /**

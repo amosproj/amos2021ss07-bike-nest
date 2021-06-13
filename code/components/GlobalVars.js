@@ -7,6 +7,7 @@ export default class GlobalVars {
 
         static async saveAuthenticationToken(token) {
                 await SecureStore.setItemAsync(GlobalVars.#accessTokenKey, token);
+                console.log("New JWT stored.");
         }
 
         static async getAuthenticationToken() {
@@ -16,6 +17,7 @@ export default class GlobalVars {
 
         static async deleteAuthenticationToken() {
                 await SecureStore.deleteItemAsync(GlobalVars.#accessTokenKey);
+                console.log("JWT deleted.");
         }
 
         static async authenticationTokenExists() {
