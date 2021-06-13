@@ -7,6 +7,7 @@ import { mainStyles } from "../styles/MainStyles";
 import ModalDropdown from 'react-native-modal-dropdown';
 import colors from '../styles/Colors';
 import { BikenestService } from "../services/BikenestService";
+import { Alert } from 'react-native';
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
@@ -45,7 +46,11 @@ export default function BookingScreen({ route, navigation }) {
   };
   const onPressOrder = () => {
     //weiter zu order verarbeitung
-    navigation.navigate("Payment", {state: bikenest, name: bikenestName, slots: textSlots, time: textHours, ebike: textEbike, price: estimatedPrice});
+    if(textSlots != null && textHours != null && textEbike != null){
+      navigation.navigate("Payment", {state: bikenest, name: bikenestName, slots: textSlots, time: textHours, ebike: textEbike, price: estimatedPrice});
+    } else {
+      Alert.alert("Halt", "Bitte wähle Slots, Stunden und Ebike-Option aus")
+    } 
   }
   const getLocation = () => {
     fetchBikenestInfos();

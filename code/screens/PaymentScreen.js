@@ -118,7 +118,7 @@ export default function PaymentScreen({route, navigation}) {
                     <View style={myStyles.headline}>
                         <Text style={myStyles.h3}> Details </Text>
                         <Text style={[myStyles.h3, {fontWeight: 'bold'}]}
-                              onPress={() => navigation.navigate("FindBikeNest")}> Ändern </Text>
+                              onPress={() => navigation.navigate("Booking")}> Ändern </Text>
                     </View>
                     <View style={myStyles.headline}>
                         <Text style={myStyles.stdText}>

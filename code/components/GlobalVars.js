@@ -3,7 +3,7 @@ import * as SecureStore from 'expo-secure-store';
 export default class GlobalVars {
         static #accessTokenKey = "secureToken";
 
-        static get globalIPAddress() { return "http://192.168.178.20:9000" };
+        static get globalIPAddress() { return "http://192.168.2.124:9000" };
 
         static async saveAuthenticationToken(token) {
                 await SecureStore.setItemAsync(GlobalVars.#accessTokenKey, token);
