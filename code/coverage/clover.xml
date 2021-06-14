@@ -478,7 +478,7 @@
         <line num="17" count="0" type="stmt"/>
         <line num="20" count="1" type="stmt"/>
       </file>
-      <file name="LockScreen.js" path="C:\Users\Niko\Documents\AMOS\amos-ss2021-bike-nest\code\screens\LockScreen.js">
+      <file name="UnlockScreen.js" path="C:\Users\Niko\Documents\AMOS\amos-ss2021-bike-nest\code\screens\UnlockScreen.js">
         <metrics statements="5" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
         <line num="12" count="1" type="stmt"/>
         <line num="13" count="1" type="stmt"/>

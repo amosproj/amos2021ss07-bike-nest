@@ -154,7 +154,7 @@ import FindBikeNestScreen from './screens/FindBikeNestScreen';
 import HistoryScreen from './screens/HistoryScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import BookingScreen from './screens/BookingScreen';
-import LockScreen from './screens/LockScreen';
+import UnlockScreen from './screens/UnlockScreen';
 import PaymentConfirmationScreen from './screens/PaymentConfirmationScreen';
 import ReservationSuccessScreen from './screens/ReservationSuccessScreen';
 import LockSpotScreen from './screens/LockSpotScreen';
@@ -174,7 +174,7 @@ export default function App() {
         &lt;AppNavigator.Screen name='EditPersonalInformation' component={PersonalInformationScreen} /&gt;
         &lt;AppNavigator.Screen name='History' component={HistoryScreen} /&gt;
         &lt;AppNavigator.Screen name='Booking' component={BookingScreen} /&gt;
-        &lt;AppNavigator.Screen name='Lock' component={LockScreen} /&gt;
+        &lt;AppNavigator.Screen name='Lock' component={UnlockScreen} /&gt;
         &lt;AppNavigator.Screen name='LockSpot' component={LockSpotScreen} /&gt;
         &lt;AppNavigator.Screen name='ReservationSuccess' component={ReservationSuccessScreen} /&gt;
         &lt;AppNavigator.Screen name='PaymentConfirmation' component={PaymentConfirmationScreen} /&gt;
@@ -206,4 +206,3 @@ const AppNavigator = createStackNavigator();
         <script src="../block-navigation.js"></script>
     </body>
 </html>
-    

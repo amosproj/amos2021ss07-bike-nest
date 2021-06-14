@@ -1,10 +1,9 @@
 package com.bikenest.servicebooking.DB;
 
+import com.bikenest.common.helper.DateTimeHelper;
+
 import javax.persistence.*;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Date;
 
 @Entity
@@ -16,7 +15,7 @@ public class Reservation {
     private Integer bikenestId;
     private Integer bikespotNumber; //The number of the bikespot that will be shown to the user. NOT THE ID OF A BIKESPOT!
     private Integer reservationMinutes; // For how long is this reservation?
-    private boolean paid; // Is this booking payed?
+    private boolean used;   //Did the user already deliver his bike?
     private boolean cancelled;
     @Basic
     @Temporal(TemporalType.TIMESTAMP)
@@ -24,12 +23,6 @@ public class Reservation {
     @Basic
     @Temporal(TemporalType.TIMESTAMP)
     private Date reservationEnd;   // End of reservation time frame
-    @Basic
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date actualStart;     // When did the user deliver his bike?
-    @Basic
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date actualEnd;   // When did the user take his bike?
 
     public Reservation(Integer userId, Integer bikenestId, Integer bikespotNumber, Integer reservationMinutes, boolean paid,
                        LocalDateTime reservationStart, LocalDateTime reservationEnd) {
@@ -37,11 +30,8 @@ public class Reservation {
         this.bikenestId = bikenestId;
         this.bikespotNumber = bikespotNumber;
         this.reservationMinutes = reservationMinutes;
-        this.paid = paid;
         setReservationStart(reservationStart);
         setReservationEnd(reservationEnd);
-        this.actualStart = null;
-        this.actualEnd = null;
         this.cancelled = false;
     }
 
@@ -72,21 +62,6 @@ public class Reservation {
         this.bikenestId = bikenestId;
     }
 
-
-    private LocalDateTime DateToLocalDateTime(Date date){
-        if(date == null)
-            return null;
-        return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
-    }
-
-    private Date LocalDateTimeToDate(LocalDateTime ldt){
-        if(ldt == null)
-            return null;
-        ZonedDateTime zdt = ldt.atZone(ZoneId.systemDefault());
-        Instant in = zdt.toInstant();
-        return Date.from(zdt.toInstant());
-    }
-
     public Integer getReservationMinutes() {
         return reservationMinutes;
     }
@@ -96,43 +71,19 @@ public class Reservation {
     }
 
     public LocalDateTime getReservationStart() {
-        return DateToLocalDateTime(reservationStart);
+        return DateTimeHelper.dateToLocalDateTime(reservationStart);
     }
 
     public void setReservationStart(LocalDateTime reservationStart) {
-        this.reservationStart = LocalDateTimeToDate(reservationStart);
+        this.reservationStart = DateTimeHelper.localDateTimeToDate(reservationStart);
     }
 
     public LocalDateTime getReservationEnd() {
-        return DateToLocalDateTime(reservationEnd);
+        return DateTimeHelper.dateToLocalDateTime(reservationEnd);
     }
 
     public void setReservationEnd(LocalDateTime reservationEnd) {
-        this.reservationEnd = LocalDateTimeToDate(reservationEnd);
-    }
-
-    public LocalDateTime getActualStart() {
-        return DateToLocalDateTime(actualStart);
-    }
-
-    public void setActualStart(LocalDateTime actualStart) {
-        this.actualStart = LocalDateTimeToDate(actualStart);
-    }
-
-    public LocalDateTime getActualEnd() {
-        return DateToLocalDateTime(actualEnd);
-    }
-
-    public void setActualEnd(LocalDateTime actualEnd) {
-        this.actualEnd = LocalDateTimeToDate(actualEnd);
-    }
-
-    public boolean isPaid() {
-        return paid;
-    }
-
-    public void setPaid(boolean paid) {
-        this.paid = paid;
+        this.reservationEnd = DateTimeHelper.localDateTimeToDate(reservationEnd);
     }
 
     public boolean isCancelled() {
@@ -149,5 +100,13 @@ public class Reservation {
 
     public void setBikespotNumber(Integer bikespotNumber) {
         this.bikespotNumber = bikespotNumber;
+    }
+
+    public boolean isUsed() {
+        return used;
+    }
+
+    public void setUsed(boolean used) {
+        this.used = used;
     }
 }

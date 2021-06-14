@@ -6,16 +6,19 @@ import com.bikenest.common.interfaces.bikenest.ReserveSpotRequest;
 import com.bikenest.common.interfaces.bikenest.ReserveSpotResponse;
 import com.bikenest.common.interfaces.booking.GetBikespotRequest;
 import com.bikenest.common.interfaces.booking.GetBikespotResponse;
+import com.bikenest.common.interfaces.booking.QRCodeRequest;
 import com.bikenest.servicebikenest.db.Bikenest;
 import com.bikenest.servicebikenest.db.Bikespot;
 import com.bikenest.servicebikenest.services.BikenestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -23,7 +26,7 @@ import java.util.Optional;
  * These Controller endpoints should not throw errors, so that they are easier consumable by the other microservices.
  */
 @RestController
-@RequestMapping(path = "/bikenest/service")
+@RequestMapping(path = "/service")
 public class BookingInfoController {
 
     @Autowired
@@ -82,6 +85,17 @@ public class BookingInfoController {
             return new GetBikespotResponse(true,null, null, null, null, null);
         }
 
+    }
+
+    @PostMapping(path="/getBikenestIdByQr")
+    @PreAuthorize("hasRole('SERVICE')")
+    public ResponseEntity<Integer> getBikenestIdByQr(@RequestBody QRCodeRequest request) throws BusinessLogicException {
+        List<Bikenest> allBikenest = bikenestService.getAllBikenests();
+        Optional<Bikenest> bikenest = allBikenest.stream().filter(x -> x.getQrCode().equals(request.getQrCode())).findFirst();
+        if(bikenest.isEmpty()){
+            throw new BusinessLogicException("Es existiert kein Bikenest mit diesem QRCode.");
+        }
+        return ResponseEntity.ok(bikenest.get().getId());
     }
 
 }
