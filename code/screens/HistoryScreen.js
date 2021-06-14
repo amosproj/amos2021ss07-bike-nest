@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ImageBackground, Pressable, StyleSheet, Text, View, Image, TouchableOpacity, Linking } from 'react-native';
 import { Dimensions } from "react-native";
 import Avatar from '../assets/Avatar.png';
@@ -10,7 +10,7 @@ import { mainStyles } from "../styles/MainStyles";
 import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
 import { BookingService } from "../services/BookingService";
 import { BikenestService } from '../services/BikenestService';
-import {ReservationService} from "../services/ReservationService";
+import { ReservationService } from "../services/ReservationService";
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
@@ -20,7 +20,56 @@ export default function HistoryScreen({ navigation }) {
   let reservationService = new ReservationService();
   let bikenestService = new BikenestService();
 
-  const [bikenestIDs, setBikenestIDs] = useState();
+  //const [bikenestIDs, setBikenestIDs] = useState();
+  const [loading, setLoading] = useState(true);
+  const [infoHeadline, setInfoHeadline] = useState("Du hast weder eine Reservierung noch eines deiner Fahrräder bei uns sicher verstaut.");
+  const [infoText, setInfoText] = useState("");
+  const [bikenestInfo, setBikenestInfo] = useState(
+    { "id": "1", "charging_available": "true", "current_spots": "2", "gpsCoordinates":"50,50", "maximum_spots": "10", "name": "Biknest 1", "qr_code": "i6UBe6AziP7Q" });
+  const [userName, setUserName] = useState("Max Muster");
+
+
+  useEffect(() => {
+    if (loading) {
+      bookingService.getAllBookings().then((bookings) => {
+        setInfoHeadline("Buchungen");
+        bikenestService.getBikenestInfo(bookings[0].bikenestId).then((info) => {
+          setBikenestInfo(info);
+          setInfoText("Dein Fahrrad befindet sich hier:\n" + info.name);
+          setLoading(false);
+        }).catch(error => {
+          if (error.display) {
+            setInfoText(error.message);
+          } else {
+            setInfoText("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
+          }
+        })
+
+      }).catch(error => {
+        reservationService.getAllReservations().then((reservations) => {
+          bikenestService.getBikenestInfo(reservations[0].bikenestId).then((info) => {
+            setBikenestInfo(info);
+            setInfoHeadline("Reservierungen");
+            setInfoText("Dein Bikenest findest du hier:\n" + info.name);
+            setLoading(false);
+          }).catch(error => {
+            if (error.display) {
+              setInfoText(error.message);
+            } else {
+              setInfoText("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
+            }
+          })
+
+        }).catch(error => {
+          if (error.display) {
+            setInfoText(error.message);
+          } else {
+            setInfoText("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
+          }
+        })
+      })
+    }
+  })
 
   let tryGETBooking = () => {
     console.log('start pulling reservation info');
@@ -34,24 +83,10 @@ export default function HistoryScreen({ navigation }) {
     });
   }
   let forwardToGoogle = () => {
-    console.log('start pulling bikenest info');
-    let latitude = 49.46;
-    let longitude = 11.07;
-
-    bikenestService.getAllBikenests().then(bikenests => {
-      console.log(bikenests);
-      //TODO get right bikenest for the navigation!
-      // for (let y of response.bikenests){
-      //   for (let x of bikenestIDs){
-      //     if (y.id == x){
-      //       latitude = y.gpsCoordinates[0];
-      //       longitude = y.gpsCoordinates[1];
-      //     }
-      //   }
-      // }
-    }).catch(error => {
-      console.error("Error retrieving all bikenests: " + JSON.stringify(error));
-    });
+    console.log("info: " + bikenestInfo.gpsCoordinates);
+    let coordinates = bikenestInfo.gpsCoordinates.split(",");
+    let latitude = coordinates[0];
+    let longitude = coordinates[1];
     Linking.openURL('https://www.google.com/maps/dir//' + latitude + ',' + longitude);
   }
 
@@ -59,11 +94,11 @@ export default function HistoryScreen({ navigation }) {
     <View style={mainStyles.container}>
       <View style={styles.historyContainer}>
         <View style={styles.containerRow}>
-          <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+          <TouchableOpacity onPress={() => navigation.navigate("EditPersonalInformation")}>
             <Image source={Avatar} style={styles.avatar} />
           </TouchableOpacity>
           <Text style={styles.name}>
-                        Max Muster </Text>
+            {userName}</Text>
         </View>
         <TouchableOpacity onPress={() => forwardToGoogle(this)}
           style={[styles.heightBike, {
@@ -82,17 +117,17 @@ export default function HistoryScreen({ navigation }) {
             }}
           />
           <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start', padding: 30 }}>
-            <Text style={{ fontSize: 16 }}>Danke für dein Vertrauen! </Text>
-            <Text style={{ fontSize: 16 }}>Dein Fahrrad befindet sich hier: {"\n"}</Text>
+            <Text style={mainStyles.h3}>{infoHeadline + "\n"}</Text>
+            <Text style={{ fontSize: 16 }}>{infoText + "\n"}</Text>
             <Text style={{ textDecorationLine: 'underline', fontSize: 16, fontStyle: 'italic' }}> Zeig es auf
-                            der Karte </Text>
+              der Karte </Text>
           </View>
         </TouchableOpacity>
 
 
         <View style={styles.containerRow}>
           <TouchableOpacity style={styles.time}>
-            <Text style={styles.timeText}> Zeit verging </Text>
+            <Text style={styles.timeText}> Zeit </Text>
             <SimpleLineIcons name="clock" size={24} color="black" />
             <Text style={styles.timeRecord}> 1 Tag </Text>
           </TouchableOpacity>
@@ -104,11 +139,11 @@ export default function HistoryScreen({ navigation }) {
           </TouchableOpacity>
         </View>
 
-          <TouchableOpacity onPress={() => navigation.navigate("Unlock")} style={mainStyles.buttonMedium}>
-            {/* <SimpleLineIcons name="lock-open" size={10} color="black" style={styles.icon} /> */}
-            <Text style={mainStyles.buttonText}> Max Muster's bike </Text>
-            <Text style={mainStyles.buttonText}> locked on spot X </Text>
-          </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Unlock")} style={mainStyles.buttonMedium}>
+          {/* <SimpleLineIcons name="lock-open" size={10} color="black" style={styles.icon} /> */}
+          <Text style={mainStyles.buttonText}> Max Muster's bike </Text>
+          <Text style={mainStyles.buttonText}> locked on spot X </Text>
+        </TouchableOpacity>
 
         <TouchableOpacity onPress={() => tryGETBooking(this)} style={styles.buttonHistory}>
           <Text style={styles.buttonHistoryText}> Frühere Reservierungen und Zahlungen </Text>
