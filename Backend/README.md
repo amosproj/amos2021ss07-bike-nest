@@ -83,32 +83,63 @@ Right now the ports are:
 
 ## Deployment
 
-To deploy the Backend Microservices, all of the Docker Containers have to be loaded into a Docker Container Registry.
-For this we use [DockerHub](https://hub.docker.com/). The basic commands to push a single container image would be:
+Microservice Deployment can be very complicated, so here is a short overview about the whole workflow:
+- We need to build all Spring Jars and build the Docker Containers
+- We need to push these Docker Containers into some Container registry (for example Docker Hub)
+- Now there are a few possibilities for proceeding:
+  - Pull these Image onto the Remote Server and start up all containers using docker-compose. This should not really
+  be done in a production environment.
+  - For Production Environment a highly used way to start all containers is using Kubernetes Cluster. So we need to
+  install a Kubernetes Cluster on the Remote Server (lightweight options for this are microk8s or minikube).
+  For Kubernetes there is the YAML file kubernetes-production.yml. It contains all definitions required to start the Backend
+    (Services, Deployments, Environment Variables, Image Name). Currently the image names are specified to be pulled
+    from the public DockerHub repositories (bikenest/service-bikenest, ...)
+    
+
+So here is a summary what has to be done:
+
+- Build all Spring JARs (`gradlew assemble`)
+- Build all Containers and push them to [DockerHub](https://hub.docker.com/). The basic commands to push a single container image would be:
 - `docker login -u %DOCKER_USERNAME -p %DOCKER_PASSWORD`
-- `docker build --tag bikenest/backend:gateway ./apigateway/`, Note: In this case, bikenest is the Docker username, backend is
-the name of the Docker repository and gateway is the tagname. This string will also be used inside the Kubernetes configuration file to actually
+- `docker build --tag bikenest/service-bikenest:latest ./service-bikenest/`, Note: In this case, bikenest is the Docker username, service-bikenest is
+the name of the Docker repository and latest is the tag. This string will also be used inside the Kubernetes configuration file to actually
   pull the image from the DockerHub.
-- `docker push bikenest/backend:gateway`
+- `docker push bikenest/service-bikenest:latest`
 - For convenience there is the `dockerhub-push.bat` Script, that will build and push all of the containers to the docker-hub.
+It will prompt you for the username and password of the bikenest DockerHub account.
 
-Now the task is to start up the containers in a kubernetes cluster. For simplicity we just installed minikube on an
-AWS EC2 Instance, because other ways would not be for free.
 
-To use these images for the Kubernetes deployment we first have to configure the login credentials to the docker hub, because
-the used repository is private. If you use a public repository, this step will not be necessary.
-- `kubectl create secret docker-registry dockercredentials -docker-server=docker.io
+Now we need to get these containers running on a remote server.
+We have done this with a Hetzner Cloud Server(CX31) running Ubuntu 18.04.
+A few basic steps for securing the server were done (e.g. change the standard ssh port 22, add new users and disable root user).
+The first step is [installing microk8s using snap.](https://ubuntu.com/tutorials/install-a-local-kubernetes-with-microk8s#2-deploying-microk8s)
+
+Next we need to get the kubernetes-production file:
+
+`curl -O https://raw.githubusercontent.com/amosproj/amos-ss2021-bike-nest/main/Backend/kubernetes-production.yml`
+
+Now tell the Kubernetes Cluster to use the kubernetes-production.yml file. (Note: You should edit the 
+Environment Variables beforehand. Especially the externalIPs field for the gateway service has to be changed to be
+the IP Address of the remote server!)
+
+`microk8s kubectl apply -f kubernetes-production.yml`
+
+Now if everything worked, you should be able to access the Backend using the port 9000.
+For troubleshooting one can use these commands:
+- `microk8s kubectl get all --all-namespaces` -> Shows all active ressources
+- `microk8s kubectl describe pod bikenest` -> Shows detailed information about the bikenest pod
+- `microk8s kubectl logs -f bikenest-92412djuwuwe` -> Shows the logs for the specified pod. Will give the console output from Spring.
+
+
+If you want to use a private docker repository, you have to create a secret with kubectl, that contains
+the credentials for that repository. Also you have to specify ImagePullSecret in the kubernetes YAML file for each image.
+Further Information can be found on the web. Github seems to offer free private repositories currently for example and
+there are some tutorials available.
+- `microk8s kubectl create secret docker-registry dockercredentials -docker-server=docker.io
   --docker-username=bikenest
   --docker-password=%PASSWORD%
   --docker-email=%EMAIL%`
   
-This secret (**dockercredentials**) can be used inside the kubernetes configuration YAML file, so that the kubernetes cluster
-can pull the images from the private container repository.
-To then start the Backend using kubernetes, execute
-
-- `kubectl apply -f kubernetes-production.yml`
-
-
 ## General Information
 
 This folder contains all Backend Microservice.
