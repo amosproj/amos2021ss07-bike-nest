@@ -131,7 +131,7 @@ items:
             service: gateway
         spec:
           containers:
-            - image: bikenest/backend:gateway
+            - image: bikenest/gateway:latest
               imagePullPolicy: IfNotPresent
               name: gateway
               ports:
@@ -317,7 +317,7 @@ items:
                   value: "3306"
                 - name: MYSQL_USER
                   value: bikenestservice
-              image: bikenest/backend:service-bikenest
+              image: bikenest/service-bikenest:latest
               imagePullPolicy: IfNotPresent
               name: bikenest
               resources: {}
@@ -355,7 +355,7 @@ items:
                   value: "3306"
                 - name: MYSQL_USER
                   value: bookingservice
-              image: bikenest/backend:service-booking
+              image: bikenest/service-booking:latest
               imagePullPolicy: IfNotPresent
               name: booking
               resources: {}
@@ -394,7 +394,7 @@ items:
                   value: "3306"
                 - name: MYSQL_USER
                   value: usermgmtservice
-              image: bikenest/backend:service-usermgmt
+              image: bikenest/service-usermgmt:latest
               imagePullPolicy: IfNotPresent
               name: usermgmt
               resources: {}
@@ -433,7 +433,7 @@ items:
                   value: "3306"
                 - name: MYSQL_USER
                   value: paymentservice
-              image: bikenest/backend:service-payment
+              image: bikenest/serive-payment:latest
               imagePullPolicy: IfNotPresent
               name: payment
               resources: {}
