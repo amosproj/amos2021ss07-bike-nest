@@ -4,23 +4,26 @@ import {Dimensions} from "react-native";
 import Colors from '../styles/Colors';
 import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
 import {mainStyles} from "../styles/MainStyles";
-import {TouchableOpacity} from 'react-native';
-import {BookingService} from "../services/BookingService";
 import {ScrollView} from 'react-native';
 import BikeNest_Modal from '../components/BikeNest_Modal';
-import global from '../components/GlobalVars';
-import moment from "moment";
+import BikeNest_TextInput from '../components/BikeNest_TextInput';
+import BikeNest_CheckBox from '../components/BikeNest_CheckBox';
 import {ReservationService} from "../services/ReservationService";
+import { pink } from 'color-name';
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
 export default function PaymentScreen({route, navigation}) {
     let reservationService = new ReservationService();
-    const [promocode, setPromoCode] = useState("");
+
+    const [iban, setIBAN] = useState("");
+    const [bic, setBIC] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
     const [modalText, setModalText] = useState("");
     const [modalHeadline, setModalHeadline] = useState("");
+
+    const [paymentVisible, setPaymentVisible] = useState(false);
 
     let bikenest = route.params.state;
     let bikenestName = route.params.name;
@@ -28,7 +31,6 @@ export default function PaymentScreen({route, navigation}) {
     let selectedTime = route.params.time;
     let selectedEbike = route.params.ebike;
     let estimatedPrice = route.params.price;
-    console.log(bikenest.id + "; " + bikenestName);
 
     let tryCreateBooking = (bikenestId) => {
 
@@ -49,31 +51,12 @@ export default function PaymentScreen({route, navigation}) {
             }
         });
     }
-
-    const onPressPaypal = () => {
-        //reconnect to paypal
-        //change style to border orange
-        //change style of pressable Visa to no border
-        Alert.alert("Paypal",
-            "Du wirst jetzt zu Paypal weitergeleitet.",
-            [
-                //API Call Paypal
-                {text: "OK", onPress: () => navigation.navigate("History")}
-            ]);
-    };
-    const onPressVisa = () => {
-        //Not implemented yet
-    };
-    const onPressAdd = () => {
-        //Zu Zahlungsmethodenauswahl?
-    };
     const onPressInfo = () => {
         //zurück zu Find Bike Nest
         alert('Info', 'Du kannst hier deinen BIKE NEST Spot buchen. Wenn du dein Fahrrad wieder abholst werden wir dir die benutzte dauer über deine ausgewählte Zahlungsmethode berechnen.');
     };
     const onPressOrder = () => {
-        var bikenestId = '1';
-        tryCreateBooking(bikenestId);
+        tryCreateBooking(bikenest.id);
     }
     const getSlots = () => {
         return selectedSlots;
@@ -87,15 +70,15 @@ export default function PaymentScreen({route, navigation}) {
     const getHours = () => {
         return selectedTime;
     };
-    const getPrice = () => {
-        return estimatedPrice;
-    };
-    const getDiscount = () => {
-        return 0.0;
-    };
     const getSum = () => {
-        return (estimatedPrice - getDiscount());
+        return (estimatedPrice); 
     };
+    const validateIBAN = (text) => {
+        // Die IBAN-Prüfziffer besteht aus zwei Ziffern an den Positionen 3 und 4 der IBAN.
+        // Sie wird nach dem MOD97-Algorithmus berechnet und stellt die primäre Integritätsprüfung für den IBAN-Standard dar.
+
+        setIBAN(text);
+    }
     return (
         <View style={myStyles.container}>
             <BikeNest_Modal
@@ -118,7 +101,7 @@ export default function PaymentScreen({route, navigation}) {
                     <View style={myStyles.headline}>
                         <Text style={myStyles.h3}> Details </Text>
                         <Text style={[myStyles.h3, {fontWeight: 'bold'}]}
-                              onPress={() => navigation.navigate("FindBikeNest")}> Ändern </Text>
+                              onPress={() => navigation.navigate("Booking")}> Ändern </Text>
                     </View>
                     <View style={myStyles.headline}>
                         <Text style={myStyles.stdText}>
@@ -137,70 +120,47 @@ export default function PaymentScreen({route, navigation}) {
                     </View>
                     <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider}/>
                     <View style={myStyles.headline}>
-                        <Text style={myStyles.h3}> Zahlungsmethode </Text>
-                        {/* <Text style={[myStyles.h3, {fontWeight: 'bold'}]} onPress={() => onPressAdd(this)}> <Image source={require('../assets/payment/plus.png')}/> Hinzufügen </Text> */}
+                        <Text style={myStyles.h3}> Zahlungsmethode{"\n"}</Text>
+                        <View style={myStyles.images}>
+                        <Image style={[{maxWidth: 45, maxHeight: 50, resizeMode: 'contain'}]} 
+                            source={require('../assets/payment/mc_vrt_opt_pos_45_1x.png')}></Image>
+                        <Image style={[{maxWidth: 35, maxHeight: 50, resizeMode: 'contain'}]}
+                            source={require('../assets/payment/logo_girocard_mit_rand_hochformat_rgb.png')}></Image>
+                        </View>
+                    </View>
+                    <View style={[myStyles.images]}>
+                       
                     </View>
                     <View style={myStyles.zahlungsmethode}>
-                        <TouchableOpacity style={[mainStyles.buttonBig, {backgroundColor: '#ffffff'}]}
-                                          onPress={() => onPressPaypal(this)}>
-                            <View style={myStyles.buttonContent}>
-                                <Image style={[myStyles.buttonImage, {maxWidth: 150, resizeMode: 'contain'}]}
-                                       source={require('../assets/payment/Paypal1.png')}/>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={[mainStyles.buttonBig, {backgroundColor: '#ffffff'}]}
-                                          onPress={() => onPressVisa(this)}>
-                            <View style={myStyles.buttonContent}>
-                                <Image style={[myStyles.buttonImage, {maxWidth: 150, resizeMode: 'contain'}]}
-                                       source={require('../assets/payment/Visa.png')}/>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                    <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider}/>
-                    <View style={myStyles.headline}>
-                        <Text style={myStyles.h3}> Promocode </Text>
-                        <TextInput style={[myStyles.halfButton, {fontWeight: 'bold', color: Colors.UI_Light_2}]}
-                                   placeholder='BIKE NEST'
-                                   onChangeText={(promocode) => setPromoCode(promocode)}
-                                   value={promocode}/>
-                    </View>
+                        {/* <View style={[mainStyles.container, { backgroundColor: 'transparent' }]}> */}
+                            <BikeNest_TextInput
+                                placeholder='IBAN'
+                                onChangeText={(text) => validateIBAN(text)}
+                            />
+                            <BikeNest_TextInput
+                                placeholder='BIC'
+                                onChangeText={(text) => setBIC(text)}
+                            />
+                            <Text>Mit der Reservierung bestätige Ich, dass meine Kontodaten für zukünftige Zahlungen von BIKENEST belastet werden dürfen.</Text>
+                            <BikeNest_CheckBox           
+                                onPressText={() => Alert.alert("Lorem ipsum")}
+                                toggleText={"SEPA-Lastschriftmandat akzeptieren"}
+                                initialValue={false}/>
+                        {/* </View> */}
+                    </View> 
                     <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider}/>
                     <View style={[myStyles.headline, {marginTop: 10, marginBottom: 10}]}>
                         <Text style={myStyles.h3}>Geschätzter Preis</Text>
                         <Text style={[myStyles.h3, {
                             fontWeight: 'bold',
                             color: Colors.UI_Light_2
-                        }]}> ~{getPrice()}€ </Text>
+                        }]}> ~{getSum()}€ </Text>
                     </View>
-                    <View style={[myStyles.headline, {marginTop: 10, marginBottom: 10}]}>
-                        <Text style={myStyles.h3}>Rabatt</Text>
-                        <Text style={[myStyles.h3, {
-                            fontWeight: 'bold',
-                            color: Colors.UI_Light_2
-                        }]}> {getDiscount()}€ </Text>
-                    </View>
-                    <View style={[myStyles.headline, {marginTop: 10, marginBottom: 10}]}>
+                    {/* <View style={[myStyles.headline, {marginTop: 10, marginBottom: 10}]}>
                         <Text style={myStyles.h3}>Gesamt (für {getHours()})</Text>
                         <Text
                             style={[myStyles.h3, {fontWeight: 'bold', color: Colors.UI_Light_2}]}> ~{getSum()}€ </Text>
-                    </View>
-                    {/* <View style={myStyles.headline}>
-            <Text style={myStyles.stdText}>Gesamt exkl. Mwst.</Text>
-            <Text style={[myStyles.stdText, { fontWeight: 'bold', color: Colors.UI_Light_2}]}> {getPrice()} </Text>
-        </View>
-        <View style={myStyles.headline}>
-            <Text style={myStyles.stdText}>Mwst. 19%</Text>
-            <Text style={[myStyles.stdText, { fontWeight: 'bold', color: Colors.UI_Light_2}]}> {getMwst()} </Text>
-        </View>
-        <View style={myStyles.headline}>
-            <Text style={myStyles.stdText}>Rabatt</Text>
-            <Text style={[myStyles.stdText, { fontWeight: 'bold', color: Colors.UI_Light_2}]}> {getDiscount()} </Text>
-        </View>
-        <Image style={{margin: 10}}source={require('../assets/payment/Line.png')}/>
-        <View style={myStyles.headline}>
-            <Text style={myStyles.h3}>Gesamt (für {getHours()})</Text>
-            <Text style={[myStyles.h3, { fontWeight: 'bold', color: Colors.UI_Light_2}]}> {getSum()} </Text>
-        </View> */}
+                    </View> */}
                     <Pressable style={[myStyles.reserved, {justifyContent: 'flex-end'}]}
                                onPress={() => onPressOrder(this)}>
                         <Text style={myStyles.h3}>Jetzt Reservieren</Text>
@@ -245,6 +205,12 @@ const myStyles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    images:{
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
         alignItems: 'center',
     },
     reserved: {
