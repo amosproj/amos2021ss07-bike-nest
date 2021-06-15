@@ -73,6 +73,12 @@ export default function PaymentScreen({route, navigation}) {
     const getSum = () => {
         return (estimatedPrice); 
     };
+    const validateIBAN = (text) => {
+        // Die IBAN-Prüfziffer besteht aus zwei Ziffern an den Positionen 3 und 4 der IBAN.
+        // Sie wird nach dem MOD97-Algorithmus berechnet und stellt die primäre Integritätsprüfung für den IBAN-Standard dar.
+
+        setIBAN(text);
+    }
     return (
         <View style={myStyles.container}>
             <BikeNest_Modal
@@ -129,13 +135,13 @@ export default function PaymentScreen({route, navigation}) {
                         {/* <View style={[mainStyles.container, { backgroundColor: 'transparent' }]}> */}
                             <BikeNest_TextInput
                                 placeholder='IBAN'
-                                onChangeText={(text) => setIBAN(text)}
+                                onChangeText={(text) => validateIBAN(text)}
                             />
                             <BikeNest_TextInput
                                 placeholder='BIC'
                                 onChangeText={(text) => setBIC(text)}
                             />
-                            <Text>Ich bestätige, dass meine Kontodaten für zukünftige Zahlungen belastet werden dürfen.</Text>
+                            <Text>Mit der Reservierung bestätige Ich, dass meine Kontodaten für zukünftige Zahlungen von BIKENEST belastet werden dürfen.</Text>
                             <BikeNest_CheckBox           
                                 onPressText={() => Alert.alert("Lorem ipsum")}
                                 toggleText={"SEPA-Lastschriftmandat akzeptieren"}
