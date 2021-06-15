@@ -10,7 +10,7 @@ export class BookingService {
     async getAllBookings() {
         return fetchWithTimeout(global.globalIPAddress + "/api/service-booking/booking/all",
             {
-                method: 'GET',
+                method: 'POST',
                 headers:
                     {
                         Accept: 'application/json', 'Content-Type': 'application/json',
