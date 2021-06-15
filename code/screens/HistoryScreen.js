@@ -145,7 +145,7 @@ export default function HistoryScreen({ navigation }) {
     let coordinates = bikenestInfo.gpsCoordinates.split(",");
     let latitude = coordinates[0];
     let longitude = coordinates[1];
-    Linking.openURL('https://www.google.com/maps/dir//' + latitude + ',' + longitude);
+    Linking.openURL('https://www.google.com/maps/dir/?api=1&destination=' + latitude + ',' + longitude + '&travelmode=bicycling');
   }
 
   let showBikeSpotBtn = () =>

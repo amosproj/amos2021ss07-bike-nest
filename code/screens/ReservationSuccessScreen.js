@@ -70,7 +70,7 @@ export default function ReservationSuccessScreen({ route, navigation }) {
                              overrideTextColor={colors.UI_BaseGrey_0} 
                              type={ButtonStyle.big} 
                              text="Ich bin schon hier" 
-                             onPress={() => navigation.navigate("Lock")} />
+                             onPress={() => navigation.navigate("Unlock")} />
         </View>
       </View>
       <BikeNest_NavigationFooter></BikeNest_NavigationFooter>
