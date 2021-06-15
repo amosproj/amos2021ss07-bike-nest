@@ -23,7 +23,7 @@ export function CreateAccountScreen({navigation}) {
 
         <CreateAccountManually />
         <View style={{ flex: 0.4, alignItems: 'center', justifyContent: 'space-between', marginBottom: 65 }}>
-          <Text style={{ color: '#A1A4B2' }} >BEREITS REGISTRIERT? <Text style={{ color: Colors.Link_Text }} onPress={() => navigation.navigate("Login")}>HIER GEHTS ZUM LOGIN</Text></Text>
+          <Text style={{ color: '#A1A4B2' }} >BEREITS REGISTRIERT? <Text style={{ color: Colors.Link_Text, textDecorationLine: 'underline' }} onPress={() => navigation.navigate("Login")}>HIER GEHTS ZUM LOGIN</Text></Text>
         </View>
       </ScrollView>
       <ImageBackground 
