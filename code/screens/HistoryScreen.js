@@ -6,6 +6,7 @@ import bike from '../assets/bike.png';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import global from '../components/GlobalVars';
+import JwtDecoder from '../components/JwtDecoder';
 import { mainStyles } from "../styles/MainStyles";
 import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
 import { BookingService } from "../services/BookingService";
@@ -22,12 +23,16 @@ export default function HistoryScreen({ navigation }) {
   let bikenestService = new BikenestService();
 
   //const [bikenestIDs, setBikenestIDs] = useState();
-  const [loading, setLoading] = useState(true);
+  const [loadingBikeInfo, setLoadingBikeInfo] = useState(true);
+  const [loadingUserInfo, setLoadingUserInfo] = useState(true);
   const [infoHeadline, setInfoHeadline] = useState("Du hast weder eine Reservierung noch eines deiner Fahrräder bei uns sicher verstaut.");
   const [infoText, setInfoText] = useState("");
   const [bikenestInfo, setBikenestInfo] = useState(
     { "id": "1", "charging_available": "true", "current_spots": "2", "gpsCoordinates": "50,50", "maximum_spots": "10", "name": "Biknest 1", "qr_code": "i6UBe6AziP7Q" });
   const [userName, setUserName] = useState("Max Muster");
+  const [bikeSpot, setBikeSpot] = useState(-1);
+  const [validBooking, setValidBooking] = useState(false);
+
 
   const compareDates = (dateString) => {
     let today = moment().format();
@@ -44,7 +49,16 @@ export default function HistoryScreen({ navigation }) {
   };
 
   useEffect(() => {
-    if (loading) {
+    global.getAuthenticationToken().then((jwt) => {
+      let payload = JwtDecoder.decode(jwt);
+      console.log(jwt);
+      setUserName(payload.FirstName + " " + payload.LastName);
+      setLoadingUserInfo(false);
+    })
+  }, [])
+
+  useEffect(() => {
+    if (loadingBikeInfo) {
       bookingService.getAllBookings().then((bookings) => {
         let bikenestId = 0;
         for (let ind in bookings) {
@@ -53,6 +67,8 @@ export default function HistoryScreen({ navigation }) {
             //Unlock the Bikenest to take the bike
             console.log("Found a valid booking!");
             bikenestId = booking.bikenestId;
+            setBikeSpot(booking.bikeSpot);
+            setValidBooking(true);
             break;
           }
         }
@@ -63,7 +79,7 @@ export default function HistoryScreen({ navigation }) {
           setInfoHeadline("Buchungen");
           setBikenestInfo(info);
           setInfoText("Dein Fahrrad befindet sich hier:\n" + info.name);
-          setLoading(false);
+          setLoadingBikeInfo(false);
         }).catch(error => {
           if (error.display) {
             setInfoText(error.message);
@@ -93,7 +109,7 @@ export default function HistoryScreen({ navigation }) {
             setBikenestInfo(info);
             setInfoHeadline("Reservierungen");
             setInfoText("Dein Bikenest findest du hier:\n" + info.name);
-            setLoading(false);
+            setLoadingBikeInfo(false);
           }).catch(error => {
             if (error.display) {
               setInfoText(error.message);
@@ -131,6 +147,15 @@ export default function HistoryScreen({ navigation }) {
     let longitude = coordinates[1];
     Linking.openURL('https://www.google.com/maps/dir//' + latitude + ',' + longitude);
   }
+
+  let showBikeSpotBtn = () =>
+    validBooking === true ?
+      <TouchableOpacity onPress={() => navigation.navigate("Unlock")} style={mainStyles.buttonMedium}>
+        <Text style={mainStyles.buttonText}> {userName}'s bike </Text>
+        <Text style={mainStyles.buttonText}> locked on spot {bikeSpot} </Text>
+      </TouchableOpacity>
+      : null;
+
 
   return (
     <View style={mainStyles.container}>
@@ -171,21 +196,17 @@ export default function HistoryScreen({ navigation }) {
           <TouchableOpacity style={styles.time}>
             <Text style={styles.timeText}> Zeit </Text>
             <SimpleLineIcons name="clock" size={24} color="black" />
-            <Text style={styles.timeRecord}> 1 Tag </Text>
+            <Text style={styles.timeRecord}> {validBooking === true ? "1 Tag" : ""}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.cost}>
             <Text style={styles.costText}> Parkkosten </Text>
             <AntDesign name="creditcard" size={24} color="black" />
-            <Text style={styles.costRecord}> 50 $ </Text>
+            <Text style={styles.costRecord}> {validBooking === true ? "50 $" : ""} </Text>
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={() => navigation.navigate("Unlock")} style={mainStyles.buttonMedium}>
-          {/* <SimpleLineIcons name="lock-open" size={10} color="black" style={styles.icon} /> */}
-          <Text style={mainStyles.buttonText}> Max Muster's bike </Text>
-          <Text style={mainStyles.buttonText}> locked on spot X </Text>
-        </TouchableOpacity>
+        {showBikeSpotBtn()}
 
         <TouchableOpacity onPress={() => tryGETBooking(this)} style={styles.buttonHistory}>
           <Text style={styles.buttonHistoryText}> Frühere Reservierungen und Zahlungen </Text>
