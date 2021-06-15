@@ -356,7 +356,7 @@ export default function FindBikeNestScreen ({ navigation }) {
                   <Text style={styles.textSign}>Zur Buchung</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => { Linking.openURL('https://www.google.com/maps/dir//' + stateMarkers[currentMarkerIndex].coordinate.latitude + ',' + stateMarkers[currentMarkerIndex].coordinate.longitude) }}
+                  onPress={() => { Linking.openURL('https://www.google.com/maps/dir/?api=1&destination=' + stateMarkers[currentMarkerIndex].coordinate.latitude + ',' + stateMarkers[currentMarkerIndex].coordinate.longitude + '&travelmode=bicycling') }}
                   style={[styles.signIn, {
                     borderColor: '#FFF',
                     borderWidth: 1
