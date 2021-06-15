@@ -1,6 +1,6 @@
 call gradlew assemble
-call docker-compose -f docker-compose-testcontainers.yml build
-call docker-compose -f docker-compose-testcontainers.yml up -d
+call docker-compose -f docker-compose-testing.yml build
+call docker-compose -f docker-compose-testing.yml up -d
 
 timeout /t 20
 
@@ -10,7 +10,7 @@ call gradlew :service-booking:test --tests com.bikenest.servicebooking.integrati
 call gradlew :service-payment:test --tests com.bikenest.servicepayment.integration.*
 call gradlew :service-usermgmt:test --tests com.bikenest.serviceusermgmt.integration.*
 
-call docker-compose -f docker-compose-testcontainers.yml stop
+call docker-compose -f docker-compose-testing.yml stop
 
 if errorlevel 1 GOTO error
 GOTO end
