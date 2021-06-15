@@ -21,11 +21,11 @@ export default function BikeNest_NavigationFooter() {
                 text="(un)lock"
                 onPress={() => navigation.navigate("Unlock")}
             />
-            <BikeNest_Button
+            {/* <BikeNest_Button
                 type={ButtonStyle.navigationBar}
                 iconPath={require("../assets/icons/PlusCircle.png")}
                 onPress={() => navigation.navigate("EditPersonalInformation")}
-            />
+            /> */}
             <BikeNest_Button
                 type={ButtonStyle.navigationBar}
                 iconPath={require("../assets/icons/map-pin.png")}
