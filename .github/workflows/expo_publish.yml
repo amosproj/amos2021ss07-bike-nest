@@ -4,9 +4,9 @@
 name: Publish App via Ex
 
 
-on: [push]
-  #release:
-   #types: [published]
+on: #[push]
+  release:
+   types: [published]
     
 jobs:
   publish:
