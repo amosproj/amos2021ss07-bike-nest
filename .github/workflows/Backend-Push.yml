@@ -6,7 +6,7 @@ name: Backend Push (Gradle)
 on: 
   push:
     branches:
-	  - main
+      - main
 
 jobs:
   Backend-Push:
