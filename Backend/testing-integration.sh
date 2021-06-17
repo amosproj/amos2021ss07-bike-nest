@@ -1,6 +1,6 @@
 ./gradlew assemble
-docker-compose -f docker-compose-testcontainers.yml build
-docker-compose -f docker-compose-testcontainers.yml up -d
+docker-compose -f docker-compose-testing.yml build
+docker-compose -f docker-compose-testing.yml up -d
 
 sleep 20s
 
@@ -10,4 +10,4 @@ sleep 20s
 ./gradlew :service-payment:test --tests com.bikenest.servicepayment.integration.*
 ./gradlew :service-usermgmt:test --tests com.bikenest.serviceusermgmt.integration.*
 
-docker-compose -f docker-compose-testcontainers.yml stop
+docker-compose -f docker-compose-testing.yml stop

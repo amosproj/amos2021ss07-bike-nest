@@ -6,7 +6,7 @@ name: Backend Push (Gradle)
 on: 
   push:
     branches:
-	  - main
+      - main
 
 jobs:
   Backend-Push:
@@ -23,7 +23,7 @@ jobs:
         distribution: 'adopt'
     
     - name: Login to Docker
-      run: docker login -u bikenest -p ${{ secrets.DOCKER_PASSWORD}}
+      run: docker login -u ${{ secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_TOKEN}}
         
     # Build all projects
     - name: Build Services
@@ -33,40 +33,40 @@ jobs:
     # Build and push every container
     - name: Build Gateway
       working-directory: ${{env.backend}}
-      run: docker build --tag bikenest/backend:gateway ./apigateway/
+      run: docker build --tag bikenest/gateway:latest ./apigateway/
       
     - name: Push Gateway
       working-directory: ${{env.backend}}
-      run: docker push bikenest/backend:gateway
+      run: docker push bikenest/gateway:latest
 
     - name: Build Bikenest Service
       working-directory: ${{env.backend}}
-      run: docker build --tag bikenest/backend:service-bikenest ./service-bikenest/
+      run: docker build --tag bikenest/service-bikenest:latest ./service-bikenest/
       
     - name: Push Bikenest Service
       working-directory: ${{env.backend}}
-      run: docker push bikenest/backend:service-bikenest
+      run: docker push bikenest/service-bikenest:latest
 
     - name: Build Booking Service
       working-directory: ${{env.backend}}
-      run: docker build --tag bikenest/backend:service-booking ./service-booking/
+      run: docker build --tag bikenest/service-booking:latest ./service-booking/
       
     - name: Push Booking Service
       working-directory: ${{env.backend}}
-      run: docker push bikenest/backend:service-booking
+      run: docker push bikenest/service-booking:latest
   
     - name: Build Usermgmt Service
       working-directory: ${{env.backend}}
-      run: docker build --tag bikenest/backend:service-usermgmt ./service-usermgmt/
+      run: docker build --tag bikenest/service-usermgmt:latest ./service-usermgmt/
       
     - name: Push Usermgmt Service
       working-directory: ${{env.backend}}
-      run: docker push bikenest/backend:service-usermgmt
+      run: docker push bikenest/service-usermgmt:latest
   
     - name: Build Payment Service
       working-directory: ${{env.backend}}
-      run: docker build --tag bikenest/backend:service-payment ./service-payment/
+      run: docker build --tag bikenest/service-payment:latest ./service-payment/
       
     - name: Push Payment Service
       working-directory: ${{env.backend}}
-      run: docker push bikenest/backend:service-payment
+      run: docker push bikenest/service-payment:latest

@@ -29,7 +29,8 @@ Or use the scripts:
 **Important: If you start the containers for the first time on your local
 machine, the database containers will take some time for initialization.
 During this time frame none of the Microservices will be able to build up a
-connection to the databases and therefore they will crash repeatedly.** 
+connection to the databases and therefore they will crash repeatedly. As solution, waiting scripts should be
+integrated to the docker container.** 
 
 **If you make any changes to the project, the docker containers will have to be
 rebuilt. Also keep in mind that you will have to reinitialize your database
@@ -68,7 +69,7 @@ Right now the ports are:
   Also because auf the Microservice Architecture there are dependencies between the
     Microservices.
   - The easiest solution is just starting up all containers using the special
-  `docker-compose-testcontainers.yml` file. There each Microservice and each database expose a port to the outside.
+  `docker-compose-testing.yml` file. There each Microservice and each database expose a port to the outside.
     Therefore the service under test can still communicate with all of the started Microservices.
     If, for example the Usermgmt Service is tested, the already started Usermgmt Service won't
     be shut down. Instead the Testconfiguration (see application.properties in test packages) makes sure
@@ -86,9 +87,13 @@ Right now the ports are:
 Microservice Deployment can be very complicated, so here is a short overview about the whole workflow:
 - We need to build all Spring Jars and build the Docker Containers
 - We need to push these Docker Containers into some Container registry (for example Docker Hub)
+- (There are alternative ways to get the container onto the remote host. For example saving the
+  container to a tar file with docker save, transferring it to the remote machine and using docker load.
+  This however will always transfer the whole image and makes the layers useless.)  
 - Now there are a few possibilities for proceeding:
   - Pull these Image onto the Remote Server and start up all containers using docker-compose. This should not really
-  be done in a production environment.
+  be done in a production environment. (It's is fine though, if there are no intentions of replicating the Microservices
+    over multiple servers)
   - For Production Environment a highly used way to start all containers is using Kubernetes Cluster. So we need to
   install a Kubernetes Cluster on the Remote Server (lightweight options for this are microk8s or minikube).
   For Kubernetes there is the YAML file kubernetes-production.yml. It contains all definitions required to start the Backend
@@ -174,6 +179,22 @@ request will be sent to the port 1234 inside the container environment.
 For communication between containers you have to specify docker networks, that the containers should use. Then the containers can
 communicate with each other using their container name as ip address. (A concrete example could be found inside the Usermgmt FeignClient.
 There the address of the Usermgmt Service is specified as http://usermgmt:9003/)
+
+To understand the docker-compose files, here are a few key points:
+Kubernetes provides the IP Adresses of services to each pod using environment variables.
+For example, the API Gateway Pod will be able to access the BIKENEST_SERVICE_HOST environment variable,
+that contains the IP Address, that can be used to communicate with the Bikenest service.
+It might be possible to use DNS instead to make this easier, but for now the whole Backend is configured to
+work with this style of IP discovery. The spring services expect these environment variables (see the
+application.properties files). So all docker-compose files were configured to statically provide these variables (
+the BIKENEST_SERVICE_HOST for example statically contains "bikenest" because for communication between docker containers
+this works.)
+
+Also the Dockerfiles can still be optimized to better use the layered architecture of docker, so that not always
+the complete Container has to be rebuilt. Another nice thing would be to build the spring application inside the
+docker container, so that the developers don't necessarily need to have the correct JDK installed (because this
+caused some troubles early on. Gradle 6.x doesn't work with JDK 16 and printed cryptic errors. Also the JAVA_HOME
+environment variable had to be set to point to a JDK 11...)
 ---
 **Docker and Spring**
 

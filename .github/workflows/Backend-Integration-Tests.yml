@@ -24,7 +24,7 @@ jobs:
     # Start up all Database Docker Containers.
     - name: Build and start all Containers
       working-directory: ${{env.backend}}
-      run: docker-compose -f docker-compose-testcontainers.yml up -d --build
+      run: docker-compose -f docker-compose-testing.yml up -d --build
           
     - name: Execute rights for waiting-script
       working-directory: ./.github

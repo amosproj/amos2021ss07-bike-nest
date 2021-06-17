@@ -3,7 +3,7 @@ services:
   # Definition of the databases, all use the same credentials because we are debugging in a dev environment only anyways...
   booking-db:
     container_name: booking-db
-    image: mysql
+    image: mysql:8.0
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PW}
       - MYSQL_USER=${DB_USER}
@@ -14,7 +14,7 @@ services:
 
   bikenest-db:
     container_name: bikenest-db
-    image: mysql
+    image: mysql:8.0
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PW}
       - MYSQL_USER=${DB_USER}
@@ -25,7 +25,7 @@ services:
 
   user-db:
     container_name: user-db
-    image: mysql
+    image: mysql:8.0
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PW}
       - MYSQL_USER=${DB_USER}
@@ -36,7 +36,7 @@ services:
 
   payment-db:
     container_name: payment-db
-    image: mysql
+    image: mysql:8.0
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PW}
       - MYSQL_USER=${DB_USER}
