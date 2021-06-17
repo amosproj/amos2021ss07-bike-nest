@@ -3,9 +3,9 @@ import { Text, View, ScrollView, StyleSheet, Dimensions, ImageBackground } from 
 import { CreateAccountManually } from '../components/CreateAccountManually';
 import { CreateAccountVia3rdParty } from '../components/CreateAccountVia3rdParty';
 import { mainStyles } from "../styles/MainStyles";
+import Colors from '../styles/Colors';
 
-
-export function CreateAccountScreen() {
+export function CreateAccountScreen({navigation}) {
   return (
 
     <View style={mainStyles.container}>
@@ -22,7 +22,9 @@ export function CreateAccountScreen() {
         </View>
 
         <CreateAccountManually />
-
+        <View style={{ flex: 0.4, alignItems: 'center', justifyContent: 'space-between', marginBottom: 65 }}>
+          <Text style={{ color: '#A1A4B2' }} >BEREITS REGISTRIERT? <Text style={{ color: Colors.Link_Text, textDecorationLine: 'underline' }} onPress={() => navigation.navigate("Login")}>HIER GEHTS ZUM LOGIN</Text></Text>
+        </View>
       </ScrollView>
       <ImageBackground 
       style={[mainStyles.fixed, styles.containter, {zIndex: -1}]}

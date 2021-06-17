@@ -1,0 +1,72 @@
+# This workflow will build a Java project with Gradle
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
+
+name: Backend Push (Gradle)
+
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  Backend-Push:
+
+    runs-on: ubuntu-latest
+    env:
+      backend: ./Backend
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+    
+    - name: Login to Docker
+      run: docker login -u ${{ secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_TOKEN}}
+        
+    # Build all projects
+    - name: Build Services
+      working-directory: ${{env.backend}}
+      run: ./gradlew assemble
+    
+    # Build and push every container
+    - name: Build Gateway
+      working-directory: ${{env.backend}}
+      run: docker build --tag bikenest/gateway:latest ./apigateway/
+      
+    - name: Push Gateway
+      working-directory: ${{env.backend}}
+      run: docker push bikenest/gateway:latest
+
+    - name: Build Bikenest Service
+      working-directory: ${{env.backend}}
+      run: docker build --tag bikenest/service-bikenest:latest ./service-bikenest/
+      
+    - name: Push Bikenest Service
+      working-directory: ${{env.backend}}
+      run: docker push bikenest/service-bikenest:latest
+
+    - name: Build Booking Service
+      working-directory: ${{env.backend}}
+      run: docker build --tag bikenest/service-booking:latest ./service-booking/
+      
+    - name: Push Booking Service
+      working-directory: ${{env.backend}}
+      run: docker push bikenest/service-booking:latest
+  
+    - name: Build Usermgmt Service
+      working-directory: ${{env.backend}}
+      run: docker build --tag bikenest/service-usermgmt:latest ./service-usermgmt/
+      
+    - name: Push Usermgmt Service
+      working-directory: ${{env.backend}}
+      run: docker push bikenest/service-usermgmt:latest
+  
+    - name: Build Payment Service
+      working-directory: ${{env.backend}}
+      run: docker build --tag bikenest/service-payment:latest ./service-payment/
+      
+    - name: Push Payment Service
+      working-directory: ${{env.backend}}
+      run: docker push bikenest/service-payment:latest

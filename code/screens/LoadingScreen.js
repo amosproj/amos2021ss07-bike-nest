@@ -10,8 +10,8 @@ export default function LoginScreen({ navigation }) {
     global.authenticationTokenExists().then((exists) => {
         let initialScreen = "Login";
 
-        if (exists === true)
-            initialScreen = "FindBikeNest";
+        // if (exists === true)
+        //     initialScreen = "FindBikeNest";
 
         console.log("initial screen: " + initialScreen);
         navigation.navigate(initialScreen);

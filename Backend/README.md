@@ -29,7 +29,8 @@ Or use the scripts:
 **Important: If you start the containers for the first time on your local
 machine, the database containers will take some time for initialization.
 During this time frame none of the Microservices will be able to build up a
-connection to the databases and therefore they will crash repeatedly.** 
+connection to the databases and therefore they will crash repeatedly. As solution, waiting scripts should be
+integrated to the docker container.** 
 
 **If you make any changes to the project, the docker containers will have to be
 rebuilt. Also keep in mind that you will have to reinitialize your database
@@ -68,7 +69,7 @@ Right now the ports are:
   Also because auf the Microservice Architecture there are dependencies between the
     Microservices.
   - The easiest solution is just starting up all containers using the special
-  `docker-compose-testcontainers.yml` file. There each Microservice and each database expose a port to the outside.
+  `docker-compose-testing.yml` file. There each Microservice and each database expose a port to the outside.
     Therefore the service under test can still communicate with all of the started Microservices.
     If, for example the Usermgmt Service is tested, the already started Usermgmt Service won't
     be shut down. Instead the Testconfiguration (see application.properties in test packages) makes sure
@@ -81,6 +82,69 @@ Right now the ports are:
 **CI is done using the same principles as described above.**
 
 
+## Deployment
+
+Microservice Deployment can be very complicated, so here is a short overview about the whole workflow:
+- We need to build all Spring Jars and build the Docker Containers
+- We need to push these Docker Containers into some Container registry (for example Docker Hub)
+- (There are alternative ways to get the container onto the remote host. For example saving the
+  container to a tar file with docker save, transferring it to the remote machine and using docker load.
+  This however will always transfer the whole image and makes the layers useless.)  
+- Now there are a few possibilities for proceeding:
+  - Pull these Image onto the Remote Server and start up all containers using docker-compose. This should not really
+  be done in a production environment. (It's is fine though, if there are no intentions of replicating the Microservices
+    over multiple servers)
+  - For Production Environment a highly used way to start all containers is using Kubernetes Cluster. So we need to
+  install a Kubernetes Cluster on the Remote Server (lightweight options for this are microk8s or minikube).
+  For Kubernetes there is the YAML file kubernetes-production.yml. It contains all definitions required to start the Backend
+    (Services, Deployments, Environment Variables, Image Name). Currently the image names are specified to be pulled
+    from the public DockerHub repositories (bikenest/service-bikenest, ...)
+    
+
+So here is a summary what has to be done:
+
+- Build all Spring JARs (`gradlew assemble`)
+- Build all Containers and push them to [DockerHub](https://hub.docker.com/). The basic commands to push a single container image would be:
+- `docker login -u %DOCKER_USERNAME -p %DOCKER_PASSWORD`
+- `docker build --tag bikenest/service-bikenest:latest ./service-bikenest/`, Note: In this case, bikenest is the Docker username, service-bikenest is
+the name of the Docker repository and latest is the tag. This string will also be used inside the Kubernetes configuration file to actually
+  pull the image from the DockerHub.
+- `docker push bikenest/service-bikenest:latest`
+- For convenience there is the `dockerhub-push.bat` Script, that will build and push all of the containers to the docker-hub.
+It will prompt you for the username and password of the bikenest DockerHub account.
+
+
+Now we need to get these containers running on a remote server.
+We have done this with a Hetzner Cloud Server(CX31) running Ubuntu 18.04.
+A few basic steps for securing the server were done (e.g. change the standard ssh port 22, add new users and disable root user).
+The first step is [installing microk8s using snap.](https://ubuntu.com/tutorials/install-a-local-kubernetes-with-microk8s#2-deploying-microk8s)
+
+Next we need to get the kubernetes-production file:
+
+`curl -O https://raw.githubusercontent.com/amosproj/amos-ss2021-bike-nest/main/Backend/kubernetes-production.yml`
+
+Now tell the Kubernetes Cluster to use the kubernetes-production.yml file. (Note: You should edit the 
+Environment Variables beforehand. Especially the externalIPs field for the gateway service has to be changed to be
+the IP Address of the remote server!)
+
+`microk8s kubectl apply -f kubernetes-production.yml`
+
+Now if everything worked, you should be able to access the Backend using the port 9000.
+For troubleshooting one can use these commands:
+- `microk8s kubectl get all --all-namespaces` -> Shows all active ressources
+- `microk8s kubectl describe pod bikenest` -> Shows detailed information about the bikenest pod
+- `microk8s kubectl logs -f bikenest-92412djuwuwe` -> Shows the logs for the specified pod. Will give the console output from Spring.
+
+
+If you want to use a private docker repository, you have to create a secret with kubectl, that contains
+the credentials for that repository. Also you have to specify ImagePullSecret in the kubernetes YAML file for each image.
+Further Information can be found on the web. Github seems to offer free private repositories currently for example and
+there are some tutorials available.
+- `microk8s kubectl create secret docker-registry dockercredentials -docker-server=docker.io
+  --docker-username=bikenest
+  --docker-password=%PASSWORD%
+  --docker-email=%EMAIL%`
+  
 ## General Information
 
 This folder contains all Backend Microservice.
@@ -115,6 +179,22 @@ request will be sent to the port 1234 inside the container environment.
 For communication between containers you have to specify docker networks, that the containers should use. Then the containers can
 communicate with each other using their container name as ip address. (A concrete example could be found inside the Usermgmt FeignClient.
 There the address of the Usermgmt Service is specified as http://usermgmt:9003/)
+
+To understand the docker-compose files, here are a few key points:
+Kubernetes provides the IP Adresses of services to each pod using environment variables.
+For example, the API Gateway Pod will be able to access the BIKENEST_SERVICE_HOST environment variable,
+that contains the IP Address, that can be used to communicate with the Bikenest service.
+It might be possible to use DNS instead to make this easier, but for now the whole Backend is configured to
+work with this style of IP discovery. The spring services expect these environment variables (see the
+application.properties files). So all docker-compose files were configured to statically provide these variables (
+the BIKENEST_SERVICE_HOST for example statically contains "bikenest" because for communication between docker containers
+this works.)
+
+Also the Dockerfiles can still be optimized to better use the layered architecture of docker, so that not always
+the complete Container has to be rebuilt. Another nice thing would be to build the spring application inside the
+docker container, so that the developers don't necessarily need to have the correct JDK installed (because this
+caused some troubles early on. Gradle 6.x doesn't work with JDK 16 and printed cryptic errors. Also the JAVA_HOME
+environment variable had to be set to point to a JDK 11...)
 ---
 **Docker and Spring**
 

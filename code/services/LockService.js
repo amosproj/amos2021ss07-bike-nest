@@ -8,12 +8,12 @@ export class LockService {
      * Returns a JSON with the content of a Reservation (see Backend).
      * @param reservationId
      * @param qrCode
-     * @returns {Promise<Reservation>}
+     * @returns {Promise<Booking>}
      */
-    async startUnlock(reservationId, qrCode) {
+    async deliverUnlock(reservationId, qrCode) {
         let body = {"reservationId": reservationId, "qrCode": qrCode};
 
-        return fetchWithTimeout(global.globalIPAddress + "/booking/lock/startunlock",
+        return fetchWithTimeout(global.globalIPAddress + "/api/service-booking/lock/deliverUnlock",
             {
                 method: 'POST',
                 body: JSON.stringify(body),
@@ -24,10 +24,10 @@ export class LockService {
             }, 10000);
     }
 
-    async startLock(reservationId) {
-        let body = {"reservationId": reservationId};
+    async deliverLock(bookingId) {
+        let body = {"bookingId": bookingId};
 
-        return fetchWithTimeout(global.globalIPAddress + "/booking/lock/startlock",
+        return fetchWithTimeout(global.globalIPAddress + "/api/service-booking/lock/deliverLock",
             {
                 method: 'POST',
                 body: JSON.stringify(body),
@@ -38,10 +38,10 @@ export class LockService {
             }, 10000);
     }
 
-    async endUnlock(reservationId, qrCode) {
-        let body = {"reservationId": reservationId, "qrCode": qrCode};
+    async takeUnlock(bookingId, qrCode) {
+        let body = {"bookingId": bookingId, "qrCode": qrCode};
 
-        return fetchWithTimeout(global.globalIPAddress + "/booking/lock/endunlock",
+        return fetchWithTimeout(global.globalIPAddress + "/api/service-booking/lock/takeUnlock",
             {
                 method: 'POST',
                 body: JSON.stringify(body),
@@ -52,10 +52,10 @@ export class LockService {
             }, 10000);
     }
 
-    async endLock(reservationId){
-        let body = {"reservationId": reservationId};
+    async takeLock(bookingId){
+        let body = {"bookingId": bookingId};
 
-        return fetchWithTimeout(global.globalIPAddress + "/booking/lock/endlock",
+        return fetchWithTimeout(global.globalIPAddress + "/api/service-booking/lock/takeLock",
             {
                 method: 'POST',
                 body: JSON.stringify(body),

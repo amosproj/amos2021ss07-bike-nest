@@ -46,7 +46,7 @@ items:
     name: usermgmt-db
   spec:
     selector:
-      service: user-db
+      service: usermgmt-db
     ports:
       - name: "3306"
         port: 3306

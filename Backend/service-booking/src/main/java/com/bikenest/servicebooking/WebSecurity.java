@@ -20,18 +20,18 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.httpBasic().disable();
 
 
-        http.cors().and().authorizeRequests()
-                .antMatchers("/booking/*", "/booking/lock/*")
-                .authenticated()
-                .anyRequest()
-                .permitAll()
+        http.cors().and()
+                .authorizeRequests()
+                .antMatchers("/booking/*").authenticated()
+                .antMatchers("/reservation/*").authenticated()
+                .antMatchers("/lock/*").authenticated()
+                .anyRequest().permitAll()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
                 .addFilterBefore(new JWTAuthenticationFilter(), BasicAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .csrf()
-                .disable();
+                .csrf().disable();
     }
 }

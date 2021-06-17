@@ -1,15 +1,21 @@
 package com.bikenest.servicebikenest.db;
 
+import com.bikenest.common.helper.RandomStringHelper;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
+@JsonIgnoreProperties({ "qrCode"})
 public class Bikenest {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
     private String name;
     private String gpsCoordinates;
+    private String qrCode;
     private Integer maximumSpots;
     private Integer currentSpots;
     private boolean chargingAvailable;
@@ -24,9 +30,12 @@ public class Bikenest {
         this.maximumSpots = maximumSpots;
         this.currentSpots = maximumSpots;
         this.chargingAvailable = chargingAvailable;
+        this.qrCode = RandomStringHelper.nextString(12);
     }
 
-    public Bikenest(){}
+    public Bikenest(){
+        this.qrCode = RandomStringHelper.nextString(12);
+    }
 
     public Integer getId() {
         return id;
@@ -82,5 +91,13 @@ public class Bikenest {
 
     public void setBikespots(Set<Bikespot> bikespots) {
         this.bikespots = bikespots;
+    }
+
+    public String getQrCode() {
+        return qrCode;
+    }
+
+    public void setQrCode(String qrCode) {
+        this.qrCode = qrCode;
     }
 }
