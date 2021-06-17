@@ -56,29 +56,6 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
-    /**
-     * Called to update the Reservation
-     * @param reservationId
-     * @return
-     */
-    public Reservation beginBooking(int userId, int reservationId) throws BusinessLogicException {
-        Reservation reservation = getReservationVerified(reservationId, userId);
-        if(reservation.getReservationEnd().compareTo(LocalDateTime.now()) < 0){
-            throw new BusinessLogicException("Diese Reservierung ist nicht mehr gültig.");
-        }
-
-        if(reservation.getReservationStart().compareTo(LocalDateTime.now()) > 0){
-            throw new BusinessLogicException("Diese Reservierung ist noch nicht gültig.");
-        }
-
-        if(reservation.isCancelled()){
-            throw new BusinessLogicException("Diese Reservierung wurde bereits storniert.");
-        }
-
-        reservation.setUsed(true);
-        return reservationRepository.save(reservation);
-    }
-
     public Reservation cancelReservation(int reservationId, int userId) throws BusinessLogicException {
         Optional<Reservation> reservation = reservationRepository.findById(reservationId);
         // Error if the Reservation with given id does not exist
@@ -94,24 +71,5 @@ public class ReservationService {
         }
         actualReservation.setCancelled(true);
         return reservationRepository.save(actualReservation);
-    }
-
-
-    /**
-     * This method only returns a Reservation, if the given user owns that Reservation. In all other cases
-     * a BusinessLogicException is thrown.
-     * @param reservationId
-     * @param userId
-     * @return Reservation of the given user with the given reservationId.
-     */
-    public Reservation getReservationVerified(Integer reservationId, Integer userId) throws BusinessLogicException {
-        Optional<Reservation> reservation = reservationRepository.findById(reservationId);
-        if(reservation.isEmpty()){
-            throw new BusinessLogicException("Diese Reservierung existiert nicht!");
-        }
-        if(!reservation.get().getUserId().equals(userId)){
-            throw new BusinessLogicException("Diese Reservierung gehört zu einem anderen Benutzer!");
-        }
-        return reservation.get();
     }
 }
