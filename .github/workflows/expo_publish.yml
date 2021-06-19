@@ -22,9 +22,10 @@ jobs:
       - uses: expo/expo-github-action@v5
         with:
           expo-version: 4.x
-          #expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
-          #expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
-          expo-token: ${{ secrets.EXPO_TOKEN }}
+          expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
+          expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
+          #The Token does not work for an unknown reason.
+          #expo-token: ${{ secrets.EXPO_TOKEN }}
           expo-cache: true
       - run: yarn install
       
