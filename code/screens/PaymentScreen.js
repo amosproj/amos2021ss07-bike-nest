@@ -94,9 +94,15 @@ export default function PaymentScreen({ route, navigation }) {
     };
 
     const onPressOrder = () => {
-        // if()
-        trySetIBAN(iban);
-        tryCreateBooking(bikenest.id);
+        if(iban.length == 22){
+            trySetIBAN(iban);
+            tryCreateBooking(bikenest.id);
+        } else {
+            setModalHeadline('IBAN');
+            setModalText('Bitte überprüfe die IBAN, sie scheint nicht die richtige länge zu haben.');
+            setModalVisible(true);
+        }
+        
     }
     const getSlots = () => {
         return selectedSlots;
@@ -116,8 +122,11 @@ export default function PaymentScreen({ route, navigation }) {
     const validateIBAN = (text) => {
         // Die IBAN-Prüfziffer besteht aus zwei Ziffern an den Positionen 3 und 4 der IBAN.
         // Sie wird nach dem MOD97-Algorithmus berechnet und stellt die primäre Integritätsprüfung für den IBAN-Standard dar.
+        // Eine IBAN muss 22 Zeichen haben. 
         
-        setIBAN(text);
+        if(text.length == 22){
+            setIBAN(text);
+        }
     }
     return (
         <View style={myStyles.container}>
