@@ -13,9 +13,9 @@ ACK = bytes.fromhex('06')
 CR = bytes.fromhex('0d')
 
 # check timeout
-ser = serial.Serial(port, baudrate=115200,
-                    timeout=1,
-                    parity=serial.PARITY_NONE)
+#ser = serial.Serial(port, baudrate=115200,
+#                    timeout=1,
+#                    parity=serial.PARITY_NONE)
 
 responseText = "no connection"
 
@@ -37,6 +37,7 @@ def hello_world():
 
 @app.route('/toggle_station_lock')
 def toggle_station_lock():
+    pass
     # get side left right
     # if gate == left:
         # gate = 1

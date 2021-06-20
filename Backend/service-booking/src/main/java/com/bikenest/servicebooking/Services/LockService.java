@@ -2,6 +2,7 @@ package com.bikenest.servicebooking.Services;
 
 import com.bikenest.common.exceptions.BusinessLogicException;
 import com.bikenest.common.feignclients.BikenestClient;
+import com.bikenest.common.feignclients.RaspiClient;
 import com.bikenest.common.interfaces.booking.GetBikespotRequest;
 import com.bikenest.common.interfaces.booking.GetBikespotResponse;
 import org.slf4j.Logger;
@@ -16,6 +17,8 @@ public class LockService {
 
     @Autowired
     BikenestClient bikenestClient;
+    @Autowired
+    RaspiClient raspiClient;
 
     public void OpenLock(Integer userId, Integer bikenestId, Integer bikespotId) throws BusinessLogicException {
         GetBikespotResponse response = bikenestClient.getBikespot(new GetBikespotRequest(bikenestId, bikespotId));
