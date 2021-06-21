@@ -275,7 +275,7 @@ export default function FindBikeNestScreen ({ navigation }) {
             <View style={[mainStyles.modalContentContainer, { backgroundColor: 'rgba(252, 252, 252, 0.7)', width: width * 0.8, height: height * 0.15, justifyContent: 'center' }]}>
               <Text style={[mainStyles.h2, { justifyContent: 'center' }]}>Lade Bikenests... </Text>
             </View>}
-        />)}
+        />)} 
       <BikeNest_Modal
         isVisible={modalState}
         onRequestClose={() => {
