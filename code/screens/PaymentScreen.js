@@ -1,21 +1,23 @@
-import React, {useState} from 'react';
-import {Alert, Pressable, StyleSheet, Text, TextInput, View, Image} from 'react-native';
-import {Dimensions} from "react-native";
+import React, { useState } from 'react';
+import { Alert, Pressable, StyleSheet, Text, TextInput, View, Image } from 'react-native';
+import { Dimensions } from "react-native";
 import Colors from '../styles/Colors';
 import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
-import {mainStyles} from "../styles/MainStyles";
-import {ScrollView} from 'react-native';
+import { mainStyles } from "../styles/MainStyles";
+import { ScrollView } from 'react-native';
 import BikeNest_Modal from '../components/BikeNest_Modal';
 import BikeNest_TextInput from '../components/BikeNest_TextInput';
 import BikeNest_CheckBox from '../components/BikeNest_CheckBox';
-import {ReservationService} from "../services/ReservationService";
+import { ReservationService } from "../services/ReservationService";
 import { pink } from 'color-name';
+import { PaymentService } from '../services/PaymentService';
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
-export default function PaymentScreen({route, navigation}) {
+export default function PaymentScreen({ route, navigation }) {
     let reservationService = new ReservationService();
+    let paymentService = new PaymentService();
 
     const [iban, setIBAN] = useState("");
     const [bic, setBIC] = useState("");
@@ -37,25 +39,37 @@ export default function PaymentScreen({route, navigation}) {
         reservationService.createReservation(bikenestId, 30)
             .then(reservation => {
                 //Forward to Reservation Success also providing the bikenest, and the bikespot Number
-                navigation.navigate("ReservationSuccess", {state: bikenest, name: bikenestName,
-                    bikespotNumber: reservation.bikespotNumber});
+                navigation.navigate("ReservationSuccess", {
+                    state: bikenest, name: bikenestName,
+                    bikespotNumber: reservation.bikespotNumber
+                });
             }).catch(error => {
-            if (error.display) {
-                setModalHeadline("Sorry!");
-                setModalText(error.message);
-                setModalVisible(true);
-            } else {
-                setModalHeadline("Sorry!");
-                setModalText("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
-                setModalVisible(true);
-            }
-        });
+                if (error.display) {
+                    setModalHeadline("Sorry!");
+                    setModalText(error.message);
+                    setModalVisible(true);
+                } else {
+                    setModalHeadline("Sorry!");
+                    setModalText("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
+                    setModalVisible(true);
+                }
+            });
     }
     const onPressInfo = () => {
-        //zurück zu Find Bike Nest
+        //zurück zu Find Bike Nest  
         alert('Info', 'Du kannst hier deinen BIKE NEST Spot buchen. Wenn du dein Fahrrad wieder abholst werden wir dir die benutzte dauer über deine ausgewählte Zahlungsmethode berechnen.');
     };
+
     const onPressOrder = () => {
+        // Demo how to use it
+        // paymentService.createPayment("22BuchstabenMussNeIban").then((response) => {
+        //     console.log("Set Iban response" + response);
+        // }).then(() => {
+        //     paymentService.getIban().then((response) => {
+        //         console.log("Get Iban repsonse: " + response);
+        //     })
+        // })
+
         tryCreateBooking(bikenest.id);
     }
     const getSlots = () => {
@@ -71,7 +85,7 @@ export default function PaymentScreen({route, navigation}) {
         return selectedTime;
     };
     const getSum = () => {
-        return (estimatedPrice); 
+        return (estimatedPrice);
     };
     const validateIBAN = (text) => {
         // Die IBAN-Prüfziffer besteht aus zwei Ziffern an den Positionen 3 und 4 der IBAN.
@@ -92,16 +106,16 @@ export default function PaymentScreen({route, navigation}) {
             />
             <ScrollView>
                 <View style={myStyles.paymentContainer}>
-                    <View style={{alignSelf: 'center'}}>
+                    <View style={{ alignSelf: 'center' }}>
                         <Text style={myStyles.h2}>
                             Meine Reservierung <Image onPress={() => onPressInfo(this)}
-                                                      source={require('../assets/payment/info.png')}/>
+                                source={require('../assets/payment/info.png')} />
                         </Text>
                     </View>
                     <View style={myStyles.headline}>
                         <Text style={myStyles.h3}> Details </Text>
-                        <Text style={[myStyles.h3, {fontWeight: 'bold'}]}
-                              onPress={() => navigation.navigate("Booking")}> Ändern </Text>
+                        <Text style={[myStyles.h3, { fontWeight: 'bold' }]}
+                            onPress={() => navigation.navigate("Booking")}> Ändern </Text>
                     </View>
                     <View style={myStyles.headline}>
                         <Text style={myStyles.stdText}>
@@ -113,43 +127,43 @@ export default function PaymentScreen({route, navigation}) {
                         <Text style={myStyles.stdText}> {getHours()} </Text>
                     </View>
                     <View style={myStyles.reserved}>
-                        <Image source={require('../assets/payment/clock.png')} style={{margin: 10}}/>
-                        <Text style={[myStyles.stdText, {color: Colors.UI_Light_2}]}>
+                        <Image source={require('../assets/payment/clock.png')} style={{ margin: 10 }} />
+                        <Text style={[myStyles.stdText, { color: Colors.UI_Light_2 }]}>
                             Reserviert für 30min
                         </Text>
                     </View>
-                    <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider}/>
+                    <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider} />
                     <View style={myStyles.headline}>
                         <Text style={myStyles.h3}> Zahlungsmethode{"\n"}</Text>
                         <View style={myStyles.images}>
-                        <Image style={[{maxWidth: 45, maxHeight: 50, resizeMode: 'contain'}]} 
-                            source={require('../assets/payment/mc_vrt_opt_pos_45_1x.png')}></Image>
-                        <Image style={[{maxWidth: 35, maxHeight: 50, resizeMode: 'contain'}]}
-                            source={require('../assets/payment/logo_girocard_mit_rand_hochformat_rgb.png')}></Image>
+                            <Image style={[{ maxWidth: 45, maxHeight: 50, resizeMode: 'contain' }]}
+                                source={require('../assets/payment/mc_vrt_opt_pos_45_1x.png')}></Image>
+                            <Image style={[{ maxWidth: 35, maxHeight: 50, resizeMode: 'contain' }]}
+                                source={require('../assets/payment/logo_girocard_mit_rand_hochformat_rgb.png')}></Image>
                         </View>
                     </View>
                     <View style={[myStyles.images]}>
-                       
+
                     </View>
                     <View style={myStyles.zahlungsmethode}>
                         {/* <View style={[mainStyles.container, { backgroundColor: 'transparent' }]}> */}
-                            <BikeNest_TextInput
-                                placeholder='IBAN'
-                                onChangeText={(text) => validateIBAN(text)}
-                            />
-                            <BikeNest_TextInput
-                                placeholder='BIC'
-                                onChangeText={(text) => setBIC(text)}
-                            />
-                            <Text>Mit der Reservierung bestätige Ich, dass meine Kontodaten für zukünftige Zahlungen von BIKENEST belastet werden dürfen.</Text>
-                            <BikeNest_CheckBox           
-                                onPressText={() => Alert.alert("Lorem ipsum")}
-                                toggleText={"SEPA-Lastschriftmandat akzeptieren"}
-                                initialValue={false}/>
+                        <BikeNest_TextInput
+                            placeholder='IBAN'
+                            onChangeText={(text) => validateIBAN(text)}
+                        />
+                        <BikeNest_TextInput
+                            placeholder='BIC'
+                            onChangeText={(text) => setBIC(text)}
+                        />
+                        <Text>Mit der Reservierung bestätige Ich, dass meine Kontodaten für zukünftige Zahlungen von BIKENEST belastet werden dürfen.</Text>
+                        <BikeNest_CheckBox
+                            onPressText={() => Alert.alert("Lorem ipsum")}
+                            toggleText={"SEPA-Lastschriftmandat akzeptieren"}
+                            initialValue={false} />
                         {/* </View> */}
-                    </View> 
-                    <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider}/>
-                    <View style={[myStyles.headline, {marginTop: 10, marginBottom: 10}]}>
+                    </View>
+                    <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider} />
+                    <View style={[myStyles.headline, { marginTop: 10, marginBottom: 10 }]}>
                         <Text style={myStyles.h3}>Geschätzter Preis</Text>
                         <Text style={[myStyles.h3, {
                             fontWeight: 'bold',
@@ -161,14 +175,14 @@ export default function PaymentScreen({route, navigation}) {
                         <Text
                             style={[myStyles.h3, {fontWeight: 'bold', color: Colors.UI_Light_2}]}> ~{getSum()}€ </Text>
                     </View> */}
-                    <Pressable style={[myStyles.reserved, {justifyContent: 'flex-end'}]}
-                               onPress={() => onPressOrder(this)}>
+                    <Pressable style={[myStyles.reserved, { justifyContent: 'flex-end' }]}
+                        onPress={() => onPressOrder(this)}>
                         <Text style={myStyles.h3}>Jetzt Reservieren</Text>
-                        <Image style={{margin: 10}} source={require('../assets/payment/mail-send.png')}/>
+                        <Image style={{ margin: 10 }} source={require('../assets/payment/mail-send.png')} />
                     </Pressable>
                 </View>
             </ScrollView>
-            <BikeNest_NavigationFooter/>
+            <BikeNest_NavigationFooter />
         </View>
     )
 }
@@ -207,7 +221,7 @@ const myStyles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
     },
-    images:{
+    images: {
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'flex-end',
