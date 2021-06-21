@@ -17,4 +17,26 @@ public class TestController {
     public ResponseEntity<String> helloWorld(){
         return ResponseEntity.ok(raspiClient.helloWorld());
     }
+
+
+    @GetMapping(path="/open_gate")
+    public ResponseEntity<String> openGate() {
+
+        return ResponseEntity.ok(raspiClient.openGate("left"));
+    }
+
+    @GetMapping(path="/try_all")
+    public ResponseEntity<String> tryAll(){
+        String result = "";
+        result += raspiClient.setSpotReserved(1,"rgb", false) + "\n";
+        result += raspiClient.closeGate("left") + "\n";
+        result += raspiClient.getStatusBikespot(1) + "\n";
+        result += raspiClient.getStatusGatePosition("left") + "\n";
+        result += raspiClient.getStatusStationLock() + "\n";
+        result += raspiClient.showBookedSpot(1, "rgb",true) + "\n";
+        result += raspiClient.openGate("right") + "\n";
+        result += raspiClient.toggleStationLock() + "\n";
+        result += raspiClient.getErrorStatus() + "\n";
+        return ResponseEntity.ok(result);
+    }
 }
