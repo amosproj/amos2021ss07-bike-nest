@@ -63,27 +63,27 @@ class UsermanagementApplicationTests {
 	// changePersonalInformation(String password, String firstName, String lastName, String newEmail, String oldEmail)
 	@Test
 	void doesUserExist() throws BusinessLogicException {
-
+		//TODO
 	}
 
 	@Test
 	void loginUser() throws BusinessLogicException {
-
+		//TODO
 	}
 
 	@Test
 	void createAccount() throws BusinessLogicException{
-		
+		//TODO
 	}
 
 	@Test
 	void changePassword() throws BusinessLogicException {
-
+		//TODO
 	}
 		
 	@Test
 	void changePersonalInformation() throws BusinessLogicException {
-
+		//TODO
 	}
 
 	// %%%% JWTService %%%%
@@ -93,17 +93,17 @@ class UsermanagementApplicationTests {
 
 	@Test
 	void buildJWTFromUser() throws BusinessLogicException {
-
+		//TODO
 	}
 
 	@Test
 	void buildAdminJwt() throws BusinessLogicException {
-
+		//TODO
 	}
 
 	@Test
 	void validateJWT() throws BusinessLogicException {
-		
+		//TODO
 	}
 
 }
