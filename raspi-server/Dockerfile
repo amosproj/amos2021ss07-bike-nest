@@ -30,4 +30,6 @@ COPY . /app
 
 ENTRYPOINT [ "python3.7" ]
 
+#CMD [ "app.py", "runserver" ]
+
 CMD [ "app.py" ]
