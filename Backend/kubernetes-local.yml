@@ -315,6 +315,10 @@ items:
             value: "3306"
           - name: MYSQL_USER
             value: root
+          - name: RASPI_HOST
+            value: 127.0.0.1
+          - name: RASPI_PORT
+            value: 5000
           image: backend_bikenest
           imagePullPolicy: IfNotPresent
           name: bikenest
@@ -351,6 +355,10 @@ items:
                 value: "3306"
               - name: MYSQL_USER
                 value: booking
+              - name: RASPI_HOST
+                value: 127.0.0.1
+              - name: RASPI_PORT
+                value: 5000
             image: backend_booking
             imagePullPolicy: IfNotPresent
             name: booking
@@ -388,6 +396,10 @@ items:
                 value: "3306"
               - name: MYSQL_USER
                 value: user
+              - name: RASPI_HOST
+                value: 127.0.0.1
+              - name: RASPI_PORT
+                value: 5000
             image: backend_usermgmt
             imagePullPolicy: IfNotPresent
             name: usermgmt
@@ -425,6 +437,10 @@ items:
                 value: "3306"
               - name: MYSQL_USER
                 value: payment
+              - name: RASPI_HOST
+                value: 127.0.0.1
+              - name: RASPI_PORT
+                value: 5000
             image: backend_payment
             imagePullPolicy: IfNotPresent
             name: payment
