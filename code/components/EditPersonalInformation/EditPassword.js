@@ -3,6 +3,7 @@ import {Pressable, Text, View, TextInput} from 'react-native';
 import {UserService} from '../../services/UserService';
 import {styles} from "./styles";
 import BikeNest_Modal from '../BikeNest_Modal';
+import { SimpleLineIcons } from '@expo/vector-icons';
 
 export default function EditPassword() {
     let userService = new UserService();
@@ -94,6 +95,7 @@ export default function EditPassword() {
                         setModalVisible(!modalVisible);
                     }}
                 />
+                <SimpleLineIcons name="lock" size={24} color="black" />
                 <View style={styles.cell}><Text style={styles.stdText}>Password:</Text></View>
                 <View style={styles.cell}><Text style={styles.stdText}>*****</Text></View>
                 <Pressable style={styles.button} onPress={() => setIsEditing(true)}>

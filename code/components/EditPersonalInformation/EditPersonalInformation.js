@@ -5,6 +5,7 @@ import { UserService } from '../../services/UserService';
 import BikeNest_Modal from '../BikeNest_Modal';
 import global from '../GlobalVars';
 import JwtDecoder from '../JwtDecoder';
+import { SimpleLineIcons } from '@expo/vector-icons';
 
 export default function EditPersonalInformation() {
     let userService = new UserService();
@@ -81,17 +82,18 @@ export default function EditPersonalInformation() {
                     setModalVisible(!modalVisible);
                 }}
             />
+            <SimpleLineIcons name="user" size={24} color="black" style={styles.Icon} />
             <Text style={styles.stdText}>Nachname:</Text>
             {EditOrShow(lastName, setLastName)}
 
             <Text style={styles.stdText}>Vorname:</Text>
             {EditOrShow(firstName, setFirstName)}
 
+            <SimpleLineIcons name="envelope" size={24} color="black" />
+
             <Text style={styles.stdText}>Email:</Text>
             {EditOrShow(email, setEmail)}
 
-            <Text style={styles.stdText}>Passwort:</Text>
-            {EditOrShow(password, setPassword)}
 
             {isEditing ?
                 <View>
