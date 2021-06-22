@@ -32,7 +32,7 @@ export default function UnlockScreen({ navigation }) {
             
             <View style={styles.storeText}>
                 <Text style={mainStyles.h1}>Bikenest öffnen</Text>
-                <Text style={mainStyles.h2}>Scannen sie den QR Code am Bikenest, um die Tür zu öffnen.</Text>
+                <Text style={styles.infotext}>Scannen sie den QR Code am Bikenest, um die Tür zu öffnen.</Text>
             </View>
             
             {/* <TouchableOpacity style={styles.Icon}>
@@ -57,7 +57,7 @@ export default function UnlockScreen({ navigation }) {
 const styles = StyleSheet.create({
     Icon:{
         position: 'absolute',
-        left: 90,
+        //left: '30%',
         top: '70%',
         height:128,
         width: 128,
@@ -78,6 +78,15 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'flex-start',
+
+      },
+      infotext: {
+        fontSize: 24,
+        letterSpacing: 1,
+        fontWeight: "400",
+        padding: '7%',
+        margin: '5%',
+        color: '#2D3436',
 
       },
 
