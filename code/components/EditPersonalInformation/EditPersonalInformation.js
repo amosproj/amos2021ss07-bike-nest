@@ -82,7 +82,7 @@ export default function EditPersonalInformation() {
                     setModalVisible(!modalVisible);
                 }}
             />
-            <SimpleLineIcons name="user" size={24} color="black" style={styles.Icon} />
+            <SimpleLineIcons name="user" size={24} color="black" />
             <Text style={styles.stdText}>Nachname:</Text>
             {EditOrShow(lastName, setLastName)}
 
