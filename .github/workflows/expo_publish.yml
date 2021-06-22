@@ -1,10 +1,11 @@
 # This is the workflow to automate the Frontend deployment.
 # CURRENTLY NOT WORKING DUE TO MISSING SECRET
 
-name: Publish App via Ex
+name: Build App via Expo
 
-
-on: #[push]
+on:
+  # Use [push] for debugging reasons 
+  #[push]
   release:
    types: [published]
     
@@ -25,8 +26,9 @@ jobs:
           expo-version: 4.x
           expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
           expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
+          #The Token does not work for an unknown reason.
           #expo-token: ${{ secrets.EXPO_TOKEN }}
-          #expo-cache: true
+          expo-cache: true
       - run: yarn install
       
       # At the current stage we release to a "staging" channel. 
