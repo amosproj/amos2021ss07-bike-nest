@@ -1,6 +1,7 @@
 from pyngrok import conf, ngrok
 
-conf.get_default().auth_token = "1uCt6ypgyad7M1ZsMADleaSNX6Z_2xhnicnerQrkVs4XH4TvZ"
+# Add personal AUTH TOKEN here or in ngrok config's .yml
+conf.get_default().auth_token = "NGROK AUTH_TOKEN"
 conf.get_default().region = "eu"
 http_tunnel = ngrok.connect(5000)
 tunnels = ngrok.get_tunnels()
