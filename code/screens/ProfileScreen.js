@@ -1,14 +1,36 @@
-import React from "react";
+
+import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View, Image, Pressable } from "react-native";
 import { mainStyles } from "../styles/MainStyles";
 import colors from "../styles/Colors";
 import BikeNest_Button, { ButtonStyle } from '../components/BikeNest_Button';
 import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
 import global from '../components/GlobalVars';
+import JwtDecoder from '../components/JwtDecoder';
+import { UserService } from '../services/UserService';
 
 // This is the screen where the Profile is shown and additional information can be seen
 
 export default function ProfileScreen({ navigation }) {
+    let userService = new UserService();
+    const [firstName, setFirstName] = useState("")
+    const [lastName, setLastName] = useState("")
+    const [email, setEmail] = useState("")
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (loading) {
+            global.getAuthenticationToken().then((jwt) => {
+                let decodedJwt = JwtDecoder.decode(jwt);
+                setFirstName(decodedJwt.FirstName);
+                setLastName(decodedJwt.LastName);
+                setEmail(decodedJwt.sub);
+                setLoading(false);
+            })
+        }
+    })
+
+  
     return (
         <View style={mainStyles.container}>
             <ScrollView>
@@ -17,12 +39,11 @@ export default function ProfileScreen({ navigation }) {
                     <Image source={require('../assets/Avatar.png')}></Image>
                     <View style={mainStyles.profileInfo}>
                         <Text style={mainStyles.h3}>
-                            Max Muster {"\n"}
+                        {firstName} {" "}{lastName}{"\n"}
                         </Text>
                         <Text style={mainStyles.stdText}>
-                            Beispiel@Gmail.com {"\n"}
-                            +52 1111111111 {"\n"}
-                            Adresse
+                        {email}  {"\n"}
+                           
                         </Text>
                     </View >
                 </View>
@@ -58,7 +79,7 @@ export default function ProfileScreen({ navigation }) {
                     overrideTextColor={colors.UI_BaseGrey_0}
                     onPress={() => console.log('HELLO')} />
                 <Pressable style={[myStyles.logout, mainStyles.stdText]} onPress={() => global.deleteAuthenticationToken().then(navigation.navigate("Login"))}>
-                    <Text style={{ textDecorationLine: 'underline' }}>Log out</Text>
+                    <Text style={{ textDecorationLine: 'underline' }}>Ausloggen</Text>
                 </Pressable>
             </ScrollView>
             <BikeNest_NavigationFooter />
@@ -70,7 +91,7 @@ const myStyles = StyleSheet.create({
     profile: {
         flex: 1,
         flexDirection: 'row',
-        margin: 10,
+        margin: '5%',
         alignItems: 'center',
         justifyContent: 'space-around',
     },
