@@ -135,14 +135,14 @@ def open_gate():
             if out.decode('ascii') == "":
                 responseText += " TIMEOUT"
             else:
-                responseText += " serial response = " + out.decode('ascii')
+                responseText += " inner serial response = " + out.decode('ascii')
     elif out == ACK + b'$12#0'+CR:
         responseText = "gate was already open"
     else:
         if out.decode('ascii') == "":
             responseText += " TIMEOUT"
         else:
-            responseText += " serial response = " + out.decode('ascii')
+            responseText += " outer serial response = " + out.decode('ascii')
 
     return responseText
 
@@ -166,14 +166,14 @@ def close_gate():
     #check response here
     out = ser.read(7) 
     if out == ACK + b'$12#0'+CR:
-        responseText += "gate already closed"
+        responseText += " gate already closed"
     elif out == ACK + b'$12#1'+CR:
         ser.reset_input_buffer()
         ser.write(('$03#0'+gate+'****').encode('ascii')+CR)
         out = ser.read(2) 
 
         if out == ACK_EOT:
-            responseText = "gate opened"
+            responseText = "gate closed"
         else:
             if out.decode('ascii') == "":
                 responseText += " TIMEOUT"
@@ -212,7 +212,7 @@ def set_spot_reserved():
     ser.write(('$04#'+spot_number+color+blink_state+'').encode('ascii')+CR)
     out = ser.read(2)
     if out == ACK_EOT:
-            responseText = "gate opened"
+            responseText = "light on"
     else:
         if out.decode('ascii') == "":
             responseText += " TIMEOUT"
@@ -256,7 +256,7 @@ def get_status_gate_position():
 
     # Check if open or closed
     ser.reset_input_buffer()
-    ser.write(('$12#'+gate+'****').encode('ascii')+CR)
+    ser.write(('$12#0'+gate+'****').encode('ascii')+CR)
     
     out = ser.read(7)
     if out==ACK+b'$12#1'+CR:
