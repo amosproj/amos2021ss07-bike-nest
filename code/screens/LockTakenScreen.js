@@ -13,7 +13,7 @@ export default function LockTakenScreen ({ route, navigation }) {
 
     let lockBikenest = () => {
         lockService.takeLock(bookingId).then(booking => {
-            navigation.navigate("History");
+            navigation.navigate("PaymentConfirmation");
         }).catch(error => {
             if(error.display){
                 alert(error.message);
