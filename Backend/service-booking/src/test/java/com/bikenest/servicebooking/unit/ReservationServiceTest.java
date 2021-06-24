@@ -6,12 +6,11 @@ import static org.mockito.Mockito.when;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import com.bikenest.common.exceptions.BusinessLogicException;
 import com.bikenest.common.feignclients.BikenestClient;
-import com.bikenest.common.interfaces.bikenest.ReserveSpotRequest;
 import com.bikenest.common.interfaces.bikenest.ReserveSpotResponse;
 import com.bikenest.common.interfaces.booking.CreateReservationRequest;
 import com.bikenest.servicebooking.ServicebookingApplication;
@@ -20,15 +19,12 @@ import com.bikenest.servicebooking.Services.ReservationService;
 import com.bikenest.servicebooking.DB.Reservation;
 
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -37,24 +33,6 @@ import org.assertj.core.api.Assertions;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = ServicebookingApplication.class)
 public class ReservationServiceTest {
-
-    // @Autowired
-    // ReservationService reservationService;
-
-    // @BeforeClass
-    // public void SetEnvironment() {
-    // System.setProperty("MYSQL_HOST", "localhost");
-    // System.setProperty("MYSQL_PORT", "3306");
-    // System.setProperty("MYSQL_DBNAME", "booking");
-    // System.setProperty("MYSQL_USER", "bookingservice");
-    // System.setProperty("MYSQL_PASSWORD", "test");
-    // }
-
-    // @Test
-    // public void TestDatabase(){
-
-    // assert(true);
-    // }
 
     @InjectMocks
     ReservationService reservationService;
@@ -68,7 +46,11 @@ public class ReservationServiceTest {
     void setUpMocks() {
         List<Reservation> reservations = new ArrayList<Reservation>();
         Reservation reservation0 = new Reservation();
+        reservation0.setUserId(1);
+        reservation0.setCancelled(true);
         Reservation reservation1 = new Reservation();
+        reservation1.setUserId(1);
+        reservation1.setCancelled(false);
         Reservation reservation2 = new Reservation();
         reservations.add(reservation0);
         reservations.add(reservation1);
@@ -80,6 +62,9 @@ public class ReservationServiceTest {
         MockitoAnnotations.openMocks(this);
         when(reservationRepository.save(any())).thenAnswer(i -> i.getArguments()[0]);
         when(reservationRepository.findAll()).thenReturn(reservations);
+        when(reservationRepository.findById(1)).thenReturn(Optional.of(reservation0));
+        when(reservationRepository.findById(2)).thenReturn(Optional.empty());
+        when(reservationRepository.findById(3)).thenReturn(Optional.of(reservation1));
 
         when(bikenestClient.existsBikenest(1)).thenReturn(true);
         when(bikenestClient.existsBikenest(2)).thenReturn(false);
@@ -137,11 +122,7 @@ public class ReservationServiceTest {
         // Arrange
         Integer userId = 3;
         Integer bikenestId = 2;
-        Integer bikespotNumber = 3;
         Integer reservationMinutes = 30;
-        boolean paid = false;
-        LocalDateTime reservationStart = LocalDateTime.now();
-        LocalDateTime reservationEnd = LocalDateTime.now().plusMinutes(reservationMinutes);
         CreateReservationRequest reservationRequest = new CreateReservationRequest();
         reservationRequest.setBikenestId(bikenestId);
         reservationRequest.setReservationMinutes(reservationMinutes);
@@ -157,11 +138,7 @@ public class ReservationServiceTest {
         // Arrange
         Integer userId = 3;
         Integer bikenestId = 3;
-        Integer bikespotNumber = 3;
         Integer reservationMinutes = 30;
-        boolean paid = false;
-        LocalDateTime reservationStart = LocalDateTime.now();
-        LocalDateTime reservationEnd = LocalDateTime.now().plusMinutes(reservationMinutes);
         CreateReservationRequest reservationRequest = new CreateReservationRequest();
         reservationRequest.setBikenestId(bikenestId);
         reservationRequest.setReservationMinutes(reservationMinutes);
@@ -170,5 +147,42 @@ public class ReservationServiceTest {
         // Assert
         Assertions.assertThatThrownBy(() -> reservationService.createReservation(userId, reservationRequest))
                 .isInstanceOf(BusinessLogicException.class);
+    }
+
+    @Test
+    void cancelReservation_shouldThrow_whenReservationNotFound() throws BusinessLogicException {
+        // Arrange
+        Integer userId = 3;
+        Integer reservationId = 2;
+
+        // Act
+        // Assert
+        Assertions.assertThatThrownBy(() -> reservationService.cancelReservation(reservationId, userId))
+                .isInstanceOf(BusinessLogicException.class);
+    }
+
+    @Test
+    void cancelReservation_shouldThrow_whenReservationIsCanceled() throws BusinessLogicException {
+        // Arrange
+        Integer userId = 1;
+        Integer reservationId = 1;
+
+        // Act
+        // Assert
+        Assertions.assertThatThrownBy(() -> reservationService.cancelReservation(reservationId, userId))
+                .isInstanceOf(BusinessLogicException.class);
+    }
+
+    @Test
+    void cancelReservation_shouldCancelReservation() throws BusinessLogicException {
+        // Arrange
+        Integer userId = 1;
+        Integer reservationId = 3;
+
+        // Act
+        Reservation reservation = reservationService.cancelReservation(reservationId, userId);
+
+        // Assert
+        Assert.assertTrue(reservation.isCancelled());
     }
 }
