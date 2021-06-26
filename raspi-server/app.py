@@ -5,13 +5,13 @@ import serial.tools.list_ports as port_list
 import time
 
 app = Flask(__name__)
-# choose correct port e.g. not clear yet, can be /dev/ttyS0, /dev/serial1 or /dev/serial0 aswell
-port = '/dev/serial0'
-#ports = list(port_list.comports())
-#print(ports)
 
-#port = '/dev/ttyS0'
-#port = ports[0]
+# IF RASPI USE BELOW INSTEAD OF LINE 13 !!
+# port = '/dev/serial0'
+
+ports = list(port_list.comports())
+print(ports)
+port = ports[0].name
 baud = 57600
 
 # if needed add constants like this
