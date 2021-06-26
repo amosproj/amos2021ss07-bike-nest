@@ -33,7 +33,6 @@ public class TestController {
         result += raspiClient.getStatusBikespot(1) + "\n";
         result += raspiClient.getStatusGatePosition("left") + "\n";
         result += raspiClient.getStatusStationLock() + "\n";
-        result += raspiClient.showBookedSpot(1, "rgb",true) + "\n";
         result += raspiClient.openGate("right") + "\n";
         result += raspiClient.toggleStationLock() + "\n";
         result += raspiClient.getErrorStatus() + "\n";
