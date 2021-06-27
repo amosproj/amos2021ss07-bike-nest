@@ -40,10 +40,8 @@ public class LockingController {
     public ResponseEntity<Booking> deliverAndUnlock(@AuthenticationPrincipal UserInformation user,
                                              @Valid @RequestBody DeliverUnlockRequest request) throws BusinessLogicException {
 
-
         Booking booking = bookingService.createBooking(user.getUserId(), request.getReservationId(), request.getQrCode());
 
-        //TODO: really implement the unlocking, there should also be a return code
         logger.info("Unlocking the Bikenest. Reservation begins now. Place the Bike inside now and close the door!");
         lockService.startBlinking(booking.getBikenestId(), booking.getBikespotNumber());
         lockService.openLock(user.getUserId(), booking.getBikenestId(), booking.getBikespotNumber());

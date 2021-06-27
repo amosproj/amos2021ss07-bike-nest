@@ -73,11 +73,11 @@ public class LockService {
     }
 
     public void startBlinking(Integer bikenestId, Integer bikespotId){
-        raspiClient.showBookedSpot(bikespotId, "rgb", true);
+        raspiClient.setSpotReserved(bikespotId, "rgb", true);
     }
 
     public void stopBlinking(Integer bikenestId, Integer bikespotId){
-        raspiClient.showBookedSpot(bikespotId, "rgb", false);
+        raspiClient.setSpotReserved(bikespotId, "rgb", false);
     }
 
 

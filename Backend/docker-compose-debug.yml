@@ -45,6 +45,16 @@ services:
     networks:
       - payment-db
 
+  raspi:
+    container_name: raspi
+    build:
+      context: ../raspi-server
+    restart: always
+    ports:
+      - "5000:5000"
+    networks:
+      - services
+
   # Definition of the microservices, every service will be accesible by their port (in production only the api gateway will be accesible)
   # The 500X ports are used for debugging
   bikenest:
@@ -63,8 +73,8 @@ services:
       - USERMGMT_SERVICE_HOST=usermgmt
       - BIKENEST_SERVICE_HOST=bikenest
       - BIKENEST_DB_SERVICE_HOST=bikenest-db
-      - RASPI_HOST=${RASPI_HOST}
-      - RASPI_PORT=${RASPI_PORT}
+      - RASPI_SERVICE_HOST=raspi
+      - RASPI_PORT=5000
       - MYSQL_PORT=3306
       - MYSQL_DBNAME=${BIKENEST_DBNAME}
       - MYSQL_USER=${DB_USER}
@@ -89,8 +99,8 @@ services:
       - USERMGMT_SERVICE_HOST=usermgmt
       - BIKENEST_SERVICE_HOST=bikenest
       - BOOKING_DB_SERVICE_HOST=booking-db
-      - RASPI_HOST=${RASPI_HOST}
-      - RASPI_PORT=${RASPI_PORT}
+      - RASPI_SERVICE_HOST=raspi
+      - RASPI_PORT=5000
       - MYSQL_PORT=3306
       - MYSQL_DBNAME=${BOOKING_DBNAME}
       - MYSQL_USER=${DB_USER}
@@ -111,8 +121,8 @@ services:
       - PAYMENT_SERVICE_HOST=payment
       - USERMGMT_SERVICE_HOST=usermgmt
       - BIKENEST_SERVICE_HOST=bikenest
-      - RASPI_HOST=${RASPI_HOST}
-      - RASPI_PORT=${RASPI_PORT}
+      - RASPI_SERVICE_HOST=raspi
+      - RASPI_PORT=5000
     ports:
       - "9000:9000"
       - "5007:5007"
@@ -135,8 +145,8 @@ services:
       - USERMGMT_SERVICE_HOST=usermgmt
       - BIKENEST_SERVICE_HOST=bikenest
       - USERMGMT_DB_SERVICE_HOST=user-db
-      - RASPI_HOST=${RASPI_HOST}
-      - RASPI_PORT=${RASPI_PORT}
+      - RASPI_SERVICE_HOST=raspi
+      - RASPI_PORT=5000
       - MYSQL_PORT=3306
       - MYSQL_DBNAME=${USER_DBNAME}
       - MYSQL_USER=${DB_USER}
@@ -161,15 +171,12 @@ services:
       - USERMGMT_SERVICE_HOST=usermgmt
       - BIKENEST_SERVICE_HOST=bikenest
       - PAYMENT_DB_SERVICE_HOST=payment-db
-      - RASPI_HOST=${RASPI_HOST}
-      - RASPI_PORT=${RASPI_PORT}
+      - RASPI_SERVICE_HOST=raspi
+      - RASPI_PORT=5000
       - MYSQL_PORT=3306
       - MYSQL_DBNAME=${PAYMENT_DBNAME}
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASSWORD}
-      - BT_MERCHANT_ID=${BT_MERCHANT_ID}
-      - BT_PUBLIC_KEY=${BT_PUBLIC_KEY}
-      - BT_PRIVATE_KEY=${BT_PRIVATE_KEY}
     networks:
       - services
       - payment-db
