@@ -155,8 +155,7 @@ def get_status_bikespot():
     except:
         return "spots only from 1 - 20"
 
-    responseText = "spot for number " + spot + " is " + spot_check
-    return responseText
+    return spot_check
 
 @app.route('/get_error_status')
 def get_error_status():
