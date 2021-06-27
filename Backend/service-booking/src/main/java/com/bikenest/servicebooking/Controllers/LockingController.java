@@ -40,11 +40,13 @@ public class LockingController {
     public ResponseEntity<Booking> deliverAndUnlock(@AuthenticationPrincipal UserInformation user,
                                              @Valid @RequestBody DeliverUnlockRequest request) throws BusinessLogicException {
 
+
         Booking booking = bookingService.createBooking(user.getUserId(), request.getReservationId(), request.getQrCode());
 
+        //TODO: really implement the unlocking, there should also be a return code
         logger.info("Unlocking the Bikenest. Reservation begins now. Place the Bike inside now and close the door!");
-        lockService.startBlinking(booking.getBikenestId(), booking.getBikespotNumber());
-        lockService.openLock(user.getUserId(), booking.getBikenestId(), booking.getBikespotNumber());
+        logger.info("**Bikespot starts blinking** (Send request to RaspberryPi)");
+        lockService.OpenLock(user.getUserId(), booking.getBikenestId(), booking.getBikespotNumber());
 
         return ResponseEntity.ok(booking);
     }
@@ -67,7 +69,7 @@ public class LockingController {
         }
 
         logger.info("You want to take your Bike? The door is open now!");
-        lockService.openLock(user.getUserId(), booking.getBikenestId(), booking.getBikespotNumber());
+        lockService.OpenLock(user.getUserId(), booking.getBikenestId(), booking.getBikespotNumber());
 
         return ResponseEntity.ok(booking);
     }
@@ -86,11 +88,11 @@ public class LockingController {
                                                             @Valid @RequestBody LockRequest request) throws BusinessLogicException {
         Booking booking = bookingService.getVerifiedBooking(user.getUserId(), request.getBookingId());
 
-        if(lockService.bikespotOccupied(booking.getBikenestId(), booking.getBikespotNumber())){
+        if(lockService.BikespotOccupied(booking.getBikenestId(), booking.getBikespotNumber())){
             booking = bookingService.deliveredBike(user.getUserId(), request.getBookingId());
 
             logger.info("You have placed your Bike inside. Closing the door now.");
-            lockService.closeLock(user.getUserId(), booking.getBikenestId(), booking.getBikespotNumber());
+            lockService.CloseLock(user.getUserId(), booking.getBikenestId(), booking.getBikespotNumber());
             return ResponseEntity.ok(booking);
         }else{
             throw new BusinessLogicException("Du hast dein Fahrrad noch nicht korrekt auf dem Platz abgestellt." +
@@ -104,9 +106,9 @@ public class LockingController {
                                                      @Valid @RequestBody LockRequest request) throws BusinessLogicException {
         Booking booking = bookingService.getVerifiedBooking(user.getUserId(), request.getBookingId());
         //TODO: REMOVE || true
-        if(!lockService.bikespotOccupied(booking.getBikenestId(), booking.getBikespotNumber()) || true){
+        if(!lockService.BikespotOccupied(booking.getBikenestId(), booking.getBikespotNumber()) || true){
             logger.info("You took your bike and the door will be closed now.");
-            lockService.closeLock(user.getUserId(), booking.getBikenestId(), booking.getBikespotNumber());
+            lockService.CloseLock(user.getUserId(), booking.getBikenestId(), booking.getBikespotNumber());
             if(!bookingService.freeReservedSpot(booking.getBikenestId(), booking.getBikespotNumber(), user.getUserId())){
                 throw new BusinessLogicException("Konnte den reservierten Spot nicht freigeben.");
             }

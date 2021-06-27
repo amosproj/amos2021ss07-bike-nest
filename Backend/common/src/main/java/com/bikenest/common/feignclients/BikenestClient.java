@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-//TODO: Proper errorhandling for the feign clients is still missing. Something like this could work:
-// https://arnoldgalovics.com/maintainable-error-handling-with-feign-clients-not-a-dream-anymore/
-
 @FeignClient(url="${client.bikenest.url}", name="BikenestClient")
 public interface BikenestClient {
 
