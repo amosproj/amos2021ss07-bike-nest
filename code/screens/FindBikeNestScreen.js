@@ -285,7 +285,7 @@ export default function FindBikeNestScreen ({ navigation }) {
           <View style={[mainStyles.modalContentContainer, { backgroundColor: stateMarkers[currentMarkerIndex].color, width: width * 0.9, height: height * 0.5 }]}>
             <Text style={mainStyles.h3}>{stateMarkers[currentMarkerIndex].address} </Text>
             <Text style={mainStyles.stdText}>Lade Optionen: <B>{stateMarkers[currentMarkerIndex].chargingOptionAvailable ? "Ja" : "Nein"}</B></Text>
-            <Text numberOfLines={1} style={mainStyles.stdText}>Entfernung:<B> {distances[currentMarkerIndex] / 1000} Km</B></Text>
+            <Text numberOfLines={1} style={mainStyles.stdText}>Entfernung:<B> {(distances[currentMarkerIndex] / 1000).toFixed(2).toLocaleString()} Km</B></Text>
             <Text numberOfLines={1} style={mainStyles.stdText}>In diesem Bikenest sind <B>{stateMarkers[currentMarkerIndex].capacity}</B> Plätze frei</Text>
             <Text>{ }</Text>
             <View style={styles.button}>
