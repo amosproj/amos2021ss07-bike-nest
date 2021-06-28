@@ -1,25 +1,9 @@
 package com.bikenest.serviceusermgmt.unit;
 
-import com.bikenest.serviceusermgmt.UsermanagementApplication;
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-package com.bikenest.serviceusermgmt.unit;
-
 import com.bikenest.common.exceptions.BusinessLogicException;
-import com.bikenest.common.interfaces.bikenest.AddBikenestRequest;
-
 import com.bikenest.serviceusermgmt.UsermanagementApplication;
-
-import com.bikenest.serviceusermgmt.db.UserRepository;
-
-import com.bikenest.serviceusermgmt.services.AccountService;
-import com.bikenest.serviceusermgmt.services.JWTService
-;
-import org.assertj.core.api.Assertions;
-import org.junit.Assert;
+import com.bikenest.serviceusermgmt.models.User;
+import com.bikenest.serviceusermgmt.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -29,10 +13,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.util.Optional;
-
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -43,9 +24,10 @@ class UsermanagementApplicationTests {
     UsermanagementApplication usermanagement;
 
     @Mock
-    UserRepository userRepo;
+	UserRepository userRepo;
 
-    private User user = MockHelper.constructUser();
+    private User user = MockHelper.constructUser(
+    		"Max", "Mustermann", "max@muster.de", "test12" );
   
 
     @BeforeEach
