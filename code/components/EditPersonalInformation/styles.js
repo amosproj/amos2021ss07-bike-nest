@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
         height: 55,
         borderRadius: 38,
         margin: 9,
-        backgroundColor: Colors.UI_Light_2
+        backgroundColor: '#ffffff'
     },
     stdText: {
         width: 328,
@@ -57,12 +57,12 @@ export const styles = StyleSheet.create({
     },
     buttonText: {
         fontSize: 14,
-        color: Colors.UI_Light_4
+        color: Colors.UI_BaseGrey_4,
     },
     h1: {
         fontSize: 28,
         fontWeight: 'bold',
-        margin: 30
+        margin: 30,
     }, 
     checkbox: {
         borderRadius: 2,
@@ -75,5 +75,21 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         marginBottom: 20,
       },
+    Avatar:{
+        width:120,
+        height: 120,
+        resizeMode:'contain',
+        alignSelf:'center',
+    },
+    Icon:{
+
+        flex: 1,
+        alignItems: 'flex-end',
+        justifyContent: 'flex-end',
+        marginTop: 20,
+        marginBottom: 20,
+        marginRight: 20
+    },
+
 
 });

@@ -33,20 +33,20 @@ deployed on a RaspberryPi.
 The folder structure is as follows:
 - **/Backend/**: contains multiple microservice projects developed with the Spring Framework
 - **/code/**: contains the Frontend Application developed with Expo (ReactNative / JS)
-- **/HardwareServer/**: contains a small python application that communicates with the Bikenest Hardware by a RS232 interface and
+- **/raspi-server/**: contains a small python application that communicates with the Bikenest Hardware by a RS232 interface and
 provides a http server for communication with the Backend Server.
 
 ## How to setup
 
 1. Download a release or the current project repository.
 2. Build the Backend Project (for detailed instructions visit <a href="https://github.com/amosproj/amos-ss2021-bike-nest/tree/main/Backend#readme">Backend</a>)
-3. Install dependencies of the HardwareServer Project (for detailed instructions visit ...)
+3. Install dependencies of the raspi-server Project (for detailed instructions have a look at the README.md in the raspi-server directory)
 4. Build the Frontend [(React) Expo](http://expo.io/)
 
 ## How to run the project after initial setup.
 1. **Backend**: Navigate into the `Backend` directory. Run the `run-release.bat` (or **run-release.sh** for UNIX based systems).
 2. **Frontend**: Navigate into the `code` directory and install the dependencies needed via `yarn install`. After everything is set up, start the Expo CLI via `yarn start`. Download the `Expo Go` App in your appstore and scan the given QR-code with it or use an emulator on your pc.
-
+3. **Raspi-Server**: The flask server can be started by running `python app.py`. Note: the server will try to communicate with the Bikenest Hardware via a serial connection. Without access to the hardware, the application will not work correctly!
 
 
 
