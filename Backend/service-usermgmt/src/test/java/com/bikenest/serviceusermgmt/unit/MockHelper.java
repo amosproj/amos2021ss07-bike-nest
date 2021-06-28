@@ -1,7 +1,6 @@
-package com.bikenest.servicebikenest.unit;
+package com.bikenest.serviceusermgmt.unit;
 
-import com.bikenest.servicebikenest.db.Bikenest;
-import com.bikenest.servicebikenest.db.Bikespot;
+import com.bikenest.serviceusermgmt.models.User;
 
 import java.util.HashSet;
 import java.util.Set;
