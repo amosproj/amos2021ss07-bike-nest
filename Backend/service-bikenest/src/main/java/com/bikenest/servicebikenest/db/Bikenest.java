@@ -30,7 +30,10 @@ public class Bikenest {
         this.maximumSpots = maximumSpots;
         this.currentSpots = maximumSpots;
         this.chargingAvailable = chargingAvailable;
-        this.qrCode = RandomStringHelper.nextString(12);
+        //TODO: We currently set this QR Code statically so its easier to test everything and we can
+        // print out a qr code that way.
+        //this.qrCode = RandomStringHelper.nextString(12);
+        this.qrCode = name;
     }
 
     public Bikenest(){
