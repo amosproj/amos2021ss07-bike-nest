@@ -111,6 +111,18 @@ items:
       - name: "9004"
         port: 9004
         targetPort: 9004
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: raspi
+  spec:
+    selector:
+      service: raspi
+    ports:
+      - name: "5000"
+        port: 5000
+        targetPort: 5000
 ### Deployments
 
 - apiVersion: apps/v1
@@ -179,6 +191,32 @@ items:
         volumes: null
   status: {}
 
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    labels:
+      service: raspi
+    name: raspi
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        service: raspi
+    strategy: {}
+    template:
+      metadata:
+        labels:
+          service: raspi
+      spec:
+        containers:
+            image: backend_raspi
+            imagePullPolicy: ""
+            name: raspi
+            resources: {}
+        restartPolicy: Always
+        serviceAccountName: ""
+        volumes: null
+  status: {}
 
 - apiVersion: apps/v1
   kind: Deployment
@@ -315,6 +353,10 @@ items:
             value: "3306"
           - name: MYSQL_USER
             value: root
+          - name: RASPI_HOST
+            value: 127.0.0.1
+          - name: RASPI_PORT
+            value: 5000
           image: backend_bikenest
           imagePullPolicy: IfNotPresent
           name: bikenest
@@ -351,6 +393,10 @@ items:
                 value: "3306"
               - name: MYSQL_USER
                 value: booking
+              - name: RASPI_HOST
+                value: 127.0.0.1
+              - name: RASPI_PORT
+                value: 5000
             image: backend_booking
             imagePullPolicy: IfNotPresent
             name: booking
@@ -388,6 +434,10 @@ items:
                 value: "3306"
               - name: MYSQL_USER
                 value: user
+              - name: RASPI_HOST
+                value: 127.0.0.1
+              - name: RASPI_PORT
+                value: 5000
             image: backend_usermgmt
             imagePullPolicy: IfNotPresent
             name: usermgmt
@@ -425,6 +475,10 @@ items:
                 value: "3306"
               - name: MYSQL_USER
                 value: payment
+              - name: RASPI_HOST
+                value: 127.0.0.1
+              - name: RASPI_PORT
+                value: 5000
             image: backend_payment
             imagePullPolicy: IfNotPresent
             name: payment

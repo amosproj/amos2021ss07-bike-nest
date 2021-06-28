@@ -21,6 +21,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
 
         http.cors().and().authorizeRequests()
+                .antMatchers("/getIban", "/setIban", "createPayment").authenticated()
                 .anyRequest()
                 .permitAll()
                 .and()
