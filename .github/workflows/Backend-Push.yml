@@ -3,9 +3,10 @@
 
 name: Backend Push (Gradle)
 
-on:
-  release:
-   types: [published]
+on: 
+  push:
+    branches:
+      - main
 
 jobs:
   Backend-Push:
