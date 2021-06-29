@@ -1,6 +1,6 @@
 import {Alert, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {mainStyles} from "../styles/MainStyles";
-import gotospot from "../assets/gotospot.png";
+import gotospot from "../assets/parkspot.png";
 import {SimpleLineIcons} from "@expo/vector-icons";
 import BikeNest_NavigationFooter from "../components/BikeNest_NavigationFooter";
 import React from "react";
@@ -28,17 +28,23 @@ export default function LockTakenScreen ({ route, navigation }) {
             <View style={styles.lockContainer}>
                 <Text style={mainStyles.h1}> Hol dein Bike!</Text>
 
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+                    <Text style={{fontSize: 20}}>Dein Bike ist am Spot {spotNumber}. </Text>
+                    {/* <Text style={{fontSize: 20}}> Dein Bike ist am Spot  X hol es ab </Text>  */}
+                    <Text style={{fontSize: 20}}>Die <SimpleLineIcons name="bulb" size={24} color="orange" /> LED an diesem Platz blinkt</Text>
+                </View>
+
                 <Image style={styles.ImageContainer} source={gotospot}></Image>
 
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                    <Text style={{fontSize: 20}}>Dein Bike ist am Spot {spotNumber}. </Text>
-                    <Text style={{fontSize: 20}}>Hol es ab und schließe danach das Bikenest indem du den Knopf drückst.</Text>
+                   
+                    <Text style={{fontSize: 18}}>Schließe danach das Bikenest indem du den Knopf drückst.</Text>
                 </View>
 
 
                 <TouchableOpacity onPress={() => lockBikenest()} style={styles.Icon}>
-                    <SimpleLineIcons name="lock-open" size={24} color="black" />
-                    <Text style={mainStyles.h3}> Bikenest schließen! </Text>
+                    <SimpleLineIcons name="lock" size={24} color="black" />
+                    <Text style={{fontSize:14, textAlign:'center'}}> Bikenest schließen</Text>
                 </TouchableOpacity>
 
 
@@ -56,11 +62,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 64,
-        borderWidth: 6,
+        borderWidth: 3,
         borderColor: 'white',
         backgroundColor: '#D6F2C9',
-        elevation: 3,
+        elevation: 2,
         bottom: 50,
+        marginTop:'10%',
 
     },
     lockContainer: {
@@ -69,9 +76,15 @@ const styles = StyleSheet.create({
 
     },
     ImageContainer:{
+        flex: 2,
         width: 300,
         height: 200,
         resizeMode: 'contain',
+        backgroundColor: '#fff',
+        alignItems: 'flex-start',
+        alignContent: 'space-around',
+        //width: 300,
+        //height: 200,
     },
 
 
