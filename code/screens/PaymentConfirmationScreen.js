@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ImageBackground, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { Dimensions } from "react-native";
 import bike from '../assets/bike.png';
@@ -10,23 +10,45 @@ import BikeNest_Button, { ButtonStyle } from '../components/BikeNest_Button';
 import { Alert } from 'react-native';
 import colors from '../styles/Colors';
 import { BookingService } from "../services/BookingService";
+import moment from "moment";
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
 
-export default function PaymentConfirmationScreen({ navigation }) {
-  // const [myListData, setData] = useState("");
-  let bookingService = new BookingService();
+export default function PaymentConfirmationScreen({ route, navigation }) {
+  const [bikeDelivered, setBikeDelivered] = useState("");
+  const [bikeTook, setBikeTook] = useState("");
+  
+  // let bookingService = new BookingService();
 
-  let tryGETBooking = () => {
-    console.log('start pulling reservation info');
-    return bookingService.getAllReservations().then(reservations => {
-      alert(JSON.stringify(reservations));
-    }).catch(error => {
-      console.error(JSON.stringify(error));
-    });
+  // let bookings = route.params.bookings;
+  // setBikeDelivered(bookings.deliveredBike);
+  // setBikeTook(bookings.bikeTook);
+
+  let tryGETReservation = () => {
+    // console.log('start pulling reservation info');
+    // return bookingService.getAllReservations().then(reservations => {
+    //   alert(JSON.stringify(reservations));
+    // }).catch(error => {
+    //   console.error(JSON.stringify(error));
+    // });
   }
+  // useEffect(() => {
+  //   if(bookingData == null){
+  //     console.log('start pulling booking info');
+  //     return bookingService.getAllBookings().then(bookings => {
+  //       alert(JSON.stringify(bookings));
+  //       setBikeDelivered(bookings.deliveredBike);
+  //       setBikeTook(bookings.tookBike);
+  //       setBookingData(bookings);
+  //       console.log(bookingData);
+  //     }).catch(error => {
+  //       console.error(JSON.stringify(error));
+  //     });
+  //   }
+  // }, []);
+
   const downloadInvoice = () => {
     Alert.alert('download', 'You are downloading the invoice.');
   }
@@ -40,7 +62,8 @@ export default function PaymentConfirmationScreen({ navigation }) {
     return "0,50€";
   }
   const getHours = () => {
-    return "2 Stunden";
+
+    return "duration";
   }
   const getSum = () => {
     return "10,57 €";
@@ -107,10 +130,6 @@ export default function PaymentConfirmationScreen({ navigation }) {
         <View style={myStyles.headline}>
           <Text style={mainStyles.stdText}>Mwst. 19%</Text>
           <Text style={[mainStyles.stdText, { fontWeight: 'bold', color: Colors.UI_Light_2 }]}> {getMwst()} </Text>
-        </View>
-        <View style={myStyles.headline}>
-          <Text style={mainStyles.stdText}>Rabatt</Text>
-          <Text style={[mainStyles.stdText, { fontWeight: 'bold', color: Colors.UI_Light_2 }]}> {getDiscount()} </Text>
         </View>
         <Image style={{ justifyContent: 'center', alignSelf: 'center', marginBottom: 10, width: 350 }} source={require('../assets/payment/Line.png')} />
         <View style={myStyles.headline}>

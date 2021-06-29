@@ -106,7 +106,7 @@ export default function HistoryScreen({ navigation }) {
             }
           }
           if (bikenestId === 0) {
-            throw { display: true, message: "Du hast keine valide Reservierungr eines Bikenests." }
+            throw { display: true, message: "Du hast keine valide Reservierung eines Bikenests." }
           }
           bikenestService.getBikenestInfo(bikenestId).then((info) => {
             setBikenestInfo(info);
@@ -134,11 +134,8 @@ export default function HistoryScreen({ navigation }) {
 
   let tryGETBooking = () => {
     console.log('start pulling reservation info');
-
     reservationService.getAllReservations().then(reservations => {
       alert(JSON.stringify(reservations));
-      // This wont work, because reservations is an array of bikenests
-      //setBikenestIDs(reservations.bikenestId);
     }).catch(error => {
       console.error("Error with pulling reservations: " + JSON.stringify(error));
     });
