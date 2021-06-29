@@ -28,7 +28,7 @@ export default function PaymentConfirmationScreen({ navigation }) {
     });
   }
   const downloadInvoice = () => {
-    Alert.alert('You are downloading the invoice');
+    Alert.alert('download', 'You are downloading the invoice.');
   }
   const getPrice = () => {
     return "8,88";
