@@ -103,7 +103,7 @@ export default function HistoryScreen({ navigation }) {
             }
           }
           if (bikenestId === 0) {
-            throw { display: true, message: "Du hast keine valide Reservierungr eines Bikenests." }
+            throw { display: true, message: "Du hast keine valide Reservierung eines Bikenests." }
           }
           bikenestService.getBikenestInfo(bikenestId).then((info) => {
             setBikenestInfo(info);
@@ -335,6 +335,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     maxHeight: 50,
     margin: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   buttonHistoryText: {
     flex: 1,
