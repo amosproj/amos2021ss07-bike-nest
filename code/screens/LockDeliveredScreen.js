@@ -1,10 +1,11 @@
 import {Alert, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {mainStyles} from "../styles/MainStyles";
-import gotospot from "../assets/gotospot.png";
+import gotospot from "../assets/parkspot.png";
 import {SimpleLineIcons} from "@expo/vector-icons";
 import BikeNest_NavigationFooter from "../components/BikeNest_NavigationFooter";
 import React from "react";
 import {LockService} from "../services/LockService";
+import { Dimensions } from "react-native";
 
 export default function LockDeliveredScreen ({ route, navigation }) {
     let lockService = new LockService();
@@ -30,19 +31,23 @@ export default function LockDeliveredScreen ({ route, navigation }) {
 
             <View style={styles.lockContainer}>
                 <Text style={mainStyles.h1}> Stell dein Bike ab!</Text>
+                
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+                    <Text style={{fontSize: 20}}>Stelle dein Bike am Spot {spotNumber} ab.</Text>
+                    {/* <Text style={{fontSize: 20}}>Stelle dein Bike am Spot X ab</Text>  */}
+                    <Text style={{fontSize: 20}}>Die <SimpleLineIcons name="bulb" size={24} color="orange" /> LED an diesem Platz blinkt</Text>
+                </View>
 
                 <Image style={styles.ImageContainer} source={gotospot}></Image>
 
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                    <Text style={{fontSize: 20}}>Stelle dein Bike am Spot {spotNumber} ab.</Text>
-                    <Text style={{fontSize: 20}}>Die LED an diesem Platz blinkt. Schließe das Bikenest mit dem Knopf,
-                    nachdem du es verlassen hast.</Text>
+                    <Text style={{fontSize: 18}}>Schließe das Bikenest mit dem Knopf,{"\n"} nachdem du es verlassen hast.</Text>
                 </View>
 
 
                 <TouchableOpacity onPress={() => lockBikenest()} style={styles.Icon}>
-                    <SimpleLineIcons name="lock-open" size={24} color="black" />
-                    <Text style={mainStyles.h3}> Bikenest schließen! </Text>
+                    <SimpleLineIcons name="lock" size={24} color="black" />
+                    <Text style={{fontSize:14, textAlign:'center'}}> Bikenest schließen</Text>
                 </TouchableOpacity>
 
 
@@ -60,11 +65,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 64,
-        borderWidth: 6,
+        borderWidth: 3,
         borderColor: 'white',
         backgroundColor: '#D6F2C9',
-        elevation: 3,
+        elevation: 2,
         bottom: 50,
+        marginTop:'10%',
 
     },
     lockContainer: {
@@ -73,9 +79,15 @@ const styles = StyleSheet.create({
 
     },
     ImageContainer:{
+        flex: 2,
         width: 300,
         height: 200,
         resizeMode: 'contain',
+        backgroundColor: '#fff',
+        alignItems: 'flex-start',
+        alignContent: 'space-around',
+        //width: 300,
+        //height: 200,
     },
 
 

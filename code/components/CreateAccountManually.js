@@ -7,7 +7,8 @@ import BikeNest_CheckBox from './BikeNest_CheckBox';
 import BikeNest_Modal from './BikeNest_Modal';
 import BikeNest_Button, { ButtonStyle } from './BikeNest_Button';
 import BikeNest_TextInput from './BikeNest_TextInput';
-import {UserService} from "../services/UserService";
+import { UserService } from "../services/UserService";
+import global from './GlobalVars';
 
 export function CreateAccountManually() {
     let userSerivce = new UserService();
@@ -37,7 +38,7 @@ export function CreateAccountManually() {
     let onModalPress = () => {
         if (accountCreated) {
             setModalVisible(false);
-            navigation.navigate("Login");
+            navigation.navigate("FindBikeNest");
         }
         else
             setModalVisible(false);
@@ -54,7 +55,7 @@ export function CreateAccountManually() {
     // }
 
     let setModalInfo = (success, message) => {
-        if(success){
+        if (success) {
             setModalHeadline("Hurra!");
             setModalText("Dein Account wurde erfolgreich erstellt.")
         } else {
@@ -69,14 +70,17 @@ export function CreateAccountManually() {
         let name = firstName;
         let lastname = lastName;
         let data = { name, lastname, email, password };
-        userSerivce.registerUser(email, password, name, lastName).then(response =>{
-            setAccountCreated(true);
-            setModalInfo(true, "Dein Account wurde erfolgreich erstellt!");
-        }).catch(error =>{
+        userSerivce.registerUser(email, password, name, lastName).then(jwt => {
+            global.saveAuthenticationToken(jwt)
+                .then(() => {
+                    setAccountCreated(true);
+                    setModalInfo(true, "Dein Account wurde erfolgreich erstellt!");
+                });
+        }).catch(error => {
             setAccountCreated(false);
-            if(error.display){
+            if (error.display) {
                 setModalInfo(false, error.message);
-            }else{
+            } else {
                 setModalInfo(false, "Ein unbekannter Fehler ist aufgetreten!");
             }
         })

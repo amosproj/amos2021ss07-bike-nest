@@ -6,6 +6,8 @@ import BikeNest_Modal from '../BikeNest_Modal';
 import global from '../GlobalVars';
 import JwtDecoder from '../JwtDecoder';
 import { SimpleLineIcons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons'; 
+
 
 export default function EditPersonalInformation() {
     let userService = new UserService();
@@ -96,12 +98,14 @@ export default function EditPersonalInformation() {
 
 
             {isEditing ?
-                <View>
-                    <Pressable style={styles.button} onPress={() => cancel()}>
-                        <Text style={styles.buttonText}>Cancel</Text>
+                <View style={{flexDirection:'row', justifyContent: 'space-between'}}>
+                    <Pressable style={{ justifyItem: 'flex-start',marginTop: 20,marginBottom: 20,marginRight: 20}} onPress={() => cancel()}>
+                        <AntDesign name="close" size={24} color="black" />
+                        {/* <Text style={styles.buttonText}>Cancel</Text> */}
                     </Pressable>
-                    <Pressable style={styles.button} onPress={() => saveData()}>
-                        <Text style={styles.buttonText}>Save</Text>
+                    <Pressable style={{ textAlign:'center', alignItems: 'flex-end',justifyContent: 'flex-end',marginTop: 20,marginBottom: 20,marginRight: 20}} onPress={() => saveData()}>
+                        <AntDesign name="check" size={24} color="black" />
+                        {/* <Text style={styles.buttonText}>Save</Text> */}
                     </Pressable>
                 </View>
                 :

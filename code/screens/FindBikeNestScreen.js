@@ -53,6 +53,8 @@ export default function FindBikeNestScreen ({ navigation }) {
   const [currentMarkerIndex, setCurrentMarkerIndex] = useState(0);
   const [distances, setDistances] = useState([-1]);
   const [modalState, setModalState] = useState(false);
+  const [loadingmodalVisible, setLoadingmodalVisible] = useState()
+
   const _map = useRef(null);
   const _scrollView = useRef(null);
   let mapAnimation = new Animated.Value(0);
@@ -116,6 +118,7 @@ export default function FindBikeNestScreen ({ navigation }) {
     });
     setDistances(localdistances);
     setMarkers(tempMarkers);
+    setLoadingmodalVisible(false);
   };
 
   function getColor (capacity) {
@@ -269,13 +272,18 @@ export default function FindBikeNestScreen ({ navigation }) {
           );
         })}
       </MapView>
-      {stateMarkers.length < 2 && (
         <BikeNest_Modal
-          content={
-            <View style={[mainStyles.modalContentContainer, { backgroundColor: 'rgba(252, 252, 252, 0.7)', width: width * 0.8, height: height * 0.15, justifyContent: 'center' }]}>
-              <Text style={[mainStyles.h2, { justifyContent: 'center' }]}>Lade Bikenests... </Text>
-            </View>}
-        />)} 
+        modalHeadLine="Lade Bikenests..."
+        modalText="Wir suchen nach Bikenests in deiner Umgebung"
+        isVisible={loadingmodalVisible}
+        onPress={() => setLoadingmodalVisible(false)}
+        onRequestClose={() => { setLoadingmodalVisible(!loadingmodalVisible); }}
+
+          // content={
+          //   <View style={[mainStyles.modalContentContainer, { backgroundColor: 'rgba(252, 252, 252, 0.7)', width: width * 0.8, height: height * 0.15, justifyContent: 'center' }]}>
+          //     <Text style={[mainStyles.h2, { justifyContent: 'center' }]}>Lade Bikenests... </Text>
+          //   </View>}
+        />
       <BikeNest_Modal
         isVisible={modalState}
         onRequestClose={() => {
@@ -285,7 +293,7 @@ export default function FindBikeNestScreen ({ navigation }) {
           <View style={[mainStyles.modalContentContainer, { backgroundColor: stateMarkers[currentMarkerIndex].color, width: width * 0.9, height: height * 0.5 }]}>
             <Text style={mainStyles.h3}>{stateMarkers[currentMarkerIndex].address} </Text>
             <Text style={mainStyles.stdText}>Lade Optionen: <B>{stateMarkers[currentMarkerIndex].chargingOptionAvailable ? "Ja" : "Nein"}</B></Text>
-            <Text numberOfLines={1} style={mainStyles.stdText}>Entfernung:<B> {distances[currentMarkerIndex] / 1000} Km</B></Text>
+            <Text numberOfLines={1} style={mainStyles.stdText}>Entfernung:<B> {(distances[currentMarkerIndex] / 1000).toFixed(2).toLocaleString()} Km</B></Text>
             <Text numberOfLines={1} style={mainStyles.stdText}>In diesem Bikenest sind <B>{stateMarkers[currentMarkerIndex].capacity}</B> Plätze frei</Text>
             <Text>{ }</Text>
             <View style={styles.button}>
