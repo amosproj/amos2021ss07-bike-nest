@@ -16,7 +16,8 @@ Backend, including the process of locking/unlocking using real hardware.
   <h4>
     <a href="https://github.com/amosproj/amos-ss2021-bike-nest/wiki/Technical-Documentation">Technical Documentation</a> |
     <a href="https://raw.githack.com/amosproj/amos-ss2021-bike-nest/main/Deliverables/media/Architecture%20C4%20Model.html">Software Architecture</a> |
-    <a href="https://github.com/amosproj/amos-ss2021-bike-nest/wiki/User-Documentation">User Documentation</a>
+    <a href="https://github.com/amosproj/amos-ss2021-bike-nest/wiki/User-Documentation">User Documentation</a> |
+    <a href="https://documenter.getpostman.com/view/9121838/TzefAP5A">API Documentation</a>
   </h4>
 </div>
 
