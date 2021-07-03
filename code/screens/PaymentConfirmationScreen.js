@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ImageBackground, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { Dimensions } from "react-native";
 import bike from '../assets/bike.png';
@@ -10,28 +10,38 @@ import BikeNest_Button, { ButtonStyle } from '../components/BikeNest_Button';
 import { Alert } from 'react-native';
 import colors from '../styles/Colors';
 import { BookingService } from "../services/BookingService";
+import { BikenestService } from "../services/BikenestService";
+import moment from "moment";
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
 
-export default function PaymentConfirmationScreen({ navigation }) {
-  // const [myListData, setData] = useState("");
+export default function PaymentConfirmationScreen({ route, navigation }) {
   let bookingService = new BookingService();
+  let bikenestService = new BikenestService();
 
-  let tryGETBooking = () => {
-    console.log('start pulling reservation info');
-    return bookingService.getAllReservations().then(reservations => {
-      alert(JSON.stringify(reservations));
-    }).catch(error => {
-      console.error(JSON.stringify(error));
-    });
+  const [bikeDelivered, setBikeDelivered] = useState("");
+  const [bikeTook, setBikeTook] = useState("");
+
+  let bookings = route.params.bookingData;
+  console.log(bookings);
+
+useEffect(() => {
+  if (bookings != null){
+    setBikeDelivered(bookings.deliveredBike);
+    setBikeTook(bookings.tookBike);
+    console.log(bikeDelivered + "; " + bikeTook);
+    bookings = null;
   }
+});
+
   const downloadInvoice = () => {
     Alert.alert('You are downloading the invoice');
   }
   const getPrice = () => {
-    return "8,88";
+    let price = getHours(this);
+    return price;
   }
   const getMwst = () => {
     return "1,69";
@@ -40,7 +50,26 @@ export default function PaymentConfirmationScreen({ navigation }) {
     return "0,50€";
   }
   const getHours = () => {
-    return "2 Stunden";
+    var duration = 0;
+    // if(bikeDelivered != null){
+    //   let delivered = bikeDelivered.split("T");
+    //   let delivered2 = delivered[1];
+    //   let delivered3 = delivered2.split(".");
+    //   delivered = delivered[0] + " " + delivered3[0];
+    //   let deliveredMoment = moment(delivered);
+  
+    //   let took = bikeTook.split("T");
+    //   let took1 = took[1];
+    //   let took2 = took1.split(".");
+    //   took = took[0] + " " + took2[0];
+    //   let tookMoment = moment(took);
+  
+    //   duration = moment.duration(tookMoment.diff(deliveredMoment)).get('minutes');
+    //   let diff = tookMoment.diff(deliveredMoment);
+    //   let f = moment.utc(diff).format("HH:mm:ss.SSS");
+    //   console.log(f);
+    // }
+    return duration;
   }
   const getSum = () => {
     return "10,57 €";
@@ -49,7 +78,7 @@ export default function PaymentConfirmationScreen({ navigation }) {
     return "1 Slot";
   }
   const getLocation = () => {
-    return "Nürnberg HBF"
+    return bookings.bikenestId;
   }
 
   return (
@@ -92,7 +121,7 @@ export default function PaymentConfirmationScreen({ navigation }) {
           <Text style={mainStyles.stdText}>
             {getSlots()} {"\n"}BIKE NEST {getLocation()}
           </Text>
-          <Text style={myStyles.stdText}> {getHours()} </Text>
+          <Text style={myStyles.stdText}> {getHours()} Stunden </Text>
         </View>
         <View style={{ alignSelf: 'center' }}>
           <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider} />
@@ -114,7 +143,7 @@ export default function PaymentConfirmationScreen({ navigation }) {
         </View>
         <Image style={{ justifyContent: 'center', alignSelf: 'center', marginBottom: 10, width: 350 }} source={require('../assets/payment/Line.png')} />
         <View style={myStyles.headline}>
-          <Text style={mainStyles.h3}>Gesamt (für {getHours()})</Text>
+          <Text style={mainStyles.h3}>Gesamt (für {getHours()} Stunden)</Text>
           <Text style={[mainStyles.h3, { fontWeight: 'bold', color: Colors.UI_Light_2 }]}> {getSum()} </Text>
         </View>
         <View style={{ justifyContent: 'center', alignItems: 'center' }}>

@@ -14,6 +14,7 @@ import { BikenestService } from '../services/BikenestService';
 import { ReservationService } from "../services/ReservationService";
 import moment from "moment";
 import { useFocusEffect } from '@react-navigation/native';
+import colors from '../styles/Colors';
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
@@ -33,7 +34,7 @@ export default function HistoryScreen({ navigation }) {
   const [userName, setUserName] = useState("Max Muster");
   const [bikeSpot, setBikeSpot] = useState(-1);
   const [validBooking, setValidBooking] = useState(false);
-
+  const [bookingTime, setBookingTime] = useState();
 
   const compareDates = (dateString) => {
     let today = moment().format();
@@ -68,7 +69,8 @@ export default function HistoryScreen({ navigation }) {
             //Unlock the Bikenest to take the bike
             console.log("Found a valid booking!");
             bikenestId = booking.bikenestId;
-            setBikeSpot(booking.bikeSpot);
+            setBikeSpot(booking.bikespotNumber);
+            setBookingTime(booking.deliveredBike);
             setValidBooking(true);
             break;
           }
@@ -143,15 +145,13 @@ export default function HistoryScreen({ navigation }) {
 
   let tryGETBooking = () => {
     console.log('start pulling reservation info');
-
     reservationService.getAllReservations().then(reservations => {
       alert(JSON.stringify(reservations));
-      // This wont work, because reservations is an array of bikenests
-      //setBikenestIDs(reservations.bikenestId);
     }).catch(error => {
       console.error("Error with pulling reservations: " + JSON.stringify(error));
     });
   }
+
   let forwardToGoogle = () => {
     console.log("info: " + bikenestInfo.gpsCoordinates);
     let coordinates = bikenestInfo.gpsCoordinates.split(",");
@@ -162,12 +162,33 @@ export default function HistoryScreen({ navigation }) {
 
   let showBikeSpotBtn = () =>
     validBooking === true ?
-      <TouchableOpacity onPress={() => navigation.navigate("Unlock")} style={mainStyles.buttonMedium}>
-        <Text style={mainStyles.buttonText}> {userName}'s bike </Text>
-        <Text style={mainStyles.buttonText}> locked on spot {bikeSpot} </Text>
+      <TouchableOpacity onPress={() => navigation.navigate("Unlock")} style={styles.buttonHistoryOrange}>
+        <Text style={styles.buttonTextOrange}> {userName}'s bike {"\n"}locked on spot {bikeSpot}</Text>
       </TouchableOpacity>
       : null;
+    
+    let getBookingTime = () => {
+      var bookingT = bookingTime.split('T');
+      var startTime = bookingT[0] + ' ' + bookingT[1];
+      var now = new moment()
+      var duration = moment.duration(now.diff(startTime)).get('hours');
+      return duration;
+    }
 
+    let getEstimatedCost = () => {
+      var duration = getBookingTime(this);
+      var price = 0;
+      if(duration <= 24){
+        price = 1;
+      } else if (duration > 24){
+        price = 2;
+      } else if (duration > 48){
+        price = 3;
+      } else if (duration > 72){
+        price = 12;
+      }
+      return price;
+    }
 
   return (
     <View style={mainStyles.container}>
@@ -208,13 +229,13 @@ export default function HistoryScreen({ navigation }) {
           <TouchableOpacity style={styles.time}>
             <Text style={styles.timeText}> Zeit </Text>
             <SimpleLineIcons name="clock" size={24} color="black" />
-            <Text style={styles.timeRecord}> {validBooking === true ? "1 Tag" : ""}</Text>
+            <Text style={styles.timeRecord}> {validBooking === true ? getBookingTime(this) + " hour(s)" : ""}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.cost}>
             <Text style={styles.costText}> Parkkosten </Text>
             <AntDesign name="creditcard" size={24} color="black" />
-            <Text style={styles.costRecord}> {validBooking === true ? "50 $" : ""} </Text>
+            <Text style={styles.costRecord}> {validBooking === true ? getEstimatedCost(this) + " €" : ""} </Text>
           </TouchableOpacity>
         </View>
 
@@ -232,7 +253,6 @@ export default function HistoryScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: 'red',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -357,6 +377,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     margin: 10,
+  },
+  buttonHistoryOrange: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 3,
+    maxHeight: 60,
+    borderRadius: 30,
+    margin: 10,
+    backgroundColor: colors.UI_Light_2
+  }, 
+  buttonTextOrange: {
+    flex: 1,
+    fontSize: 15,
+    color: colors.UI_Light_4,
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 2,
+    padding: 10
   },
   icon: {
     padding: 10,
