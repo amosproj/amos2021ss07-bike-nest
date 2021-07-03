@@ -13,6 +13,7 @@ import { BookingService } from "../services/BookingService";
 import { BikenestService } from '../services/BikenestService';
 import { ReservationService } from "../services/ReservationService";
 import moment from "moment";
+import { useFocusEffect } from '@react-navigation/native';
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
@@ -39,8 +40,8 @@ export default function HistoryScreen({ navigation }) {
     // today = today.toLocaleString('de-DE', { timeZone: 'Europe/Berlin' });
     let endDateOfBooking = moment(dateString).format();
 
-    console.log(today);
-    console.log(endDateOfBooking);
+    // console.log("Today: " + today);
+    // console.log("End: " +endDateOfBooking);
 
     if (today < endDateOfBooking) {
       return true;
@@ -48,19 +49,19 @@ export default function HistoryScreen({ navigation }) {
     return false;
   };
 
-  useEffect(() => {
-    global.getAuthenticationToken().then((jwt) => {
-      let payload = JwtDecoder.decode(jwt);
-      console.log(jwt);
-      setUserName(payload.FirstName + " " + payload.LastName);
-      setLoadingUserInfo(false);
-    })
-  }, [])
+  useFocusEffect(
+    React.useCallback(() => {
 
-  useEffect(() => {
-    if (loadingBikeInfo) {
+      global.getAuthenticationToken().then((jwt) => {
+        let payload = JwtDecoder.decode(jwt);
+        console.log(jwt);
+        setUserName(payload.FirstName + " " + payload.LastName);
+        setLoadingUserInfo(false);
+      })
+
+
       bookingService.getAllBookings().then((bookings) => {
-        let bikenestId = 0;
+        let bikenestId = -1;
         for (let ind in bookings) {
           let booking = bookings[ind];
           if (booking.deliveredBike !== null && booking.tookBike === null) {
@@ -72,14 +73,15 @@ export default function HistoryScreen({ navigation }) {
             break;
           }
         }
-        if (bikenestId === 0) {
+        
+        if (bikenestId === -1) {
           throw { display: true, message: "Du hast keine valide Buchung eines Bikenests." }
         }
+        
         bikenestService.getBikenestInfo(bikenestId).then((info) => {
           setInfoHeadline("Buchungen");
           setBikenestInfo(info);
           setInfoText("Dein Fahrrad befindet sich hier:\n" + info.name);
-          setLoadingBikeInfo(false);
         }).catch(error => {
           if (error.display) {
             setInfoText(error.message);
@@ -90,10 +92,11 @@ export default function HistoryScreen({ navigation }) {
 
       }).catch(error => {
         reservationService.getAllReservations().then((reservations) => {
-          let bikenestId = 0;
+          let bikenestId = -1;
           for (let ind in reservations) {
             let res = reservations[ind];
-            console.log(JSON.stringify(res));
+            // console.log(JSON.stringify(res) + "\n reservationStart: " + !compareDates(res.reservationStart) + "\n reservationEnd: "
+            //   + compareDates(res.reservationEnd) + "\n res not Used: " + !res.used + "\n res not cancelles: " + !res.cancelled);
             if (!compareDates(res.reservationStart) && compareDates(res.reservationEnd) && !res.used
               && !res.cancelled) {
               //Unlock the Bikenest to deliver the bike
@@ -102,16 +105,16 @@ export default function HistoryScreen({ navigation }) {
               break;
             }
           }
-          if (bikenestId === 0) {
+          if (bikenestId === -1) {
             throw { display: true, message: "Du hast keine valide Reservierung eines Bikenests." }
           }
           bikenestService.getBikenestInfo(bikenestId).then((info) => {
             setBikenestInfo(info);
             setInfoHeadline("Reservierungen");
             setInfoText("Dein Bikenest findest du hier:\n" + info.name);
-            setLoadingBikeInfo(false);
           }).catch(error => {
             if (error.display) {
+              setInfoHeadline("Fehler");
               setInfoText(error.message);
             } else {
               setInfoText("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
@@ -120,14 +123,23 @@ export default function HistoryScreen({ navigation }) {
 
         }).catch(error => {
           if (error.display) {
+            setInfoHeadline("Fehler");
             setInfoText(error.message);
           } else {
             setInfoText("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
           }
         })
+        // }).finally(() => {
+        //   console.log("finally");
+        //   setLoadingBikeInfo(false);
       })
-    }
-  }, [])
+
+
+      const unsubscribe = () => console.log("On Focus lost");
+
+      return () => unsubscribe();
+    }, [])
+  );
 
   let tryGETBooking = () => {
     console.log('start pulling reservation info');
