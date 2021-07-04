@@ -4,6 +4,7 @@ import {UserService} from '../../services/UserService';
 import {styles} from "./styles";
 import BikeNest_Modal from '../BikeNest_Modal';
 import { SimpleLineIcons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons'; 
 
 export default function EditPassword() {
     let userService = new UserService();
@@ -53,7 +54,8 @@ export default function EditPassword() {
 
     if (isEditing) {
         return (
-            <View style={styles.mainview}>
+            <View style={styles.container}>
+        
                 <BikeNest_Modal
                     modalHeadLine={modalHeadline}
                     modalText={modalText}
@@ -73,17 +75,27 @@ export default function EditPassword() {
                 <Text style={styles.stdText}>New Password Confirmation:</Text>
                 <TextInput style={styles.inputField} onChangeText={setNewPassword2} value={newPassword2}></TextInput>
                 {isInputValid() ? <Text>Valid Input!</Text> : null}
-                <Pressable style={styles.button} onPress={() => cancel()}>
+                <View style={{flexDirection:'row', justifyContent: 'space-between'}}>
+                    <Pressable style={{ justifyItem: 'flex-start',marginTop: 20,marginBottom: 20,marginRight: 20}} onPress={() => cancel()}>
+                        <AntDesign name="close" size={24} color="black" />
+            
+                    </Pressable>
+                    <Pressable style={{ textAlign:'center', alignItems: 'flex-end',justifyContent: 'flex-end',marginTop: 20,marginBottom: 20,marginRight: 20}} onPress={() => save()}>
+                        <AntDesign name="check" size={24} color="black" />
+                    </Pressable>
+                </View>
+                {/* <Pressable style={styles.button} onPress={() => cancel()}>
                     <Text style={styles.buttonText}>Cancel</Text>
-                </Pressable>
-                <Pressable style={styles.button} onPress={() => save()}>
+                </Pressable> */}
+                {/* <Pressable style={styles.button} onPress={() => save()}>
                     <Text style={styles.buttonText}>Save</Text>
-                </Pressable>
+                </Pressable> */}
             </View>
         );
     } else {
         return (
-            <View style={styles.mainview}>
+            <View style={styles.container}>
+            
                 <BikeNest_Modal
                     modalHeadLine={modalHeadline}
                     modalText={modalText}

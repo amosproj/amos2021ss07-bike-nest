@@ -8,6 +8,11 @@ import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
 import global from '../components/GlobalVars';
 import JwtDecoder from '../components/JwtDecoder';
 import { UserService } from '../services/UserService';
+import { SimpleLineIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons'; 
+import { MaterialCommunityIcons } from '@expo/vector-icons'; 
+
+
 
 // This is the screen where the Profile is shown and additional information can be seen
 
@@ -50,7 +55,9 @@ export default function ProfileScreen({ navigation }) {
                 <View style={myStyles.pencil}>
                     <Pressable onPress={() => navigation.navigate("EditPersonalInformation")}>
                         <View style={mainStyles.buttonContent}>
-                            <Image style={[myStyles.buttonImage, { maxWidth: 150, resizeMode: 'contain' }]} source={require('../assets/edit-3.png')}></Image>
+                            <Feather name="edit-3" size={30} color="black" />
+                            {/* <MaterialCommunityIcons name="account-edit-outline" size={30} color="black" /> */}
+                            {/* <Image style={[myStyles.buttonImage, { maxWidth: 150, resizeMode: 'contain' }]} source={require()}></Image> */}
                         </View>
                     </Pressable>
                 </View>
