@@ -154,7 +154,7 @@ export default function QrReaderScreen({navigation}) {
         // }
 
         return (
-            <View style={styles.bottomBar}>
+            <View style={styles.topBar}>
                 <Text numberOfLines={1} style={styles.urlText}>
                     {lastScannedUrl}
                 </Text>
@@ -170,28 +170,32 @@ export default function QrReaderScreen({navigation}) {
 
     return (
         <View style={styles.container}>
-            {scanned == true ?
-                <Text style={styles.urlText}>
-                    QR Code wurde gescanned.
-                </Text>
-                :
-                <View></View>
-            }
             {hasCameraPermission === null ? (
                 <Text>Requesting for camera permission</Text>
             ) : hasCameraPermission === false ? (
-                <Text style={{color: '#fff'}}>
+                <Text style={{color: '#000'}}>
                     Camera permission is not granted
                 </Text>
             ) : (
                 <View
                     style={{
-                        backgroundColor: 'black',
+                        backgroundColor: 'white',
                         height: Dimensions.get('window').height,
                         width: Dimensions.get('window').width,
                         alignItems: 'center',
                         justifyContent: 'center'
                     }}>
+                    {
+                        scanned !== true ?
+                        //If the QR Code has not been scanned, we show a information text
+                            <Text style={styles.topBar}>
+                                QR Code wird gescanned...
+                            </Text>
+                            :
+                            <Text style={[styles.urlText, styles.topBar]}>
+                                QR Code erfolgreich gescanned.
+                            </Text>
+                    }
                     <BarCodeScanner
                         onBarCodeScanned={scanned ? undefined : handleBarCodeRead}
                         style={StyleSheet.absoluteFillObject}
@@ -212,31 +216,16 @@ const styles = StyleSheet.create(
             justifyContent: 'center',
             backgroundColor: '#000'
         },
-        bottomBar: {
+        topBar: {
             position: 'absolute',
-            bottom: 0,
+            flex: 1,
+            top: 0,
             left: 0,
             right: 0,
-            backgroundColor: 'rgba(0,0,0,0.5)',
             padding: 15,
-            flexDirection: 'row'
-        },
-        url: {
-            flex: 1
-        },
-        urlText: {
-            color: '#fff',
+            flexDirection: 'row',
             fontSize: 20,
             margin: 20
         },
-        cancelButton: {
-            marginLeft: 10,
-            alignItems: 'center',
-            justifyContent: 'center'
-        },
-        cancelButtonText: {
-            color: 'rgba(255,255,255,0.8)',
-            fontSize: 18
-        }
     }
 );
