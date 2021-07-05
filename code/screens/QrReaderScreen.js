@@ -68,104 +68,49 @@ export default function QrReaderScreen({navigation}) {
     const handleBarCodeRead = async ({type, data}) => {
         console.log("Barcode Detected: " + data);
         await setScanned(true);
-        reservationService.getReservationsByQr(data)
-            .then(reservations => {
-                    for (let ind in reservations) {
-                        let res = reservations[ind];
-                        console.log(JSON.stringify(res))
-                        if (!compareDates(res.reservationStart) && compareDates(res.reservationEnd) && !res.used
-                            && !res.cancelled) {
-                            //Unlock the Bikenest to deliver the bike
-                            console.log("Found a valid Reservation!");
-                            return res;
-                        }
+
+        //Calls two endpoints and once the result of both is there, goes into the then branch
+        Promise.all([reservationService.getReservationsByQr(data), bookingService.getBookingsByQr(data)])
+            .then((values) => {
+                const reservations = values[0]
+                const bookings = values[1];
+                console.log('RESERVATIONS:' + JSON.stringify(reservations));
+                console.log('BOOKINGS:' + JSON.stringify(bookings));
+                //Check reservations first
+                for (let ind in reservations) {
+                    let res = reservations[ind];
+                    console.log(JSON.stringify(res))
+                    if (!compareDates(res.reservationStart) && compareDates(res.reservationEnd) && !res.used
+                        && !res.cancelled) {
+                        //Unlock the Bikenest to deliver the bike
+                        console.log("Found a valid Reservation!");
+                        return lockService.deliverUnlock(res.id, data)
+                            .then(booking => {return () => navigation.navigate("LockDelivered", {bookingId: booking.id, spotNumber: booking.bikespotNumber})});
                     }
                 }
-            ).then(reservation => {
-                if (reservation) {
-                    return lockService.deliverUnlock(reservation.id, data).then(booking => {
-                            return {booking: booking, delivered: true};
-                        }
-                    );
-                } else {
-                    return bookingService.getBookingsByQr(data)
-                        .then(bookings => {
-                            for (let ind in bookings) {
-                                let booking = bookings[ind];
-                                if (booking.deliveredBike !== null && booking.tookBike === null) {
-                                    //Unlock the Bikenest to take the bike
-                                    console.log("Found a valid booking!");
-                                    return booking;
-                                }
-                            }
-                            throw {display: true, message: "Du hast weder eine valide Reservierung, noch hast du ein Fahrrad in diesem Bikenest abgestellt."}
-                        }).then(booking => {
-                            return lockService.takeUnlock(booking.id, data).then(result => {
-                                return {booking: result, delivered: false};
-                                }
-                            );
-                        });
+
+                for (let ind in bookings) {
+                    let booking = bookings[ind];
+                    if (booking.deliveredBike !== null && booking.tookBike === null) {
+                        //Unlock the Bikenest to take the bike
+                        console.log("Found a valid booking!");
+                        return lockService.takeUnlock(booking.id, data)
+                            .then(result => { return () => navigation.navigate("LockTaken", {bookingId: result.id, spotNumber: result.bikespotNumber})});
+                    }
                 }
-            }
-        ).then(result => {
-                if (result.delivered) {
-                    navigation.navigate("LockDelivered",
-                        {bookingId: result.booking.id, spotNumber: result.booking.bikespotNumber});
-                } else {
-                    navigation.navigate("LockTaken",
-                        {bookingId: result.booking.id, spotNumber: result.booking.bikespotNumber});
-                }
-            }
-        ).catch(error => {
-            if (error.display) {
-                alert(error.message);
-                navigation.navigate('FindBikeNest');
-            }
+
+                //No suitable reservation or booking found -> error
+                throw {display: true, message: "Du hast weder eine valide Reservierung, noch hast du ein Fahrrad in diesem Bikenest abgestellt."}
+            }).then(continueFunc => {
+                console.log('CONTINUE FUNC!');
+                setTimeout(continueFunc, 500);
         })
-    };
-
-    // gets called on url press
-    // const handlePressUrl = () => {
-    //   Alert.alert(
-    //     'URL öffnen?',
-    //     lastScannedUrl,
-    //     [
-    //       {
-    //         text: 'Ja',
-    //         onPress: () => Linking.openURL(lastScannedUrl)
-    //       },
-    //       { text: 'Nein', onPress: () => {} }
-    //     ],
-    //     { cancellable: false }
-    //   );
-    // };
-
-    // gets called on cancel
-    const handlePressCancel = () => {
-        console.log('Zurück pressed');
-        setScanned(false);
-        setlastScannedUrl('Warte auf Scan ...');
-        // navigation.navigate('QrReaderScreen');
-    };
-
-    const maybeRenderUrl = () => {
-        // if (!lastScannedUrl) {
-        //   return;
-        // }
-
-        return (
-            <View style={styles.topBar}>
-                <Text numberOfLines={1} style={styles.urlText}>
-                    {lastScannedUrl}
-                </Text>
-
-                <TouchableOpacity
-                    style={styles.cancelButton}
-                    onPress={handlePressCancel}>
-                    <Text style={styles.cancelButtonText}>Zurück</Text>
-                </TouchableOpacity>
-            </View>
-        );
+            .catch(error =>{
+                if(error.display){
+                    alert(error.message);
+                    navigation.navigate("FindBikeNest");
+                }
+            });
     };
 
     return (
