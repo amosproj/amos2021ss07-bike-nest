@@ -35,6 +35,7 @@ export default function BookingScreen({ route, navigation }) {
         setSpotsLeft(response.currentSpots);
         setChargingOption(response.chargingAvailable);
         setbikenestName(response.name);
+        setTextSlots('1 Slot');
       }).catch((error) => {
         console.error("getBikenest Infos Error:" + error);
      });
@@ -92,10 +93,10 @@ export default function BookingScreen({ route, navigation }) {
     if(value == 0){
       setTextEbike('1 E-Bike Ladestation');
       setcostEbike(5);
-    } else if(value == 1){
+    } else if(value == 2){
       setTextEbike('2 E-Bike Ladestation');
       setcostEbike(10);
-    } else if(value == 2){
+    } else if(value == 1){
       setTextEbike('keine E-Bike Ladestation');
       setcostEbike(0);
     } else {
@@ -141,18 +142,18 @@ export default function BookingScreen({ route, navigation }) {
         <View style={myStyles.headline}>
             <Text style={myStyles.h3}> {"\n"} Zusätzliche Informationen </Text>
         </View>
-       
+{/*        
         <View style={myStyles.headline}>
           <Text style={myStyles.h3}> Wie viele Slots? </Text>
-          <ModalDropdown onSelect={(value) => getSelectedSlots(value)} options={['1 Slot', '2 Slots']} defaultValue={'Bitte wählen...'} textStyle={{fontSize: 18 }} dropdownTextStyle={{fontSize: 18}}/>
-        </View>
+          <ModalDropdown onSelect={(value) => getSelectedSlots(value)} options={['1 Slot', '2 Slots']} defaultValue={'1 Slot'} textStyle={{fontSize: 18 }} dropdownTextStyle={{fontSize: 18}}/>
+        </View> */}
         <View style={myStyles.headline}>
           <Text style={myStyles.h3}> Wie lange buchen? </Text>
           <ModalDropdown onSelect={(value) => getSelectedHours(value)} options={['1 Tag', '2 Tage', '3 Tage', '1 Monat']} defaultValue={'Bitte wählen...'} textStyle={{fontSize: 18 }} dropdownTextStyle={{fontSize: 18}}/>
         </View>
         <View style={myStyles.headline}>
           <Text style={myStyles.h3}> E-Bike Ladestation? </Text>
-          <ModalDropdown onSelect={(value) => getSelectedEbike(value)} options={['ja, eine', 'ja, zwei', 'nein, danke']} defaultValue={'Bitte wählen...'} textStyle={{fontSize: 18 }} dropdownTextStyle={{fontSize: 18}}/>
+          <ModalDropdown onSelect={(value) => getSelectedEbike(value)} options={['ja', 'nein, danke']} defaultValue={'Bitte wählen...'} textStyle={{fontSize: 18 }} dropdownTextStyle={{fontSize: 18}}/>
         </View>
 
         <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider}/>
