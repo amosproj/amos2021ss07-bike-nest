@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { getDistance } from 'geolib';
-import { markers } from '../tools/mapData'
 import * as Location from 'expo-location';
 import {
   StyleSheet,
@@ -42,7 +41,7 @@ export default function FindBikeNestScreen ({ navigation }) {
     },
     description: "This is Bikenest 1",
     capacity: 12,
-    image: require("../assets/bike_nest.png"),
+    image: require("../assets/bikenest1.png"),
     color: "#FFD700",
     id: 1,
     chargingOptionAvailable: true
@@ -62,8 +61,8 @@ export default function FindBikeNestScreen ({ navigation }) {
   const region = {
     latitude: 49.46,
     longitude: 11.07,
-    latitudeDelta: 0.05,
-    longitudeDelta: 0.05
+    latitudeDelta: 0.03,
+    longitudeDelta: 0.03
   };
 
   const getMarkers = async () => {
@@ -71,15 +70,16 @@ export default function FindBikeNestScreen ({ navigation }) {
     populateMarkers(MarkersFromServer);
   };
 
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Permission to access location was denied');
-      } else {
-      }
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     let { status } = await Location.requestForegroundPermissionsAsync();
+  //     if (status !== 'granted') {
+  //       Alert.alert('Bitte Standort Berechtigung zulassen, da die App sonst nicht funktioniert.');
+  //     } else {
+  //       console.log(status);
+  //     }
+  //   })();
+  // }, []);
 
   useEffect(() => {
     getMarkers();
@@ -93,7 +93,23 @@ export default function FindBikeNestScreen ({ navigation }) {
 
   const populateMarkers = (fetchedMarkers) => {
     let tempMarkers = [];
+    let count = 0
+    let imagepath1 = require('../assets/bikenest1.png')
+    let imagepath2 = require('../assets/bikenest2.png')
+    let imagepath3 = require('../assets/bikenest3.jpg')
+    let imagepath4 = require('../assets/bikenest4.jpg')
+
     for (const marker of fetchedMarkers) {
+      if (count%4===0){
+        imagepath = imagepath4
+      }else if(count%3===0){
+        imagepath = imagepath3
+      }else if(count%2===0){
+        imagepath = imagepath2
+      }else{
+        imagepath = imagepath1
+      }
+
       tempMarkers.push({
         coordinate: {
           latitude: parseFloat(marker.gpsCoordinates.split(",")[0]),
@@ -101,17 +117,19 @@ export default function FindBikeNestScreen ({ navigation }) {
         },
         address: marker.name,
         capacity: marker.currentSpots,
-        image: require("../assets/bike_nest.png"),
+        image: imagepath,
         color: getColor(marker.currentSpots),
         id: marker.id,
         chargingOptionAvailable: marker.chargingAvailable
       });
+      count++;
     }
     getLocationAsync(tempMarkers);
   };
 
   const getLocationAsync = async (tempMarkers) => {
     let location = await Location.getCurrentPositionAsync({});
+    console.log(location)
     let localdistances = [];
     tempMarkers.map((marker, index) => {
       localdistances.push(getDistanceToUser(marker, location));
@@ -186,6 +204,8 @@ export default function FindBikeNestScreen ({ navigation }) {
   useEffect(() => {
     mapAnimation.addListener(({ value }) => {
       if (value !== 0) {
+        // the 1.06 are needed, because the cards wont switch to coresponding markers in the end
+        // TODO: fix this and look into it
         let index = Math.round(value / (CARD_WIDTH * 1.06));
         if (index >= stateMarkers.length) {
           index = stateMarkers.length - 1;
@@ -204,7 +224,7 @@ export default function FindBikeNestScreen ({ navigation }) {
                 latitudeDelta: region.latitudeDelta,
                 longitudeDelta: region.longitudeDelta
               },
-              300
+              150
             );
           }
         }, 10);
@@ -313,7 +333,7 @@ export default function FindBikeNestScreen ({ navigation }) {
       <Animated.ScrollView
         ref={_scrollView}
         horizontal
-        scrollEventThrottle={5}
+        scrollEventThrottle={4}
         showsHorizontalScrollIndicator={false}
         pagingEnabled
         snapToInterval={CARD_WIDTH + 20}
@@ -328,7 +348,8 @@ export default function FindBikeNestScreen ({ navigation }) {
         contentContainerStyle={{
           paddingHorizontal: Platform.OS === 'android' ? spacing_for_card_inset : 0
         }}
-        onScroll={Animated.event(
+        onScroll ={
+          Animated.event(
           [
             {
               nativeEvent: {
