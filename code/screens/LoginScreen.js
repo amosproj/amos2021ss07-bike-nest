@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ImageBackground, ScrollView, Text, View, StyleSheet, Dimensions } from 'react-native';
 import Colors from '../styles/Colors';
 import { CreateAccountVia3rdParty } from '../components/CreateAccountVia3rdParty';
@@ -9,6 +9,7 @@ import BikeNest_TextInput from '../components/BikeNest_TextInput';
 import BikeNest_Modal from '../components/BikeNest_Modal';
 import global from '../components/GlobalVars';
 import {UserService} from "../services/UserService";
+import * as Location from 'expo-location';
 
 export default function LoginScreen({ navigation }) {
   let userService = new UserService();
@@ -23,6 +24,17 @@ export default function LoginScreen({ navigation }) {
       setModalText(message);
       setModalVisible(true);
   }
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Bitte Standort Berechtigung zulassen, da die App sonst nicht funktioniert.');
+      } else {
+        console.log(status);
+      }
+    })();
+  }, []);
 
   let tryLogIn = () => {
     userService.loginUser(email, password).then(jwt => {
