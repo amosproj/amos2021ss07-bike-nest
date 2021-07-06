@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ImageBackground, Pressable, StyleSheet, Text, View, Image, TouchableOpacity, Linking } from 'react-native';
 import { Dimensions } from "react-native";
 import Avatar from '../assets/Avatar.png';
-import bike from '../assets/bike.png';
+import bike from '../assets/bike3.png';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import global from '../components/GlobalVars';
