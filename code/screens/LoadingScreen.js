@@ -6,36 +6,44 @@ import { CreateAccountVia3rdParty } from '../components/CreateAccountVia3rdParty
 import { mainStyles } from '../styles/MainStyles';
 import global from "../components/GlobalVars";
 import JwtDecoder from "../components/JwtDecoder"
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function LoginScreen({ navigation }) {
 
+    useFocusEffect(
+        React.useCallback(() => {
+            global.authenticationTokenExists().then((exists) => {
+                let initialScreen = "Login";
 
-    global.authenticationTokenExists().then((exists) => {
-        let initialScreen = "Login";
-
-        if (exists === true) {
-            global.getAuthenticationToken().then((jwt) => {
-                let jwtPayload = JwtDecoder.decode(jwt);
-                //console.log("Exp: " + jwtPayload.exp * 1000 + " Actual: " + Date.now());
-                if (jwtPayload.exp * 1000 >= Date.now()) {
-                    initialScreen = "FindBikeNest";
-                    console.log("Valid JWT found.");
+                if (exists === true) {
+                    global.getAuthenticationToken().then((jwt) => {
+                        let jwtPayload = JwtDecoder.decode(jwt);
+                        //console.log("Exp: " + jwtPayload.exp * 1000 + " Actual: " + Date.now());
+                        if (jwtPayload.exp * 1000 >= Date.now()) {
+                            initialScreen = "FindBikeNest";
+                            console.log("Valid JWT found.");
+                            console.log("initial screen: " + initialScreen);
+                            navigation.navigate(initialScreen);
+                        }
+                        else {
+                            console.log("JWT is not valid.");
+                            console.log("initial screen: " + initialScreen);
+                            navigation.navigate(initialScreen);
+                        }
+                    })
+                }
+                else {
+                    console.log("No JWT found.");
                     console.log("initial screen: " + initialScreen);
                     navigation.navigate(initialScreen);
                 }
-                else{
-                    console.log("JWT is not valid.");
-                    console.log("initial screen: " + initialScreen);
-                    navigation.navigate(initialScreen);
-                }
-            })
-        }
-        else {
-            console.log("No JWT found.");
-            console.log("initial screen: " + initialScreen);
-            navigation.navigate(initialScreen);
-        }
-    });
+            });
+
+            const unsubscribe = () => console.log("On Focus lost");
+
+            return () => unsubscribe();
+        }, [])
+    );
 
     return (
         <View style={mainStyles.container}>
