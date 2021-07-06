@@ -15,10 +15,10 @@ var height = Dimensions.get('window').height; //full height
 export default function BookingScreen({ route, navigation }) {
   let bikenestService = new BikenestService();
 
-  const [textSlots, setTextSlots] = React.useState();
+  const [textSlots, setTextSlots] = React.useState('1 Slot');
   const [textHours, setTextHours] = React.useState();
   const [textEbike, setTextEbike] = React.useState();
-  const [costSlots, setcostSlots] = React.useState();
+  const [costSlots, setcostSlots] = React.useState(1);
   const [costHours, setcostHours] = React.useState();
   const [costEbike, setcostEbike] = React.useState();
   const [estimatedPrice, setEstimatedPrice] = React.useState();
@@ -35,7 +35,6 @@ export default function BookingScreen({ route, navigation }) {
         setSpotsLeft(response.currentSpots);
         setChargingOption(response.chargingAvailable);
         setbikenestName(response.name);
-        setTextSlots('1 Slot');
       }).catch((error) => {
         console.error("getBikenest Infos Error:" + error);
      });
@@ -76,7 +75,6 @@ export default function BookingScreen({ route, navigation }) {
     }
   }
   const getSelectedSlots = (value) => {
-
     if(value == 0){
       setTextSlots('1 Slot');
       setcostSlots(1);
@@ -91,14 +89,14 @@ export default function BookingScreen({ route, navigation }) {
 
   const getSelectedEbike = (value) => {
     if(value == 0){
-      setTextEbike('1 E-Bike Ladestation');
+      setTextEbike('Eine E-Bike Ladestation');
       setcostEbike(5);
-    } else if(value == 2){
-      setTextEbike('2 E-Bike Ladestation');
-      setcostEbike(10);
     } else if(value == 1){
-      setTextEbike('keine E-Bike Ladestation');
+      setTextEbike('Keine E-Bike Ladestation');
       setcostEbike(0);
+    }else if(value == 2){
+        setTextEbike('2 E-Bike Ladestation');
+        setcostEbike(10);
     } else {
       setTextEbike('kein E-bike ausgewählt.');
       setcostEbike(0);
@@ -107,14 +105,13 @@ export default function BookingScreen({ route, navigation }) {
 
   useEffect(()=>{
     let price = 0
-
     if(costHours != null){
       price = costHours;
     } 
-    if (costHours != null && costSlots != null){
+    if (costHours != null){
       price = (costHours*costSlots);
     } 
-    if (costHours != null && costSlots != null && costEbike != null){
+    if (costHours != null && costEbike != null){
       price = (costHours*costSlots) + costEbike;
     }
     setEstimatedPrice(price);

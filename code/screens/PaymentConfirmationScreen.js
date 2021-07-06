@@ -21,8 +21,8 @@ export default function PaymentConfirmationScreen({ route, navigation }) {
   let bookingService = new BookingService();
   let bikenestService = new BikenestService();
 
-  const [bikeDelivered, setBikeDelivered] = useState("");
-  const [bikeTook, setBikeTook] = useState("");
+  const [bikeDelivered, setBikeDelivered] = useState(null);
+  const [bikeTook, setBikeTook] = useState(null);
 
   let bookings = route.params.bookingData;
   console.log(bookings);
@@ -37,42 +37,50 @@ useEffect(() => {
 });
 
   const downloadInvoice = () => {
-    Alert.alert('You are downloading the invoice');
+    Alert.alert("Download", 'Deine Rechnung wird gedownloaded...');
   }
   const getPrice = () => {
-    let price = getHours(this);
+    let hours = getHours(this);
+    let days = 0;
+    if(hours > 24){
+      days = hours/24;
+    }
+    let price = days;
     return price;
   }
   const getMwst = () => {
-    return "1,69";
+    let brutto = getPrice();
+    let netto = brutto/ (1 + 19)
+    let mwst = brutto - netto;
+    return mwst;
   }
-  const getDiscount = () => {
-    return "0,50€";
-  }
+
   const getHours = () => {
     var duration = 0;
-    // if(bikeDelivered != null){
-    //   let delivered = bikeDelivered.split("T");
-    //   let delivered2 = delivered[1];
-    //   let delivered3 = delivered2.split(".");
-    //   delivered = delivered[0] + " " + delivered3[0];
-    //   let deliveredMoment = moment(delivered);
+    if(bikeDelivered != null && bikeTook != null){
+       let delivered = bikeDelivered.split("T");
+       let delivered2 = delivered[1];
+       let delivered3 = delivered2.split(".");
+       delivered = delivered[0] + " " + delivered3[0];
+       let deliveredMoment = moment(delivered);
   
-    //   let took = bikeTook.split("T");
-    //   let took1 = took[1];
-    //   let took2 = took1.split(".");
-    //   took = took[0] + " " + took2[0];
-    //   let tookMoment = moment(took);
+       let took = bikeTook.split("T");
+       let took1 = took[1];
+       let took2 = took1.split(".");
+       took = took[0] + " " + took2[0];
+       let tookMoment = moment(took);
   
-    //   duration = moment.duration(tookMoment.diff(deliveredMoment)).get('minutes');
-    //   let diff = tookMoment.diff(deliveredMoment);
-    //   let f = moment.utc(diff).format("HH:mm:ss.SSS");
-    //   console.log(f);
-    // }
+       duration = moment.duration(tookMoment.diff(deliveredMoment)).get('minutes');
+       let diff = tookMoment.diff(deliveredMoment);
+       let f = moment.utc(diff).format("HH:mm");
+       duration = f;
+       console.log(f);
+     }
     return duration;
   }
   const getSum = () => {
-    return "10,57 €";
+    let brutto = getPrice();
+    return brutto;
   }
   const getSlots = () => {
     return "1 Slot";
@@ -108,7 +116,7 @@ useEffect(() => {
           <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start', padding: 30 }}>
             <Text style={{ fontSize: 16, color: '#000000' }}>Vielen Dank für dein Vertrauen! </Text>
             <Text style={{ fontSize: 16, color: '#000000' }}>Wir ziehen folgenden Betrag von deiner ausgewählten Zahlungsmethode ein: {"\n"}</Text>
-            <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#000000' }}>10,57 €</Text>
+            <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#000000' }}>{getSum(this) + " €"}</Text>
           </View>
         </TouchableOpacity>
         <View style={{ alignSelf: 'center' }}>
@@ -131,20 +139,20 @@ useEffect(() => {
         </View>
         <View style={myStyles.headline}>
           <Text style={mainStyles.stdText}>Gesamt exkl. Mwst.</Text>
-          <Text style={[mainStyles.stdText, { fontWeight: 'bold', color: Colors.UI_Light_2 }]}> {getPrice()} </Text>
+          <Text style={[mainStyles.stdText, { fontWeight: 'bold', color: Colors.UI_Light_2 }]}> {getPrice() + " €"} </Text>
         </View>
         <View style={myStyles.headline}>
           <Text style={mainStyles.stdText}>Mwst. 19%</Text>
-          <Text style={[mainStyles.stdText, { fontWeight: 'bold', color: Colors.UI_Light_2 }]}> {getMwst()} </Text>
+          <Text style={[mainStyles.stdText, { fontWeight: 'bold', color: Colors.UI_Light_2 }]}> {getMwst() + " €"} </Text>
         </View>
-        <View style={myStyles.headline}>
+        {/* <View style={myStyles.headline}>
           <Text style={mainStyles.stdText}>Rabatt</Text>
           <Text style={[mainStyles.stdText, { fontWeight: 'bold', color: Colors.UI_Light_2 }]}> {getDiscount()} </Text>
-        </View>
+        </View> */}
         <Image style={{ justifyContent: 'center', alignSelf: 'center', marginBottom: 10, width: 350 }} source={require('../assets/payment/Line.png')} />
         <View style={myStyles.headline}>
           <Text style={mainStyles.h3}>Gesamt (für {getHours()} Stunden)</Text>
-          <Text style={[mainStyles.h3, { fontWeight: 'bold', color: Colors.UI_Light_2 }]}> {getSum()} </Text>
+          <Text style={[mainStyles.h3, { fontWeight: 'bold', color: Colors.UI_Light_2 }]}> {getSum() + " €"} </Text>
         </View>
         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
           <BikeNest_Button overrideButtonColor={Colors.UI_Light_4} overrideTextColor={Colors.UI_BaseGrey_0} type={ButtonStyle.big} text="Rechnung herunterladen" onPress={() => downloadInvoice(this)} />

@@ -163,7 +163,7 @@ export default function HistoryScreen({ navigation }) {
   let showBikeSpotBtn = () =>
     validBooking === true ?
       <TouchableOpacity onPress={() => navigation.navigate("Unlock")} style={styles.buttonHistoryOrange}>
-        <Text style={styles.buttonTextOrange}> {userName}'s bike {"\n"}locked on spot {bikeSpot}</Text>
+        <Text style={styles.buttonTextOrange}> {userName}'s bike an Spot {bikeSpot}</Text>
       </TouchableOpacity>
       : null;
     let getTimeHours = () => {
@@ -207,7 +207,7 @@ export default function HistoryScreen({ navigation }) {
   return (
     <View style={mainStyles.container}>
       <View style={styles.historyContainer}>
-        <View style={styles.containerRow}>
+        <View style={styles.containerRowName}>
           <TouchableOpacity onPress={() => navigation.navigate("EditPersonalInformation")}>
             <Image source={Avatar} style={styles.avatar} />
           </TouchableOpacity>
@@ -233,24 +233,24 @@ export default function HistoryScreen({ navigation }) {
           <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start', padding: 30 }}>
             <Text style={mainStyles.h3}>{infoHeadline + "\n"}</Text>
             <Text style={{ fontSize: 16 }}>{infoText + "\n"}</Text>
-            <Text style={{ textDecorationLine: 'underline', fontSize: 16, fontStyle: 'italic' }}> {validBooking === true ? "Zeig es auf der Karte" : "Jetzt reservieren"}  </Text>
+            <Text style={{ textDecorationLine: 'underline', fontSize: 16, fontStyle: 'italic' }}>{validBooking === true ? "Zeig es auf der Karte" : "Jetzt Buchen"}</Text>
           </View>
         </TouchableOpacity>
         {validBooking === true ?
-        <View style={styles.containerRow}>
-          <TouchableOpacity style={styles.time}>
-            <Text style={styles.timeText}> Zeit </Text>
-            <SimpleLineIcons name="clock" size={24} color="black" />
-            <Text style={styles.timeRecord}> {validBooking === true ? getBookingTime(this) : ""}</Text>
-          </TouchableOpacity>
+          <View style={styles.containerRow}>
+            <TouchableOpacity style={styles.time}>
+              <Text style={styles.timeText}> Zeit </Text>
+              <SimpleLineIcons name="clock" size={24} color="black" />
+              <Text style={styles.timeRecord}> {validBooking === true ? getBookingTime(this) : ""}</Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity style={styles.cost}>
-            <Text style={styles.costText}> Parkkosten </Text>
-            <AntDesign name="creditcard" size={24} color="black" />
-            <Text style={styles.costRecord}> {validBooking === true ? getEstimatedCost(this) + " €" : ""} </Text>
-          </TouchableOpacity>
-        </View>
-      : null}
+            <TouchableOpacity style={styles.cost}>
+              <Text style={styles.costText}> Parkkosten </Text>
+              <AntDesign name="creditcard" size={24} color="black" />
+              <Text style={styles.costRecord}> {validBooking === true ? getEstimatedCost(this) + " €" : ""} </Text>
+            </TouchableOpacity>
+          </View>
+        : null}
 
         {showBikeSpotBtn()}
 
@@ -281,22 +281,31 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
+    margin: 10,
+  },
+  containerRowName: {
+    flex: -1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
     margin: 10,
   },
   avatar: {
-    flex: 1,
+    flex: -1,
     maxWidth: 60,
     resizeMode: 'contain',
     marginLeft: 10,
     marginRight: 10,
+    alignItems: 'flex-start'
   },
   name: {
-    flex: 1,
+    flex: -1,
     color: '#000000',
     fontSize: 18,
     fontWeight: 'bold',
     marginLeft: 10,
+    alignItems: 'flex-start'
   },
   cardTextContainer: {
     flex: 1,
@@ -376,13 +385,14 @@ const styles = StyleSheet.create({
     color: '#55418E',
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 10,
+    margin: 5,
+    padding: 9,
   },
   buttonHistoryOrange: {
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 3,
-    maxHeight: 60,
+    maxHeight: 50,
     borderRadius: 30,
     margin: 10,
     backgroundColor: colors.UI_Light_2
@@ -393,7 +403,7 @@ const styles = StyleSheet.create({
     color: colors.UI_Light_4,
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 2,
-    padding: 10
+    margin: 5,
+    padding: 9
   },
 })
