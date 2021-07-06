@@ -523,6 +523,37 @@ exports[`renders correctly 1`] = `
           </View>
         </View>
       </View>
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "flex": 0.4,
+            "justifyContent": "space-between",
+            "marginBottom": 65,
+          }
+        }
+      >
+        <Text
+          style={
+            Object {
+              "color": "#A1A4B2",
+            }
+          }
+        >
+          BEREITS REGISTRIERT? 
+          <Text
+            onPress={[Function]}
+            style={
+              Object {
+                "color": undefined,
+                "textDecorationLine": "underline",
+              }
+            }
+          >
+            HIER GEHTS ZUM LOGIN
+          </Text>
+        </Text>
+      </View>
     </View>
   </RCTScrollView>
   <View

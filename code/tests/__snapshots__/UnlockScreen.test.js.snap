@@ -20,56 +20,71 @@ exports[`renders correctly 1`] = `
       }
     }
   >
-    <Text
+    <View
+      accessibilityIgnoresInvertColors={true}
       style={
         Object {
-          "fontSize": 28,
-          "fontWeight": "bold",
-          "margin": 30,
-          "padding": 15,
+          "flex": 1,
+          "height": "90%",
+          "position": "absolute",
+          "width": "100%",
         }
       }
     >
-       Great you are in!
-    </Text>
-    <Image
-      source={1}
-      style={
-        Object {
-          "height": 200,
-          "resizeMode": "contain",
-          "width": 300,
+      <Image
+        source={1}
+        style={
+          Array [
+            Object {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            },
+            Object {
+              "height": "90%",
+              "width": "100%",
+            },
+            undefined,
+          ]
         }
-      }
-    />
+      />
+    </View>
     <View
       style={
         Object {
           "alignItems": "center",
           "flex": 1,
-          "justifyContent": "center",
+          "justifyContent": "flex-start",
         }
       }
     >
       <Text
         style={
           Object {
-            "fontSize": 20,
+            "fontSize": 28,
+            "fontWeight": "bold",
+            "margin": 30,
+            "padding": 15,
           }
         }
       >
-        Go to spot X 
+        Bikenest öffnen
       </Text>
       <Text
         style={
           Object {
-            "fontSize": 20,
+            "color": "#2D3436",
+            "fontSize": 24,
+            "fontWeight": "400",
+            "letterSpacing": 1,
+            "margin": "5%",
+            "padding": "7%",
           }
         }
       >
-         and open with the button 
-        
-
+        Scannen sie den QR Code am Bikenest, um die Tür zu öffnen.
       </Text>
     </View>
     <View
@@ -89,11 +104,12 @@ exports[`renders correctly 1`] = `
           "borderColor": "white",
           "borderRadius": 64,
           "borderWidth": 6,
-          "bottom": 50,
           "elevation": 3,
           "height": 128,
           "justifyContent": "center",
           "opacity": 1,
+          "position": "absolute",
+          "top": "70%",
           "width": 128,
         }
       }
@@ -107,7 +123,7 @@ exports[`renders correctly 1`] = `
           }
         }
       >
-         Unlock 
+         Scan QR
       </Text>
     </View>
   </View>
@@ -227,58 +243,6 @@ exports[`renders correctly 1`] = `
         >
           (un)lock
         </Text>
-      </View>
-    </View>
-    <View
-      accessible={true}
-      focusable={true}
-      onClick={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
-      style={
-        Object {
-          "backgroundColor": "#F28D35",
-          "flex": 1,
-          "opacity": 1,
-          "padding": 5,
-        }
-      }
-    >
-      <View
-        style={
-          Object {
-            "alignItems": "center",
-            "flexDirection": "column",
-            "justifyContent": "flex-start",
-          }
-        }
-      >
-        <View
-          style={
-            Object {
-              "margin": 5,
-            }
-          }
-        >
-          <Image
-            source={1}
-          />
-        </View>
-        <Text
-          style={
-            Object {
-              "color": "#F2F2F2",
-              "fontSize": 14,
-              "height": "100%",
-              "textAlign": "center",
-              "width": "100%",
-            }
-          }
-        />
       </View>
     </View>
     <View

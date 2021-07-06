@@ -14,66 +14,11 @@ exports[`renders correctly 1`] = `
   <Text
     style={
       Object {
-        "color": "#fff",
+        "color": "#000",
       }
     }
   >
     Camera permission is not granted
   </Text>
-  <View
-    style={
-      Object {
-        "backgroundColor": "rgba(0,0,0,0.5)",
-        "bottom": 0,
-        "flexDirection": "row",
-        "left": 0,
-        "padding": 15,
-        "position": "absolute",
-        "right": 0,
-      }
-    }
-  >
-    <Text
-      numberOfLines={1}
-      style={
-        Object {
-          "color": "#fff",
-          "fontSize": 20,
-        }
-      }
-    >
-      Warte auf Scan ...
-    </Text>
-    <View
-      accessible={true}
-      focusable={true}
-      onClick={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
-      style={
-        Object {
-          "alignItems": "center",
-          "justifyContent": "center",
-          "marginLeft": 10,
-          "opacity": 1,
-        }
-      }
-    >
-      <Text
-        style={
-          Object {
-            "color": "rgba(255,255,255,0.8)",
-            "fontSize": 18,
-          }
-        }
-      >
-        Zurück
-      </Text>
-    </View>
-  </View>
 </View>
 `;

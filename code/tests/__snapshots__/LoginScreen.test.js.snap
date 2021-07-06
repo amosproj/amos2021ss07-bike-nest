@@ -441,6 +441,7 @@ exports[`renders correctly 1`] = `
             style={
               Object {
                 "color": undefined,
+                "textDecorationLine": "underline",
               }
             }
           >

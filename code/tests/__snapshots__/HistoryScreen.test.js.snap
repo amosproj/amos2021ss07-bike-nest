@@ -74,7 +74,7 @@ exports[`renders correctly 1`] = `
           }
         }
       >
-        Max Muster 
+        Max Muster
       </Text>
     </View>
     <View
@@ -141,11 +141,13 @@ exports[`renders correctly 1`] = `
         <Text
           style={
             Object {
-              "fontSize": 16,
+              "fontSize": 18,
+              "fontWeight": "300",
             }
           }
         >
-          Danke für dein Vertrauen! 
+          Du hast weder eine Reservierung noch eines deiner Fahrräder bei uns sicher verstaut.
+
         </Text>
         <Text
           style={
@@ -154,7 +156,6 @@ exports[`renders correctly 1`] = `
             }
           }
         >
-          Dein Fahrrad befindet sich hier: 
           
 
         </Text>
@@ -216,7 +217,7 @@ exports[`renders correctly 1`] = `
             }
           }
         >
-           Zeit verging 
+           Zeit 
         </Text>
         <Text />
         <Text
@@ -231,7 +232,8 @@ exports[`renders correctly 1`] = `
             }
           }
         >
-           1 Tag 
+           
+          
         </Text>
       </View>
       <View
@@ -283,110 +285,9 @@ exports[`renders correctly 1`] = `
             }
           }
         >
-           50 $ 
-        </Text>
-      </View>
-    </View>
-    <View
-      style={
-        Object {
-          "alignItems": "center",
-          "flex": 1,
-          "flexDirection": "row",
-          "justifyContent": "space-between",
-          "margin": 10,
-        }
-      }
-    >
-      <View
-        accessible={true}
-        focusable={true}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          Object {
-            "alignItems": "center",
-            "backgroundColor": "#F28D35",
-            "borderRadius": 38,
-            "elevation": 3,
-            "height": 55,
-            "justifyContent": "center",
-            "margin": 9,
-            "opacity": 1,
-            "padding": 18,
-            "width": 198,
-          }
-        }
-      >
-        <Text
-          style={
-            Object {
-              "color": "#F2F2F2",
-              "fontSize": 14,
-              "height": "100%",
-              "textAlign": "center",
-              "width": "100%",
-            }
-          }
-        >
-           Max Muster's bike 
-        </Text>
-        <Text
-          style={
-            Object {
-              "color": "#F2F2F2",
-              "fontSize": 14,
-              "height": "100%",
-              "textAlign": "center",
-              "width": "100%",
-            }
-          }
-        >
-           locked on spot X 
-        </Text>
-      </View>
-      <View
-        accessible={true}
-        focusable={true}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          Object {
-            "alignItems": "center",
-            "backgroundColor": "#F28D35",
-            "borderRadius": 38,
-            "elevation": 3,
-            "height": 55,
-            "justifyContent": "center",
-            "margin": 9,
-            "opacity": 1,
-            "padding": 18,
-            "width": 128,
-          }
-        }
-      >
-        <Text
-          style={
-            Object {
-              "color": "#F2F2F2",
-              "fontSize": 14,
-              "height": "100%",
-              "textAlign": "center",
-              "width": "100%",
-            }
-          }
-        >
-          QR Scanner
+           
+          
+           
         </Text>
       </View>
     </View>
@@ -402,10 +303,12 @@ exports[`renders correctly 1`] = `
       onStartShouldSetResponder={[Function]}
       style={
         Object {
+          "alignItems": "center",
           "borderColor": "#E6E5F2",
           "borderRadius": 30,
           "borderWidth": 1,
           "flex": 1,
+          "justifyContent": "center",
           "margin": 10,
           "maxHeight": 50,
           "opacity": 1,
@@ -544,58 +447,6 @@ exports[`renders correctly 1`] = `
         >
           (un)lock
         </Text>
-      </View>
-    </View>
-    <View
-      accessible={true}
-      focusable={true}
-      onClick={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
-      style={
-        Object {
-          "backgroundColor": "#F28D35",
-          "flex": 1,
-          "opacity": 1,
-          "padding": 5,
-        }
-      }
-    >
-      <View
-        style={
-          Object {
-            "alignItems": "center",
-            "flexDirection": "column",
-            "justifyContent": "flex-start",
-          }
-        }
-      >
-        <View
-          style={
-            Object {
-              "margin": 5,
-            }
-          }
-        >
-          <Image
-            source={1}
-          />
-        </View>
-        <Text
-          style={
-            Object {
-              "color": "#F2F2F2",
-              "fontSize": 14,
-              "height": "100%",
-              "textAlign": "center",
-              "width": "100%",
-            }
-          }
-        />
       </View>
     </View>
     <View
