@@ -5,6 +5,7 @@ import static org.mockito.Mockito.when;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -96,8 +97,8 @@ public class ReservationServiceTest {
         Integer bikespotNumber = 3;
         Integer reservationMinutes = 30;
         boolean paid = false;
-        LocalDateTime reservationStart = LocalDateTime.now();
-        LocalDateTime reservationEnd = LocalDateTime.now().plusMinutes(reservationMinutes);
+        LocalDateTime reservationStart = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
+        LocalDateTime reservationEnd = LocalDateTime.now(ZoneId.of("Europe/Berlin")).plusMinutes(reservationMinutes);
         CreateReservationRequest reservationRequest = new CreateReservationRequest();
         reservationRequest.setBikenestId(bikenestId);
         reservationRequest.setReservationMinutes(reservationMinutes);
