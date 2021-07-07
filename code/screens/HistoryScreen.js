@@ -61,40 +61,39 @@ export default function HistoryScreen({ navigation }) {
       })
 
 
-      bookingService.getAllBookings().then((bookings) => {
-        let bikenestId = -1;
-        for (let ind in bookings) {
-          let booking = bookings[ind];
-          if (booking.deliveredBike !== null && booking.tookBike === null) {
-            //Unlock the Bikenest to take the bike
-            console.log("Found a valid booking!");
-            bikenestId = booking.bikenestId;
-            setBikeSpot(booking.bikespotNumber);
-            setBookingTime(booking.deliveredBike);
-            setValidBooking(true);
-            break;
-          }
-        }
-        
-        if (bikenestId === -1) {
-          throw { display: true, message: "Du hast keine valide Buchung eines Bikenests." }
-        }
-        
-        bikenestService.getBikenestInfo(bikenestId).then((info) => {
-          setInfoHeadline("Buchung");
-          setBikenestInfo(info);
-          setInfoText("Dein Fahrrad befindet sich hier:\n" + info.name);
-        }).catch(error => {
-          if (error.display) {
-            setInfoText(error.message);
-          } else {
-            setInfoText("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
-          }
-        })
+      Promise.all([reservationService.getAllReservations(), bookingService.getAllBookings()])
+        .then((values) => {
+          const reservations = values[0]
+          const bookings = values[1];
+          console.log('RESERVATIONS:' + JSON.stringify(reservations));
+          console.log('BOOKINGS:' + JSON.stringify(bookings));
 
-      }).catch(error => {
-        reservationService.getAllReservations().then((reservations) => {
+          //Check bookings first
           let bikenestId = -1;
+          for (let ind in bookings) {
+            let booking = bookings[ind];
+            if (booking.deliveredBike !== null && booking.tookBike === null) {
+              //Unlock the Bikenest to take the bike
+              console.log("Found a valid booking!");
+              bikenestId = booking.bikenestId;
+              setBikeSpot(booking.bikespotNumber);
+              setBookingTime(booking.deliveredBike);
+              setValidBooking(true);
+              return bikenestService.getBikenestInfo(bikenestId).then((info) => {
+                setInfoHeadline("Buchungen");
+                setBikenestInfo(info);
+                setInfoText("Dein Fahrrad befindet sich hier:\n" + info.name);
+              }).catch(error => {
+                if (error.display) {
+                  setInfoText(error.message);
+                } else {
+                  setInfoText("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
+                }
+              });
+            }
+          }
+
+          //Check reservations if no booking was found
           for (let ind in reservations) {
             let res = reservations[ind];
             // console.log(JSON.stringify(res) + "\n reservationStart: " + !compareDates(res.reservationStart) + "\n reservationEnd: "
@@ -104,25 +103,23 @@ export default function HistoryScreen({ navigation }) {
               //Unlock the Bikenest to deliver the bike
               console.log("Found a valid Reservation!");
               bikenestId = res.bikenestId;
-              break;
+              return bikenestService.getBikenestInfo(bikenestId).then((info) => {
+                setBikenestInfo(info);
+                setInfoHeadline("Reservierungen");
+                setInfoText("Dein Bikenest findest du hier:\n" + info.name);
+              }).catch(error => {
+                if (error.display) {
+                  setInfoHeadline("Fehler");
+                  setInfoText(error.message);
+                } else {
+                  setInfoText("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
+                }
+              });
             }
           }
-          if (bikenestId === -1) {
-            throw { display: true, message: "Du hast keine valide Reservierung eines Bikenests." }
-          }
-          bikenestService.getBikenestInfo(bikenestId).then((info) => {
-            setBikenestInfo(info);
-            setInfoHeadline("Reservierungen");
-            setInfoText("Dein Bikenest findest du hier:\n" + info.name);
-          }).catch(error => {
-            if (error.display) {
-              setInfoHeadline("Ups");
-              setInfoText(error.message);
-            } else {
-              setInfoText("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
-            }
-          })
 
+          //No suitable reservation or booking found -> error
+          throw { display: true, message: "Du hast weder eine valide Reservierung, noch hast du ein Fahrrad in einem Bikenest abgestellt." }
         }).catch(error => {
           if (error.display) {
             setInfoHeadline("Ups");
@@ -131,11 +128,6 @@ export default function HistoryScreen({ navigation }) {
             setInfoText("Oops da ist etwas schief gelaufen. Bitte versuche es noch einmal.");
           }
         })
-        // }).finally(() => {
-        //   console.log("finally");
-        //   setLoadingBikeInfo(false);
-      })
-
 
       const unsubscribe = () => console.log("On Focus lost");
 
@@ -396,7 +388,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     margin: 10,
     backgroundColor: colors.UI_Light_2
-  }, 
+  },
   buttonTextOrange: {
     flex: 1,
     fontSize: 15,
