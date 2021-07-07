@@ -15,10 +15,10 @@ var height = Dimensions.get('window').height; //full height
 export default function BookingScreen({ route, navigation }) {
   let bikenestService = new BikenestService();
 
-  const [textSlots, setTextSlots] = React.useState();
+  const [textSlots, setTextSlots] = React.useState('1 Slot');
   const [textHours, setTextHours] = React.useState();
   const [textEbike, setTextEbike] = React.useState();
-  const [costSlots, setcostSlots] = React.useState();
+  const [costSlots, setcostSlots] = React.useState(1);
   const [costHours, setcostHours] = React.useState();
   const [costEbike, setcostEbike] = React.useState();
   const [estimatedPrice, setEstimatedPrice] = React.useState();
@@ -75,7 +75,6 @@ export default function BookingScreen({ route, navigation }) {
     }
   }
   const getSelectedSlots = (value) => {
-
     if(value == 0){
       setTextSlots('1 Slot');
       setcostSlots(1);
@@ -90,14 +89,14 @@ export default function BookingScreen({ route, navigation }) {
 
   const getSelectedEbike = (value) => {
     if(value == 0){
-      setTextEbike('1 E-Bike Ladestation');
+      setTextEbike('Eine E-Bike Ladestation');
       setcostEbike(5);
     } else if(value == 1){
-      setTextEbike('2 E-Bike Ladestation');
-      setcostEbike(10);
-    } else if(value == 2){
-      setTextEbike('keine E-Bike Ladestation');
+      setTextEbike('Keine E-Bike Ladestation');
       setcostEbike(0);
+    }else if(value == 2){
+        setTextEbike('2 E-Bike Ladestation');
+        setcostEbike(10);
     } else {
       setTextEbike('kein E-bike ausgewählt.');
       setcostEbike(0);
@@ -106,14 +105,13 @@ export default function BookingScreen({ route, navigation }) {
 
   useEffect(()=>{
     let price = 0
-
     if(costHours != null){
       price = costHours;
     } 
-    if (costHours != null && costSlots != null){
+    if (costHours != null){
       price = (costHours*costSlots);
     } 
-    if (costHours != null && costSlots != null && costEbike != null){
+    if (costHours != null && costEbike != null){
       price = (costHours*costSlots) + costEbike;
     }
     setEstimatedPrice(price);
@@ -141,18 +139,18 @@ export default function BookingScreen({ route, navigation }) {
         <View style={myStyles.headline}>
             <Text style={myStyles.h3}> {"\n"} Zusätzliche Informationen </Text>
         </View>
-       
+{/*        
         <View style={myStyles.headline}>
           <Text style={myStyles.h3}> Wie viele Slots? </Text>
-          <ModalDropdown onSelect={(value) => getSelectedSlots(value)} options={['1 Slot', '2 Slots']} defaultValue={'Bitte wählen...'} textStyle={{fontSize: 18 }} dropdownTextStyle={{fontSize: 18}}/>
-        </View>
+          <ModalDropdown onSelect={(value) => getSelectedSlots(value)} options={['1 Slot', '2 Slots']} defaultValue={'1 Slot'} textStyle={{fontSize: 18 }} dropdownTextStyle={{fontSize: 18}}/>
+        </View> */}
         <View style={myStyles.headline}>
           <Text style={myStyles.h3}> Wie lange buchen? </Text>
           <ModalDropdown onSelect={(value) => getSelectedHours(value)} options={['1 Tag', '2 Tage', '3 Tage', '1 Monat']} defaultValue={'Bitte wählen...'} textStyle={{fontSize: 18 }} dropdownTextStyle={{fontSize: 18}}/>
         </View>
         <View style={myStyles.headline}>
           <Text style={myStyles.h3}> E-Bike Ladestation? </Text>
-          <ModalDropdown onSelect={(value) => getSelectedEbike(value)} options={['ja, eine', 'ja, zwei', 'nein, danke']} defaultValue={'Bitte wählen...'} textStyle={{fontSize: 18 }} dropdownTextStyle={{fontSize: 18}}/>
+          <ModalDropdown onSelect={(value) => getSelectedEbike(value)} options={['ja', 'nein, danke']} defaultValue={'Bitte wählen...'} textStyle={{fontSize: 18 }} dropdownTextStyle={{fontSize: 18}}/>
         </View>
 
         <Image source={require('../assets/payment/Divider.png')} style={myStyles.divider}/>
