@@ -15,6 +15,7 @@ import { ReservationService } from "../services/ReservationService";
 import moment from "moment";
 import { useFocusEffect } from '@react-navigation/native';
 import colors from '../styles/Colors';
+import { Alert } from 'react-native';
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
@@ -146,7 +147,16 @@ export default function HistoryScreen({ navigation }) {
   let tryGETBooking = () => {
     console.log('start pulling reservation info');
     reservationService.getAllReservations().then(reservations => {
-      alert(JSON.stringify(reservations));
+      // var text = "";
+      // reservations.forEach(element => {
+      //   var bikenest = reservations[element].bikenestId;
+      //   var spotnum = reservations[element].bikespotNumber;
+      //   var resStart = reservations[element].reservationStart;
+      //   var resEnd = reservations[element].reservationEnd;
+      //   text += "bikenest: " + bikenest + "\n" + "Spot: " + spotnum + "\n" + "Reservation Started: " + resStart + "\n" + "Reservation Ended: " + resEnd;
+      // });
+      var reservate = "" + JSON.stringify(reservations);
+      Alert.alert("Alle Reservierungen", reservate);
     }).catch(error => {
       console.error("Error with pulling reservations: " + JSON.stringify(error));
     });

@@ -41,17 +41,16 @@ useEffect(() => {
   }
   const getPrice = () => {
     let hours = getHours(this);
-    let days = 0;
+    let days = 1;
     if(hours > 24){
       days = hours/24;
-    }
+    } 
     let price = days;
     return price;
   }
   const getMwst = () => {
     let brutto = getPrice();
-    let netto = brutto/ (1 + 19)
-    let mwst = brutto - netto;
+    let mwst = brutto/(1 + 19);
     return mwst;
   }
 
@@ -78,9 +77,11 @@ useEffect(() => {
      }
     return duration;
   }
-  const getSum = () => {
+  const getBrutto = () => {
     let brutto = getPrice();
-    return brutto;
+    let mwst = getMwst();
+    let netto = brutto - mwst;
+    return netto;
   }
   const getSlots = () => {
     return "1 Slot";
@@ -139,7 +140,7 @@ useEffect(() => {
         </View>
         <View style={myStyles.headline}>
           <Text style={mainStyles.stdText}>Gesamt exkl. Mwst.</Text>
-          <Text style={[mainStyles.stdText, { fontWeight: 'bold', color: Colors.UI_Light_2 }]}> {getPrice() + " €"} </Text>
+          <Text style={[mainStyles.stdText, { fontWeight: 'bold', color: Colors.UI_Light_2 }]}> {getBrutto() + " €"} </Text>
         </View>
         <View style={myStyles.headline}>
           <Text style={mainStyles.stdText}>Mwst. 19%</Text>
@@ -152,7 +153,7 @@ useEffect(() => {
         <Image style={{ justifyContent: 'center', alignSelf: 'center', marginBottom: 10, width: 350 }} source={require('../assets/payment/Line.png')} />
         <View style={myStyles.headline}>
           <Text style={mainStyles.h3}>Gesamt (für {getHours()} Stunden)</Text>
-          <Text style={[mainStyles.h3, { fontWeight: 'bold', color: Colors.UI_Light_2 }]}> {getSum() + " €"} </Text>
+          <Text style={[mainStyles.h3, { fontWeight: 'bold', color: Colors.UI_Light_2 }]}> {getPrice() + " €"} </Text>
         </View>
         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
           <BikeNest_Button overrideButtonColor={Colors.UI_Light_4} overrideTextColor={Colors.UI_BaseGrey_0} type={ButtonStyle.big} text="Rechnung herunterladen" onPress={() => downloadInvoice(this)} />
@@ -166,7 +167,6 @@ useEffect(() => {
 const myStyles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: 'red',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -192,12 +192,12 @@ const myStyles = StyleSheet.create({
   divider: {
     justifyContent: 'center',
     alignSelf: 'center',
-    marginLeft: -2,
+    marginLeft: -(width * 0.2),
     width: 420,
   },
   headline: {
-    marginLeft: 20,
-    marginRight: 20,
+    marginLeft: width * 0.1,
+    marginRight: width * 0.1,
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
