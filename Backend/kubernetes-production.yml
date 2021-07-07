@@ -14,6 +14,8 @@ items:
           port: 9000
           targetPort: 9000
       type: LoadBalancer
+      externalIPs:
+        - 127.0.0.1 # TODO: this is required for the Hetzner cloud server. Configure the correct external IP!
 
 
   - apiVersion: v1
@@ -138,10 +140,7 @@ items:
               ports:
                 - containerPort: 9000
               resources: {}
-          imagePullSecrets:
-            - name: dockercredentials
           restartPolicy: Always
-          serviceAccountName: ""
           volumes: null
     status: {}
 
@@ -178,7 +177,6 @@ items:
               name: bikenest-db
               resources: {}
           restartPolicy: Always
-          serviceAccountName: ""
           volumes: null
     status: {}
 
@@ -215,7 +213,6 @@ items:
               name: booking-db
               resources: {}
           restartPolicy: Always
-          serviceAccountName: ""
           volumes: null
     status: {}
 
@@ -251,7 +248,6 @@ items:
               name: usermgmt-db
               resources: {}
           restartPolicy: Always
-          serviceAccountName: ""
           volumes: null
     status: {}
 
@@ -287,7 +283,6 @@ items:
               name: payment-db
               resources: {}
           restartPolicy: Always
-          serviceAccountName: ""
           volumes: null
     status: {}
 
@@ -319,17 +314,14 @@ items:
                 - name: MYSQL_USER
                   value: bikenestservice
                 - name: RASPI_SERVICE_HOST
-                  value: 127.0.0.1 #TODO: Replace with real IP
+                  value: 127.0.0.1
                 - name: RASPI_PORT
-                  value: 5000
+                  value: "5000"
               image: bikenest/service-bikenest:latest
               imagePullPolicy: Always
               name: bikenest
               resources: {}
-          imagePullSecrets:
-            - name: dockercredentials
           restartPolicy: Always
-          serviceAccountName: ""
           volumes: null
     status: {}
 
@@ -361,17 +353,14 @@ items:
                 - name: MYSQL_USER
                   value: bookingservice
                 - name: RASPI_SERVICE_HOST
-                  value: 127.0.0.1 #TODO: Replace with real IP
+                  value: 127.0.0.1
                 - name: RASPI_PORT
-                  value: 5000
+                  value: "5000"
               image: bikenest/service-booking:latest
               imagePullPolicy: Always
               name: booking
               resources: {}
-          imagePullSecrets:
-            - name: dockercredentials
           restartPolicy: Always
-          serviceAccountName: ""
           volumes: null
     status: {}
 
@@ -404,17 +393,14 @@ items:
                 - name: MYSQL_USER
                   value: usermgmtservice
                 - name: RASPI_SERVICE_HOST
-                  value: 127.0.0.1 #TODO: Replace with real IP
+                  value: 127.0.0.1
                 - name: RASPI_PORT
-                  value: 5000
+                  value: "5000"
               image: bikenest/service-usermgmt:latest
               imagePullPolicy: Always
               name: usermgmt
               resources: {}
-          imagePullSecrets:
-            - name: dockercredentials
           restartPolicy: Always
-          serviceAccountName: ""
           volumes: null
     status: {}
 
@@ -447,17 +433,14 @@ items:
                 - name: MYSQL_USER
                   value: paymentservice
                 - name: RASPI_SERVICE_HOST
-                  value: 127.0.0.1 #TODO: Replace with real IP
+                  value: 127.0.0.1
                 - name: RASPI_PORT
-                  value: 5000
-              image: bikenest/serive-payment:latest
+                  value: "5000"
+              image: bikenest/service-payment:latest
               imagePullPolicy: Always
               name: payment
               resources: {}
-          imagePullSecrets:
-            - name: dockercredentials
           restartPolicy: Always
-          serviceAccountName: ""
           volumes: null
     status: {}
 
