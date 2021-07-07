@@ -5,7 +5,7 @@
     "slug": "bikenest",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon1.png",
     "scheme": "demo",
     "splash": {
       "image": "./assets/splash.png",
