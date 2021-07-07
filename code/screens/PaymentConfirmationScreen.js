@@ -117,7 +117,7 @@ useEffect(() => {
           <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start', padding: 30 }}>
             <Text style={{ fontSize: 16, color: '#000000' }}>Vielen Dank für dein Vertrauen! </Text>
             <Text style={{ fontSize: 16, color: '#000000' }}>Wir ziehen folgenden Betrag von deiner ausgewählten Zahlungsmethode ein: {"\n"}</Text>
-            <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#000000' }}>{getSum(this) + " €"}</Text>
+            <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#000000' }}>{getPrice(this) + " €"}</Text>
           </View>
         </TouchableOpacity>
         <View style={{ alignSelf: 'center' }}>
