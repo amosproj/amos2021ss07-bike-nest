@@ -23,7 +23,7 @@ public class JWTService {
                 .claim("LastName", user.getLastname())
                 .claim("UserId", user.getId())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + 1000000))
+                .setExpiration(new Date((new Date()).getTime() + 1000000)) //10.000s
                 .compact();
 
         return jwt;
