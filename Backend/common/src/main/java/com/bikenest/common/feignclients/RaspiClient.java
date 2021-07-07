@@ -30,13 +30,13 @@ public interface RaspiClient {
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    String openGate(@PathVariable String gate);
+    Integer openGate(@PathVariable String gate);
 
     @RequestMapping(method = RequestMethod.GET, path = "/close_gate?gate={gate}",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    String closeGate(@PathVariable String gate);
+    Integer closeGate(@PathVariable String gate);
 
     @RequestMapping(method = RequestMethod.GET, path = "/set_spot_reserved?spot_number={spotNumber}&rgb_value={rgb}&blink_state={blinkState}",
             consumes = {MediaType.APPLICATION_JSON_VALUE},

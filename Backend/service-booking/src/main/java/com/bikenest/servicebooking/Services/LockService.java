@@ -34,12 +34,18 @@ public class LockService {
             throw new BusinessLogicException("Der Bikespot ist nicht reserviert!");
         }
         if(!response.getLeftSide()){
-            raspiClient.toggleStationLock();
-            raspiClient.openGate("left");
+            //Toggling will not be required anymore
+            //raspiClient.toggleStationLock();
+            if(raspiClient.openGate("left") == 0)
+                throw new BusinessLogicException("Das Tor konnte nicht geschlossen werden.");
+
             logger.info("Opening the left Gate for userId:" + userId + ", bikenestId:" + bikenestId + ", bikespotNumber:" + bikespotId);
         }else{
-            raspiClient.toggleStationLock();
-            raspiClient.openGate("right");
+            //Toggling will not be required anymore
+            //raspiClient.toggleStationLock();
+            if(raspiClient.openGate("right") == 0)
+                throw new BusinessLogicException("Das Tor konnte nicht geschlossen werden.");
+
             logger.info("Opening the right Gate for userId:" + userId + ", bikenestId:" + bikenestId + ", bikespotNumber:" + bikespotId);
         }
     }
@@ -57,12 +63,14 @@ public class LockService {
             throw new BusinessLogicException("Der Bikespot ist nicht reserviert!");
         }
         if(!response.getLeftSide()){
-            raspiClient.closeGate("left");
-            raspiClient.toggleStationLock();
+            if(raspiClient.closeGate("left") == 0)
+                throw new BusinessLogicException("Das Tor konnte nicht geschlossen werden.");
+            //raspiClient.toggleStationLock();
             logger.info("Closing the left Gate for userId:" + userId + ", bikenestId:" + bikenestId + ", bikespotNumber:" + bikespotId);
         }else{
-            raspiClient.closeGate("right");
-            raspiClient.toggleStationLock();
+            if(raspiClient.closeGate("right") == 0)
+                throw new BusinessLogicException("Das Tor konnte nicht geschlossen werden.");
+            //raspiClient.toggleStationLock();
             logger.info("Closing the right Gate for userId:" + userId + ", bikenestId:" + bikenestId + ", bikespotNumber:" + bikespotId);
         }
     }
