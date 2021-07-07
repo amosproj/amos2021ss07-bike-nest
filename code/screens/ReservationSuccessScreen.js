@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ImageBackground, StyleSheet, Text, View, Image, TouchableOpacity, Linking } from 'react-native';
 import { Dimensions } from "react-native";
-import bike from '../assets/bike.png';
+import bike from '../assets/bike3.png';
 import global from '../components/GlobalVars';
 import { mainStyles } from "../styles/MainStyles";
 import BikeNest_NavigationFooter from '../components/BikeNest_NavigationFooter';
