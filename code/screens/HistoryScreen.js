@@ -216,7 +216,7 @@ export default function HistoryScreen({ navigation }) {
           <Text style={styles.name}>
             {userName}</Text>
         </View>
-        <TouchableOpacity onPress={() => forwardToGoogle(this)}
+        <TouchableOpacity onPress={() => validBooking === true ? forwardToGoogle(this) : navigation.navigate("FindBikeNest")}
           style={[styles.heightBike, {
             backgroundColor: '#FFF',
             height: 230,

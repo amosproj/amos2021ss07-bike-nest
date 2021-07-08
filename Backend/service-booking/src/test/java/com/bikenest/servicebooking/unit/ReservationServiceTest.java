@@ -29,15 +29,10 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import org.assertj.core.api.Assertions;
 
-/**
- * For this test a mysql docker container should be running that exposes the port 3306.
- * Also you have to set the db name to booking and create a user with name bookingservice and password test.
- * //TODO: DOES NOT WORK YET
- * Docker Command:
- * docker run --name testdb -p 3306:3306 -e MYSQL_ROOT_PASSWORD=test -e MYSQL_USER=bookingservice -e MYSQL_PASSWORD=test -e MYSQL_DATABASE=booking -d mysql:latest
- */
-//@SpringBootTest
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = ServicebookingApplication.class)
 public class ReservationServiceTest {
 
     @InjectMocks
@@ -149,7 +144,10 @@ public class ReservationServiceTest {
         reservationRequest.setBikenestId(bikenestId);
         reservationRequest.setReservationMinutes(reservationMinutes);
 
-        assert(true);
+        // Act
+        // Assert
+        Assertions.assertThatThrownBy(() -> reservationService.createReservation(userId, reservationRequest))
+                .isInstanceOf(BusinessLogicException.class);
     }
 
     @Test
