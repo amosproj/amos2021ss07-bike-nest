@@ -34,17 +34,19 @@ public class LockService {
             throw new BusinessLogicException("Der Bikespot ist nicht reserviert!");
         }
         if(!response.getLeftSide()){
-            //Toggling will not be required anymore
-            //raspiClient.toggleStationLock();
-            if(raspiClient.openGate("left") == 0)
-                throw new BusinessLogicException("Das Tor konnte nicht geschlossen werden.");
+            //Open the Station Lock
+            if(raspiClient.openStationLock("left").equals("0"))
+                throw new BusinessLogicException("Das Torschloss konnte nicht geöffnet werden.");
+            //open the sliding gate
+            if(raspiClient.openGate("left").equals("0"))
+                throw new BusinessLogicException("Das Tor konnte nicht geöffnet werden.");
 
             logger.info("Opening the left Gate for userId:" + userId + ", bikenestId:" + bikenestId + ", bikespotNumber:" + bikespotId);
         }else{
-            //Toggling will not be required anymore
-            //raspiClient.toggleStationLock();
-            if(raspiClient.openGate("right") == 0)
-                throw new BusinessLogicException("Das Tor konnte nicht geschlossen werden.");
+            if(raspiClient.openStationLock("right").equals("0"))
+                throw new BusinessLogicException("Das Torschloss konnte nicht geöffnet werden.");
+            if(raspiClient.openGate("right").equals("0"))
+                throw new BusinessLogicException("Das Tor konnte nicht geöffnet werden.");
 
             logger.info("Opening the right Gate for userId:" + userId + ", bikenestId:" + bikenestId + ", bikespotNumber:" + bikespotId);
         }
@@ -63,21 +65,24 @@ public class LockService {
             throw new BusinessLogicException("Der Bikespot ist nicht reserviert!");
         }
         if(!response.getLeftSide()){
-            if(raspiClient.closeGate("left") == 0)
+            if(raspiClient.closeGate("left").equals("0"))
                 throw new BusinessLogicException("Das Tor konnte nicht geschlossen werden.");
-            //raspiClient.toggleStationLock();
+            if(raspiClient.closeStationLock("left").equals("0"))
+                throw new BusinessLogicException("Das Torschloss konnte nicht geschlossen werden.");
+
             logger.info("Closing the left Gate for userId:" + userId + ", bikenestId:" + bikenestId + ", bikespotNumber:" + bikespotId);
         }else{
-            if(raspiClient.closeGate("right") == 0)
+            if(raspiClient.closeGate("right").equals("0"))
                 throw new BusinessLogicException("Das Tor konnte nicht geschlossen werden.");
-            //raspiClient.toggleStationLock();
+            if(raspiClient.closeStationLock("right").equals("0"))
+                throw new BusinessLogicException("Das Torschloss konnte nicht geschlossen werden.");
+
             logger.info("Closing the right Gate for userId:" + userId + ", bikenestId:" + bikenestId + ", bikespotNumber:" + bikespotId);
         }
     }
 
     public boolean bikespotOccupied(Integer bikenestId, Integer bikespotId){
-        String status = raspiClient.getStatusBikespot(bikespotId);
-        return status.equals("occupied");
+        return raspiClient.getStatusBikespot(bikespotId).equals("0");
     }
 
     public void startBlinking(Integer bikenestId, Integer bikespotId){

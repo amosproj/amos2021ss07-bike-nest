@@ -11,9 +11,12 @@ responseText = "no connection"
 station_open = False
 gate_left_open = False
 gate_right_open = False
+lock_left_open = False
+lock_right_open = False
+
 spot_dict = {}
 for x in range(1,21):
-  spot_dict[str(x)] = "empty"
+  spot_dict[str(x)] = "1"
 
 @app.route('/openConnection')
 def open_connection():
@@ -25,70 +28,68 @@ def open_connection():
 def hello_world():
     return 'Hey, we have Flask in a Docker container!'
 
-@app.route('/toggle_station_lock')
-def toggle_station_lock():
-    global station_open, gate_left_open, gate_right_open
-    responseText = "Error!"
-    # get side left right
+
+@app.route('/open_stationlock')
+def open_stationlock():
+    global lock_left_open, lock_right_open, gate_left_open, gate_right_open
     gate = request.args.get('gate')
-
-    if gate == "left":
-        gate = "1"
+    if gate == 'left':
+        lock_left_open = True
+        return "1"
     elif gate == 'right':
-        gate = "2"
+        lock_right_open = True
+        return "1"
     else:
-        return "Error, correct Gate was not detected!"
+        return "0"
 
-    if(gate_left_open or gate_right_open):
-        gate_left_open = False
-        gate_right_open = False
-    
-    station_open = not station_open
-
-    return "Station open: " + str(station_open)
+@app.route('/close_stationlock')
+def close_stationlock():
+    global lock_left_open, lock_right_open, gate_left_open, gate_right_open
+    gate = request.args.get('gate')
+    if gate == 'left':
+        lock_left_open = False
+        return "1"
+    elif gate == 'right':
+        lock_right_open = False
+        return "1"
+    else:
+        return "0"
 
 @app.route('/open_gate')
 def open_gate():
-    global station_open, gate_left_open, gate_right_open
+    global lock_left_open, lock_right_open, gate_left_open, gate_right_open
     gate = request.args.get('gate')
-    left=False
-    responseText = "error"
 
-    # Validate correct gate specifier
     if gate == 'left':
-        gate = "1"
-        left=True
-    elif gate == 'right':
-        gate = "2"
-    else:
-        return "Error, correct Gate was not detected!"
-
-    if(gate == "1"):
+        if lock_left_open == False:
+            return "0"
         gate_left_open = True
-        return "gate left open: " + str(gate_left_open )
+        return "1"
+    elif gate == 'right':
+        if lock_right_open == False:
+            return "0"
+        gate_right_open = True
+        return "1"
     else:
-        gate_right_open =True
-        return "gate right open: " + str(gate_right_open)
+        return "0"
 
 @app.route('/close_gate')
 def close_gate():
-    global station_open, gate_left_open, gate_right_open
+    global lock_left_open, lock_right_open, gate_left_open, gate_right_open
     gate = request.args.get('gate')
-    responseText = "error"
 
     if gate == 'left':
-        gate = '1'
-    elif gate == 'right':
-        gate = '2'
-    else:
-        return "Error, correct Gate was not detected!"
-
-    if(gate == "1"):
+        if lock_left_open == False:
+            return "0"
         gate_left_open = False
-        return "gate left open: " + str(gate_left_open )
-    else:
+        return "1"
+    elif gate == 'right':
+        if lock_right_open == False:
+            return "0"
         gate_right_open = False
-        return "gate right open: " + str(gate_right_open)
+        return "1"
+    else:
+        return "0"
 
 
 # @app.route('/show_booked_spot')
@@ -111,7 +112,7 @@ def set_spot_reserved():
     blink_state = request.args.get('blink_state')
 
     try:
-        spot_dict[spot_number] = "occupied"
+        spot_dict[spot_number] = "0"
     except:
         return "spots only from 1 - 20"
 
