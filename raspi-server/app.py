@@ -134,7 +134,7 @@ def open_stationlock():
 #     gate = request.args.get('gate')
 #     if gate == "left":
 #         gate = "1"
-#     else: 
+#     else:
 #         gate = "2"
 #     # Check status of station
 #     ser.reset_input_buffer()
@@ -146,7 +146,7 @@ def open_stationlock():
 #     ser.write(CR)
 #     #ser.write('$11#0'+gate+'****'.encode('ascii')+CR)
 #     #if station locked -> open
-#     out = ser.read(7) 
+#     out = ser.read(7)
 #     if out ==  ACK + b'$11#1'+CR:
 #         ser.reset_input_buffer()
 #         cmd = '$01#0'+gate+'02**'
@@ -156,14 +156,14 @@ def open_stationlock():
 #         time.sleep(0.01)
 #         ser.write(CR)
 #         #ser.write('$01#0'+gate+'02**'.encode('ascii')+CR)
-#         # expecting ACK->EOT 
-#         out = ser.read(2)  
+#         # expecting ACK->EOT
+#         out = ser.read(2)
 #         if out == ACK_EOT:
 #             responseText = "Station Unlocked"
 #         else:
 #             responseText += " serial response = " + out.decode('ascii')
 #     # if station unlocked
-#     elif out ==  ACK + b'$11#0'+CR: 
+#     elif out ==  ACK + b'$11#0'+CR:
 #         # ask gate state
 #         ser.reset_input_buffer()
 #         cmd = '$12#0'+gate+'****'
@@ -173,7 +173,7 @@ def open_stationlock():
 #         time.sleep(0.01)
 #         ser.write(CR)
 #         #ser.write(('$12#0'+gate+'****').encode('ascii')+CR)
-#         out = ser.read(7) 
+#         out = ser.read(7)
 #         #if gate open -> close gate
 #         if out== ACK + b'$12#1'+CR:
 #             ser.reset_input_buffer()
@@ -184,7 +184,7 @@ def open_stationlock():
 #             time.sleep(0.01)
 #             ser.write(CR)
 #             #ser.write(('$03#0'+gate+'****').encode('ascii')+CR)
-#             out = ser.read(2) 
+#             out = ser.read(2)
 #             # lock station
 #             if out == ACK_EOT:
 #                 responseText = "gate closed, station lock unchanged"
@@ -197,7 +197,7 @@ def open_stationlock():
 #                 time.sleep(0.01)
 #                 ser.write(CR)
 #                 #ser.write('$01#0101**'.encode('ascii')+CR)
-#                 out = ser.read(2) 
+#                 out = ser.read(2)
 
 #                 if out == ACK_EOT:
 #                    responseText = "gate closed, station locked"
@@ -206,7 +206,7 @@ def open_stationlock():
 #             else:
 #                 responseText += " serial response = " + out.decode('ascii')
 #         else:
-#             responseText += " serial response = " + out.decode('ascii')        
+#             responseText += " serial response = " + out.decode('ascii')
 #     else:
 #         responseText += " serial response = " + out.decode('ascii')
 
@@ -244,7 +244,7 @@ def open_gate():
 #     #ser.write(('$12#0'+gate+'****').encode('ascii')+CR)
 
 #     # check response here
-#     out = ser.read(7) 
+#     out = ser.read(7)
 #     if out == ACK + b'$12#0'+CR:
 #         ser.reset_input_buffer()
 #         cmd = '$02#0'+gate+'****'
@@ -254,7 +254,7 @@ def open_gate():
 #         time.sleep(0.01)
 #         ser.write(CR)
 #         #ser.write(('$02#0'+gate+'****').encode('ascii')+CR)
-#         out = ser.read(2) 
+#         out = ser.read(2)
 
 #         if out == ACK_EOT:
 #             responseText = "gate opened"
@@ -314,7 +314,7 @@ def close_gate():
 #     #ser.write(('$12#0'+gate+'****').encode('ascii')+CR)
 
 #     #check response here
-#     out = ser.read(7) 
+#     out = ser.read(7)
 #     if out == ACK + b'$12#0'+CR:
 #         responseText += " gate already closed"
 #     elif out == ACK + b'$12#1'+CR:
@@ -326,7 +326,7 @@ def close_gate():
 #         time.sleep(0.01)
 #         ser.write(CR)
 #         #ser.write(('$03#0'+gate+'****').encode('ascii')+CR)
-#         out = ser.read(2) 
+#         out = ser.read(2)
 
 #         if out == ACK_EOT:
 #             responseText = "gate closed"
@@ -375,7 +375,7 @@ def set_spot_reserved():
 #     color = request.args.get('rgb_value')
 #     blink_state = request.args.get('blink_state')
 #     spot_number = str(spot_number).zfill(2)
-    
+
 #     ser.reset_input_buffer()
 #     cmd = '$04#'+spot_number+color+blink_state
 #     for i in cmd:
@@ -464,7 +464,7 @@ def get_status_gate_position():
 #         time.sleep(0.01)
 #         ser.write(i.encode())
 #     time.sleep(0.01)
-    
+
 #     ser.write(CR)
 #     #ser.write(('$12#0'+gate+'****').encode('ascii')+CR)
 #     out = ser.read(7)
@@ -507,7 +507,7 @@ def get_status_bikespot():
 #     ser.write(CR)
 #     #ser.write(('$13#'+spot+'****').encode('ascii')+CR)
 
-#     out = ser.read(7)  
+#     out = ser.read(7)
 #     if out==ACK + b'$13#0'+CR:
 #         responseText = 'empty'
 #     elif out == ACK + b'$13#1'+CR:

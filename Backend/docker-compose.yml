@@ -55,8 +55,6 @@ services:
       - USERMGMT_SERVICE_HOST=usermgmt
       - BIKENEST_SERVICE_HOST=bikenest
       - BIKENEST_DB_SERVICE_HOST=bikenest-db
-      - RASPI_SERVICE_HOST=${RASPI_HOST}
-      - RASPI_PORT=${RASPI_PORT}
       - MYSQL_PORT=3306
       - MYSQL_DBNAME=${BIKENEST_DBNAME}
       - MYSQL_USER=${DB_USER}
@@ -75,8 +73,6 @@ services:
       - USERMGMT_SERVICE_HOST=usermgmt
       - BIKENEST_SERVICE_HOST=bikenest
       - BOOKING_DB_SERVICE_HOST=booking-db
-      - RASPI_SERVICE_HOST=${RASPI_HOST}
-      - RASPI_PORT=${RASPI_PORT}
       - MYSQL_PORT=3306
       - MYSQL_DBNAME=${BOOKING_DBNAME}
       - MYSQL_USER=${DB_USER}
@@ -94,8 +90,6 @@ services:
       - PAYMENT_SERVICE_HOST=payment
       - USERMGMT_SERVICE_HOST=usermgmt
       - BIKENEST_SERVICE_HOST=bikenest
-      - RASPI_SERVICE_HOST=${RASPI_HOST}
-      - RASPI_PORT=${RASPI_PORT}
     ports:
      - "9000:9000"
     networks:
@@ -111,8 +105,6 @@ services:
       - USERMGMT_SERVICE_HOST=usermgmt
       - BIKENEST_SERVICE_HOST=bikenest
       - USERMGMT_DB_SERVICE_HOST=user-db
-      - RASPI_HOST=${RASPI_HOST}
-      - RASPI_SERVICE_HOST=${RASPI_PORT}
       - MYSQL_PORT=3306
       - MYSQL_DBNAME=${USER_DBNAME}
       - MYSQL_USER=${DB_USER}
@@ -131,12 +123,13 @@ services:
       - USERMGMT_SERVICE_HOST=usermgmt
       - BIKENEST_SERVICE_HOST=bikenest
       - PAYMENT_DB_SERVICE_HOST=payment-db
-      - RASPI_SERVICE_HOST=${RASPI_HOST}
-      - RASPI_PORT=${RASPI_PORT}
       - MYSQL_PORT=3306
       - MYSQL_DBNAME=${PAYMENT_DBNAME}
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASSWORD}
+      - BT_MERCHANT_ID=${BT_MERCHANT_ID}
+      - BT_PUBLIC_KEY=${BT_PUBLIC_KEY}
+      - BT_PRIVATE_KEY=${BT_PRIVATE_KEY}
     networks:
       - services
       - payment-db

@@ -45,7 +45,21 @@ class UsermanagementApplicationTests {
 	// changePersonalInformation(String password, String firstName, String lastName, String newEmail, String oldEmail)
 	@Test
 	void doesUserExist() throws BusinessLogicException {
-		//TODO
+
+		 when(daoMock.save(any(User.class))).thenReturn(true);
+
+        User user=new User();
+        assertThat(service.addUser(user), is(true));
+
+        //verify that the save method has been invoked
+        verify(daoMock).save(any(User.class));
+
+        //verify that the exists method is invoked one time
+        verify(daoMock, times(1)).exists(anyString());
+
+        //verify that the delete method has never been  invoked
+
+        verify(daoMock, never()).delete(any(User.class));
 	}
 
 	@Test
@@ -55,7 +69,12 @@ class UsermanagementApplicationTests {
 
 	@Test
 	void createAccount() throws BusinessLogicException{
-		//TODO
+		when(daoMock.save(any(User.class))).thenReturn(new User());
+
+            User user = new User();
+
+            assertThat(service.addUser(user), is(notNullValue()));
+	
 	}
 
 	@Test
@@ -75,7 +94,15 @@ class UsermanagementApplicationTests {
 
 	@Test
 	void buildJWTFromUser() throws BusinessLogicException {
-		//TODO
+
+        service.register(new User());
+
+        //captures the argument which was passed in to save method.
+        verify(doaMock).save(userArgument.capture());
+
+        //make sure a token is assigned by the register method before saving.
+        assertThat(userArgument.getValue().getToken(), is(notNullValue()));
+	
 	}
 
 	@Test
