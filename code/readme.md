@@ -15,11 +15,10 @@ This folder contains the End-User App which is based on React (Expo). The `App.j
 3. Run `yarn start` or `expo start` to start the development server
 4. Press e.g. `a` in the CLI to start the Android Emulator or select it from the Expo Dev Tools which pop up as soon as the development server started
 
-# Debugging
-tbd
 
 # Testing
 tbd
 
 # CI / CD 
-Currently there is no real deployment planned as this project is a proof-of-concept to show the end-to-end process of the [described project](https://github.com/amosproj/amos-ss2021-bike-nest).  
+We have a Github Action that will build the application with expo on release. With valid access rights, the APK can then be
+downloaded from EXPO.

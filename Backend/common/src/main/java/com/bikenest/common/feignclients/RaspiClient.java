@@ -19,22 +19,28 @@ public interface RaspiClient {
     @ResponseBody
     String helloWorld();
 
-    @RequestMapping(method = RequestMethod.GET, path = "/toggle_station_lock",
-            consumes = {MediaType.APPLICATION_JSON_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(method = RequestMethod.GET, path = "/open_stationlock?gate={gate}",
+            consumes = {MediaType.TEXT_PLAIN_VALUE},
+            produces = {MediaType.TEXT_PLAIN_VALUE})
     @ResponseBody
-    String toggleStationLock();
+    String openStationLock(@PathVariable String gate);
+
+    @RequestMapping(method = RequestMethod.GET, path = "/close_stationlock?gate={gate}",
+            consumes = {MediaType.TEXT_PLAIN_VALUE},
+            produces = {MediaType.TEXT_PLAIN_VALUE})
+    @ResponseBody
+    String closeStationLock(@PathVariable String gate);
 
 
     @RequestMapping(method = RequestMethod.GET, path = "/open_gate?gate={gate}",
-            consumes = {MediaType.APPLICATION_JSON_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE})
+            consumes = {MediaType.TEXT_PLAIN_VALUE},
+            produces = {MediaType.TEXT_PLAIN_VALUE})
     @ResponseBody
     String openGate(@PathVariable String gate);
 
     @RequestMapping(method = RequestMethod.GET, path = "/close_gate?gate={gate}",
-            consumes = {MediaType.APPLICATION_JSON_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE})
+            consumes = {MediaType.TEXT_PLAIN_VALUE},
+            produces = {MediaType.TEXT_PLAIN_VALUE})
     @ResponseBody
     String closeGate(@PathVariable String gate);
 
@@ -57,8 +63,8 @@ public interface RaspiClient {
     String getStatusGatePosition(@PathVariable String gate);
 
     @RequestMapping(method = RequestMethod.GET, path = "/get_status_bikespot?spot_number={spotNumber}",
-            consumes = {MediaType.APPLICATION_JSON_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE})
+            consumes = {MediaType.TEXT_PLAIN_VALUE},
+            produces = {MediaType.TEXT_PLAIN_VALUE})
     @ResponseBody
     String getStatusBikespot(@PathVariable Integer spotNumber);
 

@@ -67,6 +67,7 @@ public class LockingController {
         }
 
         logger.info("You want to take your Bike? The door is open now!");
+        lockService.startBlinking(booking.getBikenestId(), booking.getBikespotNumber());
         lockService.openLock(user.getUserId(), booking.getBikenestId(), booking.getBikespotNumber());
 
         return ResponseEntity.ok(booking);
@@ -91,6 +92,7 @@ public class LockingController {
 
             logger.info("You have placed your Bike inside. Closing the door now.");
             lockService.closeLock(user.getUserId(), booking.getBikenestId(), booking.getBikespotNumber());
+            lockService.stopBlinking(booking.getBikenestId(), booking.getBikespotNumber());
             return ResponseEntity.ok(booking);
         }else{
             throw new BusinessLogicException("Du hast dein Fahrrad noch nicht korrekt auf dem Platz abgestellt." +
@@ -110,6 +112,7 @@ public class LockingController {
             if(!bookingService.freeReservedSpot(booking.getBikenestId(), booking.getBikespotNumber(), user.getUserId())){
                 throw new BusinessLogicException("Konnte den reservierten Spot nicht freigeben.");
             }
+            lockService.stopBlinking(booking.getBikenestId(), booking.getBikespotNumber());
             return ResponseEntity.ok(bookingService.tookBike(user.getUserId(), request.getBookingId()));
         }else{
             throw new BusinessLogicException("Du hast dein Fahrrad nicht vom Bikespot entfernt." +

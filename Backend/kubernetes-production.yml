@@ -1,7 +1,7 @@
 apiVersion: v1
 items:
   # TODO: Add a config-map file to store all environment variables. Makes it easier to exchange values...
-  ### Services for Conncetions
+  ### Services for Connections
   - apiVersion: v1
     kind: Service
     metadata:
@@ -14,6 +14,8 @@ items:
           port: 9000
           targetPort: 9000
       type: LoadBalancer
+      externalIPs:
+        - 127.0.0.1 # TODO: this is required for the Hetzner cloud server. Configure the correct external IP!
 
 
   - apiVersion: v1
@@ -112,17 +114,6 @@ items:
           port: 9004
           targetPort: 9004
 
-  - apiVersion: v1
-    kind: Service
-    metadata:
-      name: raspi
-    spec:
-      selector:
-        service: raspi
-      ports:
-        - name: "5000"
-          port: 5000
-          targetPort: 5000
   ### Deployments
 
   - apiVersion: apps/v1
@@ -144,15 +135,12 @@ items:
         spec:
           containers:
             - image: bikenest/gateway:latest
-              imagePullPolicy: IfNotPresent
+              imagePullPolicy: Always
               name: gateway
               ports:
                 - containerPort: 9000
               resources: {}
-          imagePullSecrets:
-            - name: dockercredentials
           restartPolicy: Always
-          serviceAccountName: ""
           volumes: null
     status: {}
 
@@ -184,12 +172,11 @@ items:
                   value: test
                 - name: MYSQL_USER
                   value: bikenestservice
-              image: mysql
-              imagePullPolicy: ""
+              image: mysql:8.0
+              imagePullPolicy: IfNotPresent
               name: bikenest-db
               resources: {}
           restartPolicy: Always
-          serviceAccountName: ""
           volumes: null
     status: {}
 
@@ -221,12 +208,11 @@ items:
                   value: test
                 - name: MYSQL_USER
                   value: bookingservice
-              image: mysql
-              imagePullPolicy: ""
+              image: mysql:8.0
+              imagePullPolicy: IfNotPresent
               name: booking-db
               resources: {}
           restartPolicy: Always
-          serviceAccountName: ""
           volumes: null
     status: {}
 
@@ -257,12 +243,11 @@ items:
                   value: test
                 - name: MYSQL_USER
                   value: usermgmtservice
-              image: mysql
-              imagePullPolicy: ""
+              image: mysql:8.0
+              imagePullPolicy: IfNotPresent
               name: usermgmt-db
               resources: {}
           restartPolicy: Always
-          serviceAccountName: ""
           volumes: null
     status: {}
 
@@ -293,39 +278,11 @@ items:
                   value: test
                 - name: MYSQL_USER
                   value: paymentservice
-              image: mysql
-              imagePullPolicy: ""
+              image: mysql:8.0
+              imagePullPolicy: IfNotPresent
               name: payment-db
               resources: {}
           restartPolicy: Always
-          serviceAccountName: ""
-          volumes: null
-    status: {}
-
-  - apiVersion: apps/v1
-    kind: Deployment
-    metadata:
-      labels:
-        service: raspi
-      name: raspi
-    spec:
-      replicas: 1
-      selector:
-        matchLabels:
-          service: raspi
-      strategy: {}
-      template:
-        metadata:
-          labels:
-            service: raspi
-        spec:
-          containers:
-            image: backend_raspi
-            imagePullPolicy: ""
-            name: raspi
-            resources: {}
-          restartPolicy: Always
-          serviceAccountName: ""
           volumes: null
     status: {}
 
@@ -356,18 +313,15 @@ items:
                   value: "3306"
                 - name: MYSQL_USER
                   value: bikenestservice
-                - name: RASPI_HOST
+                - name: RASPI_SERVICE_HOST
                   value: 127.0.0.1
                 - name: RASPI_PORT
-                  value: 5000
+                  value: "5000"
               image: bikenest/service-bikenest:latest
-              imagePullPolicy: IfNotPresent
+              imagePullPolicy: Always
               name: bikenest
               resources: {}
-          imagePullSecrets:
-            - name: dockercredentials
           restartPolicy: Always
-          serviceAccountName: ""
           volumes: null
     status: {}
 
@@ -398,18 +352,15 @@ items:
                   value: "3306"
                 - name: MYSQL_USER
                   value: bookingservice
-                - name: RASPI_HOST
+                - name: RASPI_SERVICE_HOST
                   value: 127.0.0.1
                 - name: RASPI_PORT
-                  value: 5000
+                  value: "5000"
               image: bikenest/service-booking:latest
-              imagePullPolicy: IfNotPresent
+              imagePullPolicy: Always
               name: booking
               resources: {}
-          imagePullSecrets:
-            - name: dockercredentials
           restartPolicy: Always
-          serviceAccountName: ""
           volumes: null
     status: {}
 
@@ -441,18 +392,15 @@ items:
                   value: "3306"
                 - name: MYSQL_USER
                   value: usermgmtservice
-                - name: RASPI_HOST
+                - name: RASPI_SERVICE_HOST
                   value: 127.0.0.1
                 - name: RASPI_PORT
-                  value: 5000
+                  value: "5000"
               image: bikenest/service-usermgmt:latest
-              imagePullPolicy: IfNotPresent
+              imagePullPolicy: Always
               name: usermgmt
               resources: {}
-          imagePullSecrets:
-            - name: dockercredentials
           restartPolicy: Always
-          serviceAccountName: ""
           volumes: null
     status: {}
 
@@ -484,18 +432,15 @@ items:
                   value: "3306"
                 - name: MYSQL_USER
                   value: paymentservice
-                - name: RASPI_HOST
+                - name: RASPI_SERVICE_HOST
                   value: 127.0.0.1
                 - name: RASPI_PORT
-                  value: 5000
-              image: bikenest/serive-payment:latest
-              imagePullPolicy: IfNotPresent
+                  value: "5000"
+              image: bikenest/service-payment:latest
+              imagePullPolicy: Always
               name: payment
               resources: {}
-          imagePullSecrets:
-            - name: dockercredentials
           restartPolicy: Always
-          serviceAccountName: ""
           volumes: null
     status: {}
 
