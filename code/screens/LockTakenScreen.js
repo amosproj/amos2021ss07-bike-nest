@@ -31,20 +31,20 @@ export default function LockTakenScreen ({ route, navigation }) {
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                     <Text style={{fontSize: 20}}>Dein Bike ist am Spot {spotNumber}. </Text>
                     {/* <Text style={{fontSize: 20}}> Dein Bike ist am Spot  X hol es ab </Text>  */}
-                    <Text style={{fontSize: 20}}>Die <SimpleLineIcons name="bulb" size={24} color="orange" /> LED an diesem Platz blinkt</Text>
+                    <Text style={{fontSize: 20}}>Die <SimpleLineIcons name="bulb" size={24} color="orange" /> LED an diesem Platz blinkt.</Text>
                 </View>
 
                 <Image style={styles.ImageContainer} source={gotospot}></Image>
 
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                    
-                    <Text style={{fontSize: 18}}>Schließe danach das Bikenest indem du den Knopf drückst.</Text>
+                    <Text style={{fontSize: 18}}>Schließe das Bikenest mit dem Knopf, {"\n"}nachdem du es verlassen hast.</Text>
                 </View>
 
 
                 <TouchableOpacity onPress={() => lockBikenest()} style={styles.Icon}>
                     <SimpleLineIcons name="lock" size={24} color="black" />
-                    <Text style={{fontSize:14, textAlign:'center'}}> Bikenest schließen</Text>
+                    <Text style={{fontSize:14, textAlign:'center'}}> Bikenest {"\n"}schließen</Text>
                 </TouchableOpacity>
 
 

@@ -47,7 +47,7 @@ export default function LockDeliveredScreen ({ route, navigation }) {
 
                 <TouchableOpacity onPress={() => lockBikenest()} style={styles.Icon}>
                     <SimpleLineIcons name="lock" size={24} color="black" />
-                    <Text style={{fontSize:14, textAlign:'center'}}> Bikenest schließen</Text>
+                    <Text style={{fontSize:14, textAlign:'center'}}> Bikenest {"\n"}schließen</Text>
                 </TouchableOpacity>
 
 
