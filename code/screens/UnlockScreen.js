@@ -32,7 +32,7 @@ export default function UnlockScreen({ navigation }) {
             
             <View style={styles.storeText}>
                 <Text style={mainStyles.h1}>Bikenest öffnen</Text>
-                <Text style={styles.infotext}>Scannen sie den QR Code am Bikenest, um die Tür zu öffnen.</Text>
+                <Text style={styles.infotext}>Scanne den QR Code am Bikenest, um die Tür zu öffnen.</Text>
             </View>
             
             {/* <TouchableOpacity style={styles.Icon}>
