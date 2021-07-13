@@ -143,6 +143,14 @@ there are some tutorials available.
   --docker-password=%PASSWORD%
   --docker-email=%EMAIL%`
   
+Some Information about configuring Environment variables:
+- Every Microservice needs to know the IP Adresses of the other services and the information
+for connecting with their database. For Docker the environment variables are configured
+  statically in the docker-compose files. If you are using Kubernetes, they will be set automatically and can be used by
+  Spring.
+- The IP Address of the Raspberry Pi needs to be set via Environment variables
+- Basically every configuration that has to be made can be found inside the .env file in this folder
+
 ## General Information
 
 This folder contains all Backend Microservice.
