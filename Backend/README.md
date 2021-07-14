@@ -1,7 +1,7 @@
 ## Requirements
 - [Docker](https://www.docker.com)
 - [JDK 11](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
-- If you encounter errors with building make sure the JAVA_HOME environment variable is correctly set to your JDK directory
+- If you encounter errors with building, make sure the JAVA_HOME environment variable is correctly set to your JDK directory
 
 ## Build and Run
 
@@ -65,12 +65,11 @@ Right now the ports are:
   - See `testing-unit.bat` or `testing-unit.sh`
 ---  
 - Integration Tests
-  - These are more complicated because they depend on external ressources.
-  Also because auf the Microservice Architecture there are dependencies between the
-    Microservices.
+  - These are more complicated because they depend on external resources and we have dependencies between
+  some microservices.
   - The easiest solution is just starting up all containers using the special
   `docker-compose-testing.yml` file. There each Microservice and each database expose a port to the outside.
-    Therefore the service under test can still communicate with all of the started Microservices.
+    Therefore, the service under test can still communicate with all the started Microservices.
     If, for example the Usermgmt Service is tested, the already started Usermgmt Service won't
     be shut down. Instead the Testconfiguration (see application.properties in test packages) makes sure
     that the service under test is started with a different port, than the already running services.
@@ -80,7 +79,6 @@ Right now the ports are:
 ---
 
 **CI is done using the same principles as described above.**
-
 
 ## Deployment
 
@@ -92,12 +90,12 @@ Microservice Deployment can be very complicated, so here is a short overview abo
   This however will always transfer the whole image and makes the layers useless.)  
 - Now there are a few possibilities for proceeding:
   - Pull these Image onto the Remote Server and start up all containers using docker-compose. This should not really
-  be done in a production environment. (It's is fine though, if there are no intentions of replicating the Microservices
+  be done in a production environment. (It is fine though, if there are no intentions of replicating the Microservices
     over multiple servers)
   - For Production Environment a highly used way to start all containers is using Kubernetes Cluster. So we need to
   install a Kubernetes Cluster on the Remote Server (lightweight options for this are microk8s or minikube).
   For Kubernetes there is the YAML file kubernetes-production.yml. It contains all definitions required to start the Backend
-    (Services, Deployments, Environment Variables, Image Name). Currently the image names are specified to be pulled
+    (Services, Deployments, Environment Variables, Image Name). Currently, the image names are specified to be pulled
     from the public DockerHub repositories (bikenest/service-bikenest, ...)
     
 
@@ -106,11 +104,11 @@ So here is a summary what has to be done:
 - Build all Spring JARs (`gradlew assemble`)
 - Build all Containers and push them to [DockerHub](https://hub.docker.com/). The basic commands to push a single container image would be:
 - `docker login -u %DOCKER_USERNAME -p %DOCKER_PASSWORD`
-- `docker build --tag bikenest/service-bikenest:latest ./service-bikenest/`, Note: In this case, bikenest is the Docker username, service-bikenest is
+- `docker build --tag bikenest/service-bikenest:latest ./service-bikenest/` Note: In this case, bikenest is the Docker username, service-bikenest is
 the name of the Docker repository and latest is the tag. This string will also be used inside the Kubernetes configuration file to actually
   pull the image from the DockerHub.
 - `docker push bikenest/service-bikenest:latest`
-- For convenience there is the `dockerhub-push.bat` Script, that will build and push all of the containers to the docker-hub.
+- For convenience there is the `dockerhub-push.bat` Script, that will build and push all the containers to the docker-hub.
 It will prompt you for the username and password of the bikenest DockerHub account.
 
 
@@ -137,7 +135,7 @@ For troubleshooting one can use these commands:
 
 
 If you want to use a private docker repository, you have to create a secret with kubectl, that contains
-the credentials for that repository. Also you have to specify ImagePullSecret in the kubernetes YAML file for each image.
+the credentials for that repository. Also, you have to specify ImagePullSecret in the kubernetes YAML file for each image.
 Further Information can be found on the web. Github seems to offer free private repositories currently for example and
 there are some tutorials available.
 - `microk8s kubectl create secret docker-registry dockercredentials -docker-server=docker.io
@@ -145,11 +143,19 @@ there are some tutorials available.
   --docker-password=%PASSWORD%
   --docker-email=%EMAIL%`
   
+Some Information about configuring Environment variables:
+- Every Microservice needs to know the IP Adresses of the other services and the information
+for connecting with their database. For Docker the environment variables are configured
+  statically in the docker-compose files. If you are using Kubernetes, they will be set automatically and can be used by
+  Spring.
+- The IP Address of the Raspberry Pi needs to be set via Environment variables
+- Basically every configuration that has to be made can be found inside the .env file in this folder
+
 ## General Information
 
 This folder contains all Backend Microservice.
 
-Currently there is a
+Currently, there is a
 - **UserMgmt Microservice** that handles all User specific work (login, account creation,
   JWT validation)
 - **Booking Microservice** that handles new reservations and the whole locking and
@@ -172,9 +178,9 @@ instructions on how to build the container.
 ---
 **Some general Information for Docker:**
 
-Docker Containers run in an isolated environment. You have provide additional instructions to allow communication with the
-host system. This is usually done by specifing port mappings, that map a port on the host system to a port inside the container.
-E. g. you specify the portmapping -p "4503:1234" for a container. If you try to connect to port 4503 on your host system, this
+Docker Containers run in an isolated environment. You have to provide additional instructions to allow communication with the
+host system. This is usually done by specifying port mappings, that map a port on the host system to a port inside the container,
+e. g. you specify the Portmapping -p "4503:1234" for a container. If you try to connect to port 4503 on your host system, this
 request will be sent to the port 1234 inside the container environment.
 For communication between containers you have to specify docker networks, that the containers should use. Then the containers can
 communicate with each other using their container name as ip address. (A concrete example could be found inside the Usermgmt FeignClient.
@@ -189,12 +195,6 @@ work with this style of IP discovery. The spring services expect these environme
 application.properties files). So all docker-compose files were configured to statically provide these variables (
 the BIKENEST_SERVICE_HOST for example statically contains "bikenest" because for communication between docker containers
 this works.)
-
-Also the Dockerfiles can still be optimized to better use the layered architecture of docker, so that not always
-the complete Container has to be rebuilt. Another nice thing would be to build the spring application inside the
-docker container, so that the developers don't necessarily need to have the correct JDK installed (because this
-caused some troubles early on. Gradle 6.x doesn't work with JDK 16 and printed cryptic errors. Also the JAVA_HOME
-environment variable had to be set to point to a JDK 11...)
 ---
 **Docker and Spring**
 
@@ -205,7 +205,7 @@ file of spring with the mysql connection string to the database (using the conta
 `spring.datasource.url=jdbc:mysql://mysql-container:3306/dbname`
 
 However, in this project we do not directly configure everything inside the application.properties but instead
-use environment variables there. Therefore we have to set the environment variables for all docker containers.
+use environment variables there. Therefore, we have to set the environment variables for all docker containers.
 This and other tasks can be easily done using docker-compose.
 
 We have three docker compose files for the backend. These files configure the environment variables for each container,
