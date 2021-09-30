@@ -49,6 +49,8 @@ def check_response(expected_message, expected_bytes):
     ser.reset_input_buffer()
     time.sleep(0.01)
     out = ser.read(expected_bytes)
+    print(out)
+    print (expected_message)
     if out == expected_message:
         return 1
     else:
@@ -65,7 +67,7 @@ def check_gate_from_url(gate_arg):
 def check_hardware_state(cmd, expected_response, expected_bytes ):
     status_code = 0
     count = 0
-    while(status_code==0 or count<15):
+    while(status_code==0 and count<20):
         send_on_serial(cmd)
         status_code = check_response(expected_response,expected_bytes)
         time.sleep(0.5)
@@ -94,38 +96,32 @@ def hello_world():
 @app.route('/close_stationlock')
 def close_stationlock():
     # should we check if gate is closed here?   ##########################################################################
-    gate_arg = request.args.get('gate')
-    status_code = 0
-    gate = check_gate_from_url(gate_arg)
-    if(gate != "1" or gate != "2"):
-        print("correct gate was not detected")
-        return 0
-
+    gate="1"
     cmd = '$01#0101**'
     send_on_serial(cmd)
     status_code = check_response(ACK_EOT, 2)
     if(status_code == 1):
         cmd = '$11#0'+gate+'****'
+        time.sleep(0.5)
         status_code = check_hardware_state(cmd, STATION_IS_LOCKED, 7 )
-    return status_code
+    return str(status_code)
 
 @app.route('/open_stationlock')
 def open_stationlock():
     # should we check if gate is closed here?   ##########################################################################
-    gate_arg = request.args.get('gate')
-    status_code = 0
-    gate = check_gate_from_url(gate_arg)
-    if(gate != "1" or gate != "2"):
-        print("correct gate was not detected")
-        return 0
-
+    gate="1"
     cmd = '$01#0102**'
     send_on_serial(cmd)
     status_code = check_response(ACK_EOT, 2)
     if(status_code == 1):
+        print("open command angekommen")
         cmd = '$11#0'+gate+'****'
+        time.sleep(0.5)
         status_code = check_hardware_state(cmd, STATION_IS_OPEN, 7 )
-    return status_code
+        print("Lock open: " + str(status_code))
+    else:
+        print("schief gegangen")
+    return str(status_code)
 
 # @app.route('/toggle_station_lock')
 # def toggle_station_lock():
@@ -214,20 +210,22 @@ def open_stationlock():
 
 @app.route('/open_gate')
 def open_gate():
-    gate_arg = request.args.get('gate')
-    status_code = 0
-    gate = check_gate_from_url(gate_arg)
-    if(gate != "1" or gate != "2"):
-        print("correct gate was not detected")
-        return 0
-
+    #gate_arg = request.args.get('gate')
+    #status_code = 0
+    #gate = check_gate_from_url(gate_arg)
+    #if(gate != "1" and gate != "2"):
+    #    print("correct gate was not detected")
+    #    return "0"
+    gate="1"
     cmd = '$02#0'+gate+'****'
     send_on_serial(cmd)
     status_code = check_response(ACK_EOT,2)
     if(status_code == 1):
+        print("opening gate now")
         cmd = '$12#0'+gate+'****'
         status_code = check_hardware_state(cmd, GATE_IS_OPEN, 7 )
-    return status_code
+        print("gate open: " + str(status_code))
+    return str(status_code)
 
 # @app.route('/open_gate_old')
 # def open_gate_old():
@@ -278,9 +276,9 @@ def close_gate():
     gate_arg = request.args.get('gate')
     status_code = 0
     gate = check_gate_from_url(gate_arg)
-    if(gate != "1" or gate != "2"):
+    if(gate != "1" and gate != "2"):
         print("correct gate was not detected")
-        return 0
+        return "0"
 
     cmd = '$03#0'+gate+'****'
     send_on_serial(cmd)
@@ -288,7 +286,7 @@ def close_gate():
     if(status_code == 1):
         cmd = '$12#0'+gate+'****'
         status_code = check_hardware_state(cmd, GATE_IS_CLOSED, 7 )
-    return status_code
+    return str(status_code)
 
 # @app.route('/close_gate_old')
 # def close_gate_old():
@@ -358,14 +356,20 @@ def close_gate():
 @app.route('/set_spot_reserved')
 def set_spot_reserved():
     status_code = 0
-    spot_number = request.args.get('spot_number')
+    #spot_number = request.args.get('spot_number')
     color = request.args.get('rgb_value')
     blink_state = request.args.get('blink_state')
-    spot_number = str(spot_number).zfill(2)
+    print(blink_state)
+    spot_number = "01"
+    if(blink_state=="true"):
+        blink_state="1"
+    else:
+        blink_state="0"
     cmd = '$04#'+spot_number+color+blink_state
     send_on_serial(cmd)
     status_code = check_response(ACK_EOT,2)
-    return status_code
+    print("reservation: " + str(status_code))
+    return str(status_code)
 
 # @app.route('/set_spot_reserved_old')
 # def set_spot_reserved_old():
@@ -400,7 +404,8 @@ def get_status_station_lock():
     cmd = '$11#01****'
     send_on_serial(cmd)
     status_code = check_response(STATION_IS_OPEN, 7)
-    return status_code
+    print(status_code)
+    return str(status_code)
 
 
 # @app.route('/get_status_station_lock_old')
@@ -434,14 +439,14 @@ def get_status_gate_position():
     gate_arg = request.args.get('gate')
     status_code = 0
     gate = check_gate_from_url(gate_arg)
-    if(gate != "1" or gate != "2"):
+    if(gate != "1" and gate != "2"):
         print("correct gate was not detected")
-        return 0
+        return "0"
 
     cmd = '$12#0'+gate+'****'
     send_on_serial(cmd)
     status_code = check_response(GATE_IS_OPEN, 7)
-    return status_code
+    return str(status_code)
     
 # @app.route('/get_status_gate_position_old')
 # def get_status_gate_position_old():
@@ -483,12 +488,13 @@ def get_status_gate_position():
 @app.route('/get_status_bikespot')
 def get_status_bikespot():
     status_code = 0
-    spot = request.args.get('spot_number')
-    spot = str(spot).zfill(2)
+    #spot = request.args.get('spot_number')
+    #spot = str(spot).zfill(2)
+    spot="01"
     cmd = '$13#'+spot+'****'
     send_on_serial(cmd)
     status_code = check_response(SPOT_EMPTY,7)
-    return status_code
+    return str(status_code)
 
 #     # Check if occupied or empty
 # @app.route('/get_status_bikespot_old')
@@ -526,6 +532,3 @@ def get_error_status():
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
-
-
-
