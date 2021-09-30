@@ -13,7 +13,7 @@ The real version will have to be deployed to the Raspberry Pis, that control the
 ## Deployment on Raspberry
 
 1. Make sure Python 3.8 (including pip, venv) is installed.
-2. Navigate into the directory: the python script
+2. Navigate into the directory with the python script
 3. Create a virtual environment: `python -m venv env`
 4. Activate the virtual environment: `.\env\Scripts\Activate` (Windows) or `source env/bin/activate` (Linux)
 5. Install all requirements: `pip install -r requirements.txt`

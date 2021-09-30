@@ -17,7 +17,7 @@ This folder contains the End-User App which is based on React (Expo). The `App.j
 
 
 # Testing
-tbd
+Snapshot Testing
 
 # CI / CD 
 We have a Github Action that will build the application with expo on release. With valid access rights, the APK can then be
